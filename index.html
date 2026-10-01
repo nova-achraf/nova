@@ -4,220 +4,36 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <title>NOVA - Achraf Aza | From Morocco</title>
-<meta name="description" content="NOVA by Achraf Aza - From Morocco · Connecting the world">
-<meta name="theme-color" content="#ffffff">
-<link rel="manifest" href="manifest.json">
-<meta property="og:title" content="NOVA - Achraf Aza | From Morocco">
-<meta property="og:description" content="Social app from Morocco 🇲🇦 · BLABLA reels, live chat & marketplace">
-<meta property="og:image" content="https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?w=1200&q=60&auto=format&fit=crop">
-<meta property="og:type" content="website">
-<link rel="preconnect" href="https://images.unsplash.com">
-<link rel="preconnect" href="https://i.pravatar.cc">
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
-body{font-family:-apple-system,system-ui,'Segoe UI',Roboto,Tahoma,sans-serif;background:#f0f2f5;color:#050505;overflow-x:hidden}
+body{font-family:-apple-system,system-ui,sans-serif;background:#f0f2f5;color:#050505;overflow-x:hidden}
 .header{position:sticky;top:0;z-index:100;background:#fff;display:flex;justify-content:space-between;align-items:center;padding:10px 14px;box-shadow:0 1px 2px rgba(0,0,0,.1)}
 .logo{width:42px;height:42px;background:#1877f2;color:#fff;border-radius:11px;display:grid;place-items:center;font-weight:900;font-size:22px}
-.lang{border:1px solid #ddd;border-radius:20px;padding:6px 12px;font-size:13px;background:#fff;font-family:inherit;cursor:pointer;max-width:48vw}
-.cover{width:100%;height:clamp(180px,38vw,300px);background:#ddd;overflow:hidden}
-.cover img{width:100%;height:100%;object-fit:cover;display:block}
-.profile{background:#fff;padding:12px 14px 14px;box-shadow:0 1px 2px rgba(0,0,0,.06);position:relative;z-index:2}
-.top{display:flex;gap:12px;align-items:flex-start}
-.avatar{width:86px;height:86px;border-radius:50%;border:4px solid #fff;margin-top:-34px;object-fit:cover;background:#ccc;box-shadow:0 2px 8px rgba(0,0,0,.25);flex-shrink:0;position:relative;z-index:3}
-.info{flex:1;min-width:0;padding-top:2px}
-.info h1{font-size:22px;font-weight:800;line-height:1.1}
-.info p{color:#65676b;font-size:13px;margin-top:3px}
-.friends{font-weight:700;font-size:13.5px;margin-top:4px}
-.btns{display:flex;gap:8px;margin-top:14px}
-.btn{flex:1;padding:11px;border-radius:8px;border:none;font-weight:700;font-size:14.5px;cursor:pointer}
-.btn-p{background:#1877f2;color:#fff}
-.btn-s{background:#e4e6eb}
+.lang{border:1px solid #ddd;border-radius:20px;padding:6px 12px;font-size:13px;background:#fff;cursor:pointer}
+.cover{width:100%;height:240px;background:#ddd;overflow:hidden}.cover img{width:100%;height:100%;object-fit:cover}
+.profile{background:#fff;padding:12px 14px}.top{display:flex;gap:12px}.avatar{width:86px;height:86px;border-radius:50%;border:4px solid #fff;margin-top:-34px;box-shadow:0 2px 8px rgba(0,0,0,.25)}
 .card{background:#fff;border-radius:12px;padding:12px;margin:10px;box-shadow:0 1px 2px rgba(0,0,0,.06)}
-.composer{display:flex;gap:10px;align-items:center}
-.composer img{width:38px;height:38px;border-radius:50%}
-.composer input{flex:1;min-width:0;border:none;background:#f0f2f5;border-radius:20px;padding:11px 14px;outline:none;font-size:14px}
-.opts{display:flex;justify-content:space-around;border-top:1px solid #eee;padding-top:10px;margin-top:10px}
-.opt{display:flex;align-items:center;gap:6px;font-weight:600;font-size:14px;cursor:pointer}
-.post-head{display:flex;gap:10px}
-.post-head img{width:40px;height:40px;border-radius:50%}
-.bottom{position:fixed;bottom:0;left:0;right:0;background:#fff;border-top:1px solid #ddd;display:flex;justify-content:space-around;padding:7px 0 calc(7px + env(safe-area-inset-bottom));z-index:100}
-.nav{flex:1;display:flex;flex-direction:column;align-items:center;font-size:10px;color:#65676b;text-decoration:none;gap:2px}
-.nav.active{color:#1877f2;font-weight:700}
-.nav span.ico{font-size:19px}
-#marketPage{display:none}#marketPage.active{display:block}
-.msearch{flex:1;min-width:0;border:none;background:#f0f2f5;border-radius:20px;padding:10px 14px;outline:none;font-size:14px}
-.chips{display:flex;gap:8px;overflow-x:auto;padding:10px 0 2px;-ms-overflow-style:none;scrollbar-width:none}
-.chips::-webkit-scrollbar{display:none}
-.chip{border:none;background:#e4e6eb;border-radius:20px;padding:7px 14px;font-size:13px;font-weight:600;white-space:nowrap;cursor:pointer}
-.chip.on{background:#1877f2;color:#fff}
-.mkt-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;padding:0 10px}
-.item{background:#fff;border-radius:12px;overflow:hidden;box-shadow:0 1px 2px rgba(0,0,0,.06);cursor:pointer}
-.item img{width:100%;aspect-ratio:1/1;object-fit:cover;display:block}
-.item .pad{padding:8px 10px}
-.price{font-weight:800;font-size:14px}
-.iname{font-size:13px;margin-top:2px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-.iloc{font-size:11px;color:#65676b;margin-top:2px}
-.modal{position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:200;display:none;align-items:flex-end}
-.modal.open{display:flex}
-.sheet{background:#fff;width:100%;border-radius:14px 14px 0 0;padding:16px;max-height:88vh;overflow-y:auto}
-.f{width:100%;border:1px solid #ddd;border-radius:8px;padding:10px 12px;font-size:14px;margin-top:10px;outline:none;font-family:inherit;background:#fff}
-#blablaPage{display:none}
-#blablaPage.active{display:flex;flex-direction:column;position:fixed;inset:0;background:#000;z-index:50}
-.reelbar{display:flex;justify-content:space-between;align-items:center;background:#000;color:#fff;padding:8px 12px;flex-shrink:0}
-.reelbar .t{font-weight:800;font-size:16px}
-.live{font-size:11px;font-weight:700;color:#fff;background:#f3425f;border-radius:6px;padding:3px 8px}
-.cambtn{width:38px;height:38px;border-radius:50%;background:#42b72a;color:#fff;border:none;font-size:18px;cursor:pointer}
-.reels{flex:1;min-height:0;overflow-y:auto;scroll-snap-type:y mandatory;-webkit-overflow-scrolling:touch;scrollbar-width:none}
-.reels::-webkit-scrollbar{display:none}
-.reel{height:100%;scroll-snap-align:start;position:relative;overflow:hidden;background:#111}
-.bgimg{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;animation:kb 18s ease-in-out infinite alternate}
-@keyframes kb{from{transform:scale(1) translate(0,0)}to{transform:scale(1.14) translate(-2.5%,2.5%)}}
-.shade{position:absolute;left:0;right:0;bottom:0;height:46%;background:linear-gradient(transparent,rgba(0,0,0,.68))}
-.rail{position:absolute;right:10px;bottom:110px;display:flex;flex-direction:column;gap:16px;align-items:center}
-.rb{background:none;border:none;color:#fff;font-size:30px;cursor:pointer;display:flex;flex-direction:column;align-items:center;line-height:1;padding:0}
-.cnt{font-size:12px;font-weight:700;margin-top:5px}
-.caption{position:absolute;left:12px;right:70px;bottom:16px;color:#fff;pointer-events:none}
-.disc{display:inline-block;animation:spin 4s linear infinite}
-@keyframes spin{to{transform:rotate(360deg)}}
-.chatmsgs{position:absolute;left:10px;right:70px;bottom:66px;display:flex;flex-direction:column;gap:6px;pointer-events:none;max-height:30vh;overflow:hidden}
-.msg{background:rgba(0,0,0,.5);color:#fff;padding:6px 11px;border-radius:16px;font-size:13px;width:fit-content;max-width:100%;animation:pop .25s}
-@keyframes pop{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
-.chatbar{display:flex;gap:8px;padding:8px 10px;background:#000;flex-shrink:0}
-.chatbar input{flex:1;min-width:0;border:none;background:#262626;color:#fff;border-radius:20px;padding:10px 14px;outline:none;font-size:14px}
-.sendbtn{border:none;background:#1877f2;color:#fff;border-radius:20px;padding:8px 16px;font-weight:700;font-size:13px;cursor:pointer}
-.camctrls{position:absolute;bottom:26px;left:0;right:0;display:flex;justify-content:space-around;align-items:center;z-index:5}
-.camb{background:rgba(0,0,0,.55);color:#fff;border:none;width:46px;height:46px;border-radius:50%;font-size:20px;cursor:pointer}
-.snapbtn{width:70px;height:70px;border-radius:50%;background:#f3425f;border:5px solid #fff;cursor:pointer}
+.composer{display:flex;gap:10px;align-items:center}.composer img{width:38px;height:38px;border-radius:50%}.composer input{flex:1;border:none;background:#f0f2f5;border-radius:20px;padding:11px 14px;outline:none}
+.opts{display:flex;justify-content:space-around;border-top:1px solid #eee;padding-top:10px;margin-top:10px}.opt{font-weight:600;font-size:14px;cursor:pointer}
+.media-wrap{position:relative;margin-top:10px;border-radius:12px;overflow:hidden;background:#000}
+.media-wrap img,.media-wrap video{width:100%;display:block;max-height:500px;object-fit:contain;cursor:pointer}
+.dl{position:absolute;top:8px;right:8px;background:rgba(0,0,0,.75);color:#fff;border:none;border-radius:20px;padding:7px 12px;font-size:12px;font-weight:700;cursor:pointer;z-index:5}
+.post-head{display:flex;gap:10px}.post-head img{width:40px;height:40px;border-radius:50%}
+.bottom{position:fixed;bottom:0;left:0;right:0;background:#fff;border-top:1px solid #ddd;display:flex;justify-content:space-around;padding:7px 0;z-index:100}
+.nav{flex:1;display:flex;flex-direction:column;align-items:center;font-size:10px;color:#65676b;text-decoration:none}.nav.active{color:#1877f2;font-weight:700}.nav span.ico{font-size:19px}
+#viewer{position:fixed;inset:0;background:rgba(0,0,0,.96);z-index:9999;display:none;align-items:center;justify-content:center;flex-direction:column;padding:10px}
+#viewer.active{display:flex}
+#viewer img,#viewer video{max-width:98%;max-height:82%;border-radius:10px}
+#blablaPage{display:none}#blablaPage.active{display:flex;flex-direction:column;position:fixed;inset:0;background:#000;z-index:50}
+.reelbar{display:flex;justify-content:space-between;align-items:center;background:#000;color:#fff;padding:8px 12px}
+.reels{flex:1;overflow-y:auto}.reel{height:100%;position:relative;background:#111;overflow:hidden}
+.bgimg{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+.caption{position:absolute;left:12px;bottom:16px;color:#fff}
 </style>
 </head>
 <body>
 
-<div class="header"><div class="logo">N</div>
-<select id="langSel" class="lang" onchange="onLang(this.value)">
-<option value="en">🌐 English</option>
-<option value="ar">🌐 العربية</option>
-<option value="fr">🌐 Français</option>
-<option value="es">🌐 Español</option>
-<option value="pt">🌐 Português</option>
-<option value="hi">🌐 हिन्दी</option>
-</select></div>
-
-<div class="cover">
-<img src="https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?w=800&q=55&auto=format&fit=crop" width="800" height="300" alt="cover" loading="eager" fetchpriority="high" decoding="async">
-</div>
-
-<div class="profile">
-<div class="top">
-<img class="avatar" src="https://i.pravatar.cc/200?img=12" width="86" height="86" alt="Achraf" loading="eager" decoding="async">
-<div class="info"><h1>Achraf Aza</h1><p data-i18n="tagline">From Morocco · Connecting the world</p><div class="friends" data-i18n="friends">1,284 friends</div></div>
-</div>
-<div class="btns"><button class="btn btn-p" data-i18n="follow">Follow</button><button class="btn btn-s" data-i18n="message">Message</button></div>
-</div>
-
-<div class="card"><b data-i18n="intro">Intro</b><div style="margin-top:4px;font-size:14.5px" data-i18n="introTxt">Sharing from Morocco 🌍 Building NOVA 🚀</div></div>
-
-<div class="card">
-<div class="composer">
-<img src="https://i.pravatar.cc/100?img=12" alt="" loading="lazy" decoding="async">
-<input id="postInput" data-i18n-ph="composer" placeholder="What's on your mind, Achraf?">
-</div>
-<div class="opts">
-<label class="opt" style="color:#45bd62">📷 <span data-i18n="photo">Photo</span><input type="file" accept="image/*" hidden onchange="preview(this,'img')"></label>
-<label class="opt" style="color:#f3425f">🎥 <span data-i18n="video">Video</span><input type="file" accept="video/*" hidden onchange="preview(this,'video')"></label>
-<label class="opt" style="color:#f7b928">😊 <span data-i18n="feeling">Feeling</span></label>
-</div>
-<div id="preview"></div>
-<button onclick="publishPost()" data-i18n="post" style="width:100%;margin-top:10px;padding:10px;background:#1877f2;color:#fff;border:none;border-radius:8px;font-weight:700">Post</button>
-</div>
-
-<div id="homePosts"></div>
-
-<div id="blablaPage">
-<div class="reelbar">
-<div class="t">BLABLA <span class="live">● LIVE</span></div>
-<button class="cambtn" onclick="openCam()">📷</button>
-</div>
-<div class="reels" id="reels"></div>
-<div class="chatmsgs" id="chatmsgs"></div>
-<div class="chatbar">
-<input id="chatInput" data-i18n-ph="say" placeholder="Say something..." onkeydown="if(event.key==='Enter')sendChat()">
-<button class="sendbtn" data-i18n="send" onclick="sendChat()">Send</button>
-</div>
-</div>
-
-<div id="marketPage">
-<div class="card" style="background:#1877f2;color:#fff"><b data-i18n="mktTitle">Marketplace</b><div style="font-size:12px;opacity:.9" data-i18n="mktSub">Buy &amp; sell near you · NOVA</div></div>
-<div class="card" style="padding:10px">
-<div style="display:flex;gap:8px">
-<input id="mktSearch" class="msearch" data-i18n-ph="search" placeholder="Search items...">
-<button onclick="openSell()" style="padding:10px 16px;background:#42b72a;color:#fff;border:none;border-radius:20px;font-weight:700;font-size:13px;white-space:nowrap" data-i18n="sell">Sell</button>
-</div>
-<div class="chips" id="mktChips"></div>
-</div>
-<div class="mkt-grid" id="mktGrid"></div>
-</div>
-
-<div class="modal" id="sellModal" onclick="if(event.target===this)closeSell()">
-<div class="sheet">
-<div style="display:flex;justify-content:space-between;align-items:center"><b data-i18n="sellTitle">Sell an item</b><button onclick="closeSell()" style="background:none;border:none;font-size:22px;cursor:pointer">✕</button></div>
-<label style="display:block;margin-top:12px;border:2px dashed #ddd;border-radius:12px;padding:18px;text-align:center;font-weight:600;color:#1877f2">📷 <span data-i18n="photo">Photo</span>
-<input type="file" accept="image/*" hidden onchange="pickSellPhoto(this)"></label>
-<div id="sellThumb" style="margin-top:8px"></div>
-<input id="sName" class="f" data-i18n-ph="itemName" placeholder="Item name">
-<input id="sPrice" class="f" type="number" inputmode="numeric" data-i18n-ph="priceLbl" placeholder="Price (DH)">
-<input id="sCity" class="f" data-i18n-ph="city" placeholder="City">
-<select id="sCat" class="f">
-<option value="phones" data-i18n="catPhones">Phones</option>
-<option value="electro" data-i18n="catElectro">Electronics</option>
-<option value="sport" data-i18n="catSport">Sport</option>
-<option value="fashion" data-i18n="catFashion">Fashion</option>
-<option value="home" data-i18n="catHome">Home</option>
-</select>
-<button onclick="publishItem()" data-i18n="post" style="width:100%;margin-top:14px;padding:11px;background:#1877f2;color:#fff;border:none;border-radius:8px;font-weight:700;font-size:15px">Post</button>
-</div>
-</div>
-
-<div class="modal" id="detailModal" onclick="if(event.target===this)closeDetail()">
-<div class="sheet">
-<button onclick="closeDetail()" style="background:#e4e6eb;border:none;border-radius:50%;width:32px;height:32px;font-size:16px;cursor:pointer;position:sticky;top:0;float:right">✕</button>
-<img id="dImg" style="width:100%;max-height:340px;object-fit:cover;border-radius:12px" alt="">
-<div style="font-size:24px;font-weight:800;margin-top:12px" id="dPrice"></div>
-<div style="font-weight:700;margin-top:2px" id="dName"></div>
-<div style="font-size:13px;color:#65676b;margin-top:2px" id="dLoc"></div>
-<div style="display:flex;gap:10px;align-items:center;margin-top:14px;padding-top:12px;border-top:1px solid #eee">
-<img src="https://i.pravatar.cc/100?img=12" width="40" height="40" alt="" style="border-radius:50%">
-<div><b>Achraf Aza</b><div style="font-size:11px;color:#65676b" id="dSeller"></div></div>
-</div>
-<button id="dMsg" onclick="alert(I18N[cur].msgSoon)" style="width:100%;margin-top:14px;padding:11px;background:#1877f2;color:#fff;border:none;border-radius:8px;font-weight:700;font-size:15px"></button>
-</div>
-</div>
-
-<div id="camModal" style="display:none;position:fixed;inset:0;background:#000;z-index:300">
-<video id="camView" autoplay playsinline muted style="width:100%;height:100%;object-fit:cover"></video>
-<div class="camctrls">
-<button class="camb" onclick="switchCam()">🔄</button>
-<button class="snapbtn" onclick="snap()"></button>
-<button class="camb" onclick="closeCam()">✕</button>
-</div>
-</div>
-
-<div style="height:90px"></div>
-
-<nav class="bottom">
-<a class="nav active" id="homeNav" href="#" onclick="showHome(event)"><span class="ico">🏠</span><span data-i18n="home">Home</span></a>
-<a class="nav" href="#"><span class="ico">👥</span><span data-i18n="myfriends">Friends</span></a>
-<a class="nav" id="blablaNav" href="#" onclick="openBlabla(event)"><span class="ico">💬</span><span>BLABLA</span></a>
-<a class="nav" id="marketNav" href="#" onclick="openMarket(event)"><span class="ico">🛒</span><span data-i18n="market">Market</span></a>
-<a class="nav" href="#"><span class="ico">💭</span><span data-i18n="chat">Chat</span></a>
-<a class="nav" href="#"><span class="ico">👤</span><span data-i18n="profile">Profile</span></a>
-</nav>
-
-<script>
-let currentMedia=null,currentType=null,cur='en',curCat='all',sellImg=null;
-const home=document.getElementById('homePosts');
-
-const I18N={
-en:{dir:'ltr',title:'NOVA - Achraf Aza | From Morocco',tagline:'From Morocco · Connecting the world',friends:'1,284 friends',follow:'Follow',message:'Message',intro:'Intro',introTxt:'Sharing from Morocco 🌍 Building NOVA 🚀',composer:"What's on your mind, Achraf?",photo:'Photo',video:'Video',feeling:'Feeling',post:'Post',home:'Home',myfriends:'Friends',chat:'Chat',profile:'Profile',blablaTitle:'BLABLA',scroll:'↓',loading:'Loading...',now:'Now · 🌍',empty:'Write something or add photo/video',remove:'❌ Remove',share:'↗️ Share',explorer:'Explorer',ago:n=>n+'m ago',postTxt:n=>'BLABLA #'+n+' from Morocco 🚀',market:'Market',mktTitle:'Marketplace',mktSub:'Buy & sell near you · NOVA',search:'Search items...',sell:'Sell',catAll:'All',catPhones:'Phones',catElectro:'Electronics',catSport:'Sport',catFashion:'Fashion',catHome:'Home',sellTitle:'Sell an item',itemName:'Item name',priceLbl:'Price (DH)',city:'City',cancel:'Cancel',soldBy:'Sold by',msgSeller:'Message seller',msgSoon:'Chat coming soon 🚀',posted:'Your item is live! ✓',fillAll:'Fill the name and the price',noRes:'No results 😕',mnow:'Just now',it1:'iPhone 13 · 128GB',it2:'Wireless headphones',it3:'Mountain bike',it4:'Sports watch',it5:'Camera + lens',it6:'Laptop 16"',c1:'Casablanca',c2:'Rabat',c3:'Marrakech',c4:'Tanger',c5:'Fès',c6:'Agadir',say:'Say something...',send:'Send',camErr:'Camera not available 😕',you:'You',r1:'Cool! 🔥',r2:'Haha 😂',r3:'Wow 🤩'},
-ar:{dir:'rtl',title:'NOVA - أشرف أزا | من المغرب',tagline:'من المغرب · ربط العالم',friends:'1,284 صديق',follow:'متابعة',message:'رسالة',intro:'نبذة',introTxt:'أشارك من المغرب 🌍 نبني NOVA 🚀',composer:'شنو فبالك يا أشرف؟',photo:'صورة',video:'فيديو',feeling:'شعور',post:'نشر',home:'الرئيسية',myfriends:'الأصدقاء',chat:'دردشة',profile:'الملف',blablaTitle:'BLABLA',scroll:'↓',loading:'جاري التحميل...',now:'الآن · 🌍',empty:'اكتب شي حاجة ولا زيد صورة/فيديو',remove:'❌ حذف',share:'↗️ مشاركة',explorer:'مستكشف',ago:n=>'منذ '+n+' د',postTxt:n=>'BLABLA رقم '+n+' من المغرب 🚀',market:'السوق',mktTitle:'سوق NOVA',mktSub:'بيع وشري قريب منك',search:'بحث عن منتج...',sell:'بيع',catAll:'الكل',catPhones:'هواتف',catElectro:'إلكترونيك',catSport:'رياضة',catFashion:'موضة',catHome:'بيت',sellTitle:'بيع شي حاجة',itemName:'سمية المنتج',priceLbl:'الثمن (درهم)',city:'المدينة',cancel:'إلغاء',soldBy:'البائع',msgSeller:'راسل البائع',msgSoon:'الدردشة جاية قريبا 🚀',posted:'المنتج ديالك تنشر! ✓',fillAll:'عمّر الاسم والثمن',noRes:'ما كاين حتى نتيجة 😕',mnow:'الآن',it1:'آيفون 13 · 128GB',it2:'سماعات بلوتوث',it3:'بيسكليت جبلي',it4:'ساعة رياضية',it5:'كاميرا مع عدسة',it6:'لابتوب 16"',c1:'الدار البيضاء',c2:'الرباط',c3:'مراكش',c4:'طنجة',c5:'فاس',c6:'أكادير',say:'قول شي حاجة...',send:'إرسال',camErr:'الكاميرا ما متوفرةش 😕',you:'نتا',r1:'زوينة! 🔥',r2:'هههه 😂',r3:'وااو 🤩'},
-fr:{dir:'ltr',title:'NOVA - Achraf Aza | Du Maroc',tagline:'Du Maroc · Connecter le monde',friends:'1 284 amis',follow:'Suivre',message:'Message',intro:'Intro',introTxt:'Partager du Maroc 🌍 Construire NOVA 🚀',composer:'Quoi de neuf, Achraf ?',photo:'Photo',video:'Vidéo',feeling:'Humeur',post:'Publier',home:'Accueil',myfriends:'Amis',chat:'Chat',profile:'Profil',blablaTitle:'BLABLA',scroll:'↓',loading:'Chargement...',now:'Maintenant · 🌍',empty:'Écrivez quelque chose ou ajoutez une photo/vidéo',remove:'❌ Retirer',share:'↗️ Partager',explorer:'Explorateur',ago:n=>'il y a '+n+' min',postTxt:n=>'BLABLA #'+n+' du Maroc 🚀',market:'Marché',mktTitle:'Marketplace',mktSub:'Achetez & vendez près de vous',search:'Rechercher...',sell:'Vendre',catAll:'Tout',catPhones:'Téléphones',catElectro:'Électronique',catSport:'Sport',catFashion:'Mode',catHome:'Maison',sellTitle:'Vendre un article',itemName:"Nom de l'article",priceLbl:'Prix (DH)',city:'Ville',cancel:'Annuler',soldBy:'Vendu par',msgSeller:'Contacter le vendeur',msgSoon:'Chat bientôt disponible 🚀',posted:'Article publié ! ✓',fillAll:'Remplissez le nom et le prix',noRes:'Aucun résultat 😕',mnow:"À l'instant",it1:'iPhone 13 · 128 Go',it2:'Casque sans fil',it3:'VTT',it4:'Montre sport',it5:'Appareil photo + objectif',it6:'Ordinateur 16"',c1:'Casablanca',c2:'Rabat',c3:'Marrakech',c4:'Tanger',c5:'Fès',c6:'Agadir',say:'Dire quelque chose...',send:'Envoyer',camErr:'Caméra indisponible 😕',you:'Vous',r1:'Trop fort ! 🔥',r2:'Haha 😂',r3:'Waouh 🤩'},
-es:{dir:'ltr',title:'NOVA - Achraf Aza | De Marruecos',tagline:'De Marruecos · Conectando el mundo',friends:'1 284 amigos',follow:'Seguir',message:'Mensaje',intro:'Intro',introTxt:'Compartiendo desde Marruecos 🌍 Construyendo NOVA 🚀',composer:'¿En qué piensas, Achraf?',photo:'Foto',video:'Vídeo',feeling:'Ánimo',post:'Publicar',home:'Inicio',myfriends:'Amigos',chat:'Chat',profile:'Perfil',blablaTitle:'BLABLA',scroll:'↓',loading:'Cargando...',now:'Ahora · 🌍',empty:'Escribe algo o añade foto/vídeo',remove:'❌ Quitar',share:'↗️ Compartir',explorer:'Explorador',ago:n=>'hace '+n+' min',postTxt:n=>'BLABLA #'+n+' de Marruecos 🚀',market:'Mercado',mktTitle:'Marketplace',mktSub:'Compra y vende cerca de ti',search:'Buscar...',sell:'Vender',catAll:'Todo',catPhones:'Teléfonos',catElectro:'Electrónica',catSport:'Deporte',catFashion:'Moda',catHome:'Hogar',sellTitle:'Vender un artículo',itemName:'Nombre del artículo',priceLbl:'Precio (DH)',city:'Ciudad',cancel:'Cancelar',soldBy:'Vendido por',msgSeller:'Contactar al vendedor',msgSoon:'Chat próximamente 🚀',posted:'¡Artículo publicado! ✓',fillAll:'Completa el nombre y el precio',noRes:'Sin resultados 😕',mnow:'Ahora mismo',it1:'iPhone 13 · 128GB',it2:'Auriculares inalámbricos',it3:'Bicicleta de montaña',it4:'Reloj deportivo',it5:'Cámara + lente',it6:'Portátil 16"',c1:'Casablanca',c2:'Rabat',c3:'Marrakech',c4:'Tánger',c5:'Fez',c6:'Agadir',say:'Di algo...',send:'Enviar',camErr:'Cá
+<div class="header"><div class="logo">N</div><select class="lang"><option>🌐 English</option></select></div>
+<div class="cover"><img src="https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?w=800&q=60&auto=format&fit=crop"></div>
+<div class="profile"><div class="top"><img class="avatar" src="https://i.pravatar.cc/200?img=12"><div><div style="font-weight:800;font-size:22px">Achraf Aza</div><div style="color:#65676b;font-size:13px">From Morocco · Connecting the world</div><div style="font-weight:700;font-size:13px;margin-top:4px">1,284 friends</div></div></div></div>
+<div class="card"><b>Intro</b><div style="margin-top:4px">Sharing from Morocco 🌍
