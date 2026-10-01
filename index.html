@@ -4,11 +4,11 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <title>NOVA - Achraf Aza | From Morocco</title>
-<meta name="description" content="NOVA by Achraf Aza - From Morocco Connecting the world">
+<meta name="description" content="NOVA by Achraf Aza - From Morocco">
 <link rel="preconnect" href="https://images.unsplash.com">
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
-body{font-family:-apple-system,system-ui,sans-serif;background:#f0f2f5;color:#050505;-webkit-font-smoothing:antialiased}
+body{font-family:-apple-system,system-ui,sans-serif;background:#f0f2f5;color:#050505}
 .header{position:sticky;top:0;z-index:100;background:#fff;display:flex;justify-content:space-between;align-items:center;padding:10px 14px;box-shadow:0 1px 2px rgba(0,0,0,.1)}
 .logo{width:42px;height:42px;background:#1877f2;color:#fff;border-radius:11px;display:grid;place-items:center;font-weight:900;font-size:22px}
 .lang{border:1px solid #ddd;border-radius:20px;padding:6px 12px;font-size:13px}
@@ -18,17 +18,19 @@ body{font-family:-apple-system,system-ui,sans-serif;background:#f0f2f5;color:#05
 .top{display:flex;gap:12px;align-items:flex-start}
 .avatar{width:86px;height:86px;border-radius:50%;border:4px solid #fff;margin-top:-32px;object-fit:cover;background:#ccc;box-shadow:0 2px 8px rgba(0,0,0,.25);flex-shrink:0}
 .info{flex:1;min-width:0;padding-top:2px}
-.info h1{font-size:22px;font-weight:800;line-height:1.1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.info h1{font-size:22px;font-weight:800;line-height:1.1}
 .info p{color:#65676b;font-size:13px;margin-top:3px}
 .friends{font-weight:700;font-size:13.5px;margin-top:4px}
 .btns{display:flex;gap:8px;margin-top:14px}
 .btn{flex:1;padding:11px;border-radius:8px;border:none;font-weight:700;font-size:14.5px;cursor:pointer}
-.btn-p{background:#1877f2;color:#fff}.btn-p:active{transform:scale(.98)}
-.btn-s{background:#e4e6eb;color:#050505}
+.btn-p{background:#1877f2;color:#fff}
+.btn-s{background:#e4e6eb}
 .card{background:#fff;border-radius:12px;padding:12px;margin:10px;box-shadow:0 1px 2px rgba(0,0,0,.06)}
 .composer{display:flex;gap:10px;align-items:center}
 .composer img{width:38px;height:38px;border-radius:50%}
 .composer input{flex:1;border:none;background:#f0f2f5;border-radius:20px;padding:11px 14px;outline:none;font-size:14px}
+.opts{display:flex;justify-content:space-around;border-top:1px solid #eee;padding-top:10px;margin-top:10px}
+.opt{display:flex;align-items:center;gap:6px;font-weight:600;font-size:14px;cursor:pointer}
 .post-head{display:flex;gap:10px}
 .post-head img{width:40px;height:40px;border-radius:50%}
 .bottom{position:fixed;bottom:0;left:0;right:0;background:#fff;border-top:1px solid #ddd;display:flex;justify-content:space-around;padding:7px 0 calc(7px + env(safe-area-inset-bottom));z-index:100}
@@ -36,7 +38,6 @@ body{font-family:-apple-system,system-ui,sans-serif;background:#f0f2f5;color:#05
 .nav.active{color:#1877f2;font-weight:700}
 .nav span{font-size:20px}
 #blablaPage{display:none}#blablaPage.active{display:block}
-.post{content-visibility:auto;contain-intrinsic-size:0 200px}
 </style>
 </head>
 <body>
@@ -44,32 +45,43 @@ body{font-family:-apple-system,system-ui,sans-serif;background:#f0f2f5;color:#05
 <div class="header"><div class="logo">N</div><div class="lang">🌐 English</div></div>
 
 <div class="cover">
-<img src="https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?w=800&q=60&auto=format&fit=crop" width="800" height="240" alt="cover" loading="eager" fetchpriority="high" decoding="async">
+<img src="https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?w=800&q=60&auto=format&fit=crop" width="800" height="240" alt="cover" loading="eager" fetchpriority="high">
 </div>
 
 <div class="profile">
 <div class="top">
-<img class="avatar" src="https://i.pravatar.cc/200?img=12" width="86" height="86" alt="Achraf" loading="eager">
+<img class="avatar" src="https://i.pravatar.cc/200?img=12" width="86" height="86" alt="Achraf">
 <div class="info"><h1>Achraf Aza</h1><p>From Morocco · Connecting the world</p><div class="friends">1,284 friends</div></div>
 </div>
 <div class="btns"><button class="btn btn-p">Follow</button><button class="btn btn-s">Message</button></div>
 </div>
 
-<div class="card"><b style="font-size:15px">Intro</b><div style="margin-top:5px;font-size:14.5px">Sharing from Morocco 🌍 Building NOVA</div></div>
+<div class="card"><b>Intro</b><div style="margin-top:4px;font-size:14.5px">Sharing from Morocco 🌍 Building NOVA 🚀</div></div>
 
-<div class="card composer"><img src="https://i.pravatar.cc/100?img=12" alt=""><input placeholder="What's on your mind, Achraf?"></div>
-
-<div id="homePosts">
-<div class="card post"><div class="post-head"><img src="https://i.pravatar.cc/100?img=12" alt=""><div><b style="font-size:14px">Achraf Aza</b><div style="font-size:11px;color:#65676b">Now · 🌍</div></div></div><p style="margin-top:10px;font-size:14.5px;line-height:1.4">Welcome to NOVA 🚀 Ultra fast, global, from Morocco to the world!</p></div>
+<!-- POST COMPOSER WITH PHOTO/VIDEO -->
+<div class="card">
+<div class="composer">
+<img src="https://i.pravatar.cc/100?img=12" alt="">
+<input id="postInput" placeholder="What's on your mind, Achraf?">
 </div>
+<div class="opts">
+<label class="opt" style="color:#45bd62">📷 Photo<input type="file" accept="image/*" hidden onchange="preview(this,'img')"></label>
+<label class="opt" style="color:#f3425f">🎥 Video<input type="file" accept="video/*" hidden onchange="preview(this,'video')"></label>
+<label class="opt" style="color:#f7b928">😊 Feeling</label>
+</div>
+<div id="preview"></div>
+<button onclick="publishPost()" style="width:100%;margin-top:10px;padding:10px;background:#1877f2;color:#fff;border:none;border-radius:8px;font-weight:700">Post</button>
+</div>
+
+<div id="homePosts"></div>
 
 <div id="blablaPage">
-<div class="card" style="background:#1877f2;color:#fff"><b>BLABLA NEW - Global Feed</b><div style="font-size:12px;opacity:.9;margin-top:2px">20 by 20 · Infinite scroll · Ultra fast</div></div>
+<div class="card" style="background:#1877f2;color:#fff"><b>BLABLA - Global Feed</b><div style="font-size:12px;opacity:.9">20 by 20 · Ultra fast</div></div>
 <div id="list"></div>
-<div id="loader" style="text-align:center;padding:22px;color:#65676b;font-size:13px">Scroll down for more ↓</div>
+<div id="loader" style="text-align:center;padding:22px;color:#65676b;font-size:13px">↓ Scroll for more</div>
 </div>
 
-<div style="height:85px"></div>
+<div style="height:90px"></div>
 
 <nav class="bottom">
 <a class="nav" href="#" onclick="showHome();return false"><span>🏠</span>Home</a>
@@ -80,36 +92,4 @@ body{font-family:-apple-system,system-ui,sans-serif;background:#f0f2f5;color:#05
 </nav>
 
 <script>
-let page=0,loading=false;
-const list=document.getElementById('list'),loader=document.getElementById('loader'),home=document.getElementById('homePosts');
-function make(n){
-const d=document.createElement('div');d.className='card post';
-d.innerHTML=`<div class="post-head"><img src="https://i.pravatar.cc/100?img=${(n%70)+1}" loading="lazy" width="40" height="40" alt=""><div><b style="font-size:14px">Explorer ${n}</b><div style="font-size:11px;color:#65676b">${n}m ago · 🌍</div></div></div><p style="margin-top:10px;font-size:14.5px">BLABLA #${n} from Morocco 🚀 NOVA is flying!</p><div style="margin-top:10px;display:flex;gap:16px;color:#65676b;font-size:13px"><span>❤️ ${n*3}</span><span>💬 ${n}</span><span>↗️ Share</span></div>`;
-return d;
-}
-function load(){
-if(loading) return; loading=true;
-loader.textContent='Loading...';
-setTimeout(()=>{
-for(let i=0;i<20;i++){page++;list.appendChild(make(page));}
-loading=false;loader.textContent='Scroll down for more ↓';
-},120);
-}
-function openBlabla(e){
-e.preventDefault();
-document.getElementById('blablaPage').classList.add('active');
-home.style.display='none';
-document.getElementById('blablaNav').classList.add('active');
-window.scrollTo({top:0,behavior:'smooth'});
-if(page===0) load();
-const io=new IntersectionObserver(es=>{if(es[0].isIntersecting) load();},{rootMargin:'500px'});
-io.observe(loader);
-}
-function showHome(){
-document.getElementById('blablaPage').classList.remove('active');
-home.style.display='block';
-window.scrollTo({top:0,behavior:'smooth'});
-}
-</script>
-</body>
-</html>
+let page=0,loading=false,currentMedia=null,currentType=null
