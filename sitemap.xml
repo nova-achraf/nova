@@ -1,6 +1,2062 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-  <url>
-    <loc>https://nova-achraf.github.io/nova/</loc>
-  </url>
-</urlset>
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#1877f2">
+<meta name="description" content="NOVA — From Morocco, Connecting the World">
+<title>NOVA — From Morocco 🌍</title>
+
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+
+:root{
+  --primary:#1877f2;
+  --primary2:#0b5ed7;
+  --bg:#f0f2f5;
+  --card:#fff;
+  --text:#050505;
+  --muted:#65676b;
+  --border:#dddfe2;
+  --danger:#f3425f;
+  --green:#42b72a;
+}
+
+body{
+  font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif;
+  background:var(--bg);
+  color:var(--text);
+  padding-bottom:75px;
+}
+
+button,input,textarea,select{
+  font:inherit;
+}
+
+button{
+  cursor:pointer;
+}
+
+.header{
+  position:sticky;
+  top:0;
+  z-index:100;
+  height:62px;
+  background:#fff;
+  border-bottom:1px solid var(--border);
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  padding:0 14px;
+}
+
+.brand{
+  display:flex;
+  align-items:center;
+  gap:9px;
+}
+
+.logo{
+  width:42px;
+  height:42px;
+  border-radius:12px;
+  background:linear-gradient(135deg,#1877f2,#6c5ce7);
+  color:white;
+  display:grid;
+  place-items:center;
+  font-size:23px;
+  font-weight:900;
+  box-shadow:0 4px 12px rgba(24,119,242,.25);
+}
+
+.brandText{
+  font-size:20px;
+  font-weight:900;
+}
+
+.brandText small{
+  display:block;
+  font-size:9px;
+  color:var(--muted);
+  font-weight:500;
+}
+
+.headerActions{
+  display:flex;
+  gap:7px;
+}
+
+.iconBtn{
+  width:39px;
+  height:39px;
+  border:0;
+  border-radius:50%;
+  background:#f0f2f5;
+  display:grid;
+  place-items:center;
+  font-size:18px;
+}
+
+.page{
+  max-width:760px;
+  margin:auto;
+}
+
+.cover{
+  height:250px;
+  overflow:hidden;
+  background:#ddd;
+}
+
+.cover img{
+  width:100%;
+  height:100%;
+  object-fit:cover;
+}
+
+.profile{
+  background:#fff;
+  padding:0 14px 15px;
+}
+
+.profileTop{
+  display:flex;
+  gap:12px;
+  align-items:flex-end;
+}
+
+.avatar{
+  width:92px;
+  height:92px;
+  border-radius:50%;
+  border:4px solid white;
+  object-fit:cover;
+  margin-top:-38px;
+  box-shadow:0 2px 8px rgba(0,0,0,.2);
+}
+
+.profileInfo{
+  padding:8px 0 4px;
+}
+
+.profileInfo h1{
+  font-size:22px;
+}
+
+.profileInfo p{
+  color:var(--muted);
+  font-size:13px;
+  margin-top:3px;
+}
+
+.profileButtons{
+  display:flex;
+  gap:8px;
+  margin-top:12px;
+}
+
+.btn{
+  border:0;
+  border-radius:8px;
+  padding:10px 15px;
+  font-weight:700;
+  flex:1;
+}
+
+.primary{
+  background:var(--primary);
+  color:white;
+}
+
+.secondary{
+  background:#e4e6eb;
+  color:#050505;
+}
+
+.card{
+  background:white;
+  border-radius:12px;
+  margin:10px;
+  padding:13px;
+  box-shadow:0 1px 2px rgba(0,0,0,.08);
+}
+
+.introTitle{
+  font-weight:800;
+  margin-bottom:6px;
+}
+
+.composer{
+  display:flex;
+  gap:9px;
+  align-items:center;
+}
+
+.composer img{
+  width:42px;
+  height:42px;
+  border-radius:50%;
+  object-fit:cover;
+}
+
+.composer input{
+  flex:1;
+  border:0;
+  background:#f0f2f5;
+  border-radius:22px;
+  padding:12px 15px;
+  outline:none;
+}
+
+.postActions{
+  display:flex;
+  gap:7px;
+  margin-top:11px;
+  padding-top:10px;
+  border-top:1px solid #eee;
+}
+
+.action{
+  flex:1;
+  border:0;
+  background:white;
+  padding:9px 5px;
+  border-radius:8px;
+  font-weight:700;
+  color:var(--muted);
+}
+
+.action:hover{
+  background:#f0f2f5;
+}
+
+.post{
+  background:white;
+  margin:10px;
+  border-radius:12px;
+  padding:13px;
+  box-shadow:0 1px 2px rgba(0,0,0,.08);
+}
+
+.postHeader{
+  display:flex;
+  align-items:center;
+  gap:9px;
+}
+
+.postHeader img{
+  width:42px;
+  height:42px;
+  border-radius:50%;
+}
+
+.postUser{
+  font-weight:800;
+}
+
+.postTime{
+  font-size:11px;
+  color:var(--muted);
+}
+
+.postText{
+  margin-top:10px;
+  line-height:1.5;
+  white-space:pre-wrap;
+}
+
+.postMedia{
+  width:100%;
+  max-height:520px;
+  object-fit:cover;
+  border-radius:10px;
+  margin-top:10px;
+}
+
+.postStats{
+  display:flex;
+  justify-content:space-between;
+  color:var(--muted);
+  font-size:12px;
+  margin-top:9px;
+  padding-bottom:8px;
+  border-bottom:1px solid #eee;
+}
+
+.postButtons{
+  display:flex;
+  gap:4px;
+  margin-top:5px;
+}
+
+.postButtons button{
+  flex:1;
+  border:0;
+  background:white;
+  padding:9px 3px;
+  border-radius:8px;
+  font-weight:700;
+  color:var(--muted);
+}
+
+.postButtons button:hover{
+  background:#f0f2f5;
+}
+
+.postButtons .liked{
+  color:var(--primary);
+}
+
+.commentBox{
+  display:flex;
+  gap:7px;
+  margin-top:9px;
+}
+
+.commentBox input{
+  flex:1;
+  border:0;
+  background:#f0f2f5;
+  border-radius:20px;
+  padding:9px 12px;
+  outline:none;
+}
+
+.commentBox button{
+  border:0;
+  border-radius:20px;
+  padding:0 13px;
+  background:var(--primary);
+  color:#fff;
+  font-weight:700;
+}
+
+.comments{
+  margin-top:7px;
+}
+
+.comment{
+  background:#f0f2f5;
+  border-radius:14px;
+  padding:7px 10px;
+  margin-top:5px;
+  font-size:13px;
+}
+
+.empty{
+  text-align:center;
+  color:var(--muted);
+  padding:30px 10px;
+}
+
+.bottom{
+  position:fixed;
+  left:0;
+  right:0;
+  bottom:0;
+  height:68px;
+  background:#fff;
+  border-top:1px solid var(--border);
+  display:flex;
+  z-index:150;
+  padding-bottom:env(safe-area-inset-bottom);
+}
+
+.nav{
+  flex:1;
+  border:0;
+  background:white;
+  color:var(--muted);
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  gap:2px;
+  font-size:10px;
+  font-weight:600;
+}
+
+.nav span{
+  font-size:20px;
+}
+
+.nav.active{
+  color:var(--primary);
+}
+
+.pageSection{
+  display:none;
+}
+
+.pageSection.active{
+  display:block;
+}
+
+/* BLABLA */
+
+.blabla{
+  position:fixed;
+  inset:0;
+  background:#000;
+  z-index:200;
+  display:none;
+  color:white;
+}
+
+.blabla.active{
+  display:flex;
+  flex-direction:column;
+}
+
+.blablaTop{
+  height:58px;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  padding:0 13px;
+  background:#000;
+}
+
+.blablaTitle{
+  font-size:19px;
+  font-weight:900;
+}
+
+.live{
+  background:#f3425f;
+  padding:4px 7px;
+  border-radius:5px;
+  font-size:10px;
+  margin-left:5px;
+}
+
+.reels{
+  flex:1;
+  overflow-y:auto;
+  scroll-snap-type:y mandatory;
+}
+
+.reel{
+  position:relative;
+  height:100%;
+  min-height:calc(100vh - 116px);
+  scroll-snap-align:start;
+  overflow:hidden;
+}
+
+.reel img{
+  width:100%;
+  height:100%;
+  object-fit:cover;
+}
+
+.reelShade{
+  position:absolute;
+  inset:45% 0 0;
+  background:linear-gradient(transparent,rgba(0,0,0,.85));
+}
+
+.reelInfo{
+  position:absolute;
+  left:14px;
+  right:80px;
+  bottom:20px;
+}
+
+.reelUser{
+  font-weight:900;
+  font-size:15px;
+}
+
+.reelCaption{
+  margin-top:6px;
+  font-size:14px;
+  line-height:1.4;
+}
+
+.reelActions{
+  position:absolute;
+  right:12px;
+  bottom:80px;
+  display:flex;
+  flex-direction:column;
+  gap:15px;
+}
+
+.reelActions button{
+  background:transparent;
+  border:0;
+  color:white;
+  font-size:28px;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+}
+
+.reelActions small{
+  font-size:11px;
+}
+
+/* MARKET */
+
+.marketHeader{
+  background:linear-gradient(135deg,#1877f2,#6c5ce7);
+  color:white;
+  padding:18px;
+  margin:10px;
+  border-radius:14px;
+}
+
+.marketSearch{
+  display:flex;
+  gap:7px;
+  margin-top:12px;
+}
+
+.marketSearch input{
+  flex:1;
+  border:0;
+  border-radius:20px;
+  padding:11px 14px;
+  outline:none;
+}
+
+.marketSearch button{
+  border:0;
+  border-radius:20px;
+  padding:0 16px;
+  background:#42b72a;
+  color:white;
+  font-weight:800;
+}
+
+.chips{
+  display:flex;
+  gap:7px;
+  overflow-x:auto;
+  padding:0 10px 5px;
+}
+
+.chip{
+  border:0;
+  border-radius:20px;
+  padding:8px 14px;
+  background:#e4e6eb;
+  white-space:nowrap;
+  font-weight:700;
+}
+
+.chip.active{
+  background:var(--primary);
+  color:white;
+}
+
+.marketGrid{
+  display:grid;
+  grid-template-columns:repeat(2,1fr);
+  gap:10px;
+  padding:10px;
+}
+
+.item{
+  background:#fff;
+  border-radius:12px;
+  overflow:hidden;
+  box-shadow:0 1px 2px rgba(0,0,0,.08);
+}
+
+.item img{
+  width:100%;
+  aspect-ratio:1;
+  object-fit:cover;
+}
+
+.itemInfo{
+  padding:9px;
+}
+
+.itemPrice{
+  font-weight:900;
+}
+
+.itemName{
+  font-size:13px;
+  margin-top:3px;
+  white-space:nowrap;
+  overflow:hidden;
+  text-overflow:ellipsis;
+}
+
+.itemCity{
+  font-size:11px;
+  color:var(--muted);
+  margin-top:3px;
+}
+
+/* MODAL */
+
+.modal{
+  position:fixed;
+  inset:0;
+  background:rgba(0,0,0,.55);
+  z-index:500;
+  display:none;
+  align-items:flex-end;
+}
+
+.modal.show{
+  display:flex;
+}
+
+.sheet{
+  background:white;
+  width:100%;
+  max-height:90vh;
+  overflow:auto;
+  border-radius:16px 16px 0 0;
+  padding:18px;
+}
+
+.sheet h2{
+  margin-bottom:10px;
+}
+
+.field{
+  width:100%;
+  border:1px solid #ddd;
+  border-radius:9px;
+  padding:11px;
+  margin-top:9px;
+  outline:none;
+}
+
+.fileBtn{
+  display:block;
+  margin-top:10px;
+  padding:16px;
+  border:2px dashed #ddd;
+  border-radius:10px;
+  text-align:center;
+  color:var(--primary);
+  font-weight:800;
+}
+
+.close{
+  float:right;
+  border:0;
+  background:#eee;
+  width:32px;
+  height:32px;
+  border-radius:50%;
+}
+
+/* RESPONSIVE */
+
+@media(min-width:800px){
+  .page{
+    max-width:760px;
+  }
+
+  .cover{
+    border-radius:0 0 12px 12px;
+  }
+}
+</style>
+</head>
+
+<body>
+
+<header class="header">
+
+  <div class="brand">
+    <div class="logo">N</div>
+    <div class="brandText">
+      NOVA
+      <small>FROM MOROCCO · GLOBAL</small>
+    </div>
+  </div>
+
+  <div class="headerActions">
+    <button class="iconBtn" onclick="openSearch()">🔎</button>
+    <button class="iconBtn" onclick="openNotifications()">🔔</button>
+    <button class="iconBtn" onclick="openProfile()">👤</button>
+  </div>
+
+</header>
+
+<main class="page">
+
+<!-- HOME -->
+
+<section id="homePage" class="pageSection active">
+
+  <div class="cover">
+    <img
+      src="https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?w=1200&q=70&auto=format&fit=crop"
+      alt="NOVA cover">
+  </div>
+
+  <div class="profile">
+
+    <div class="profileTop">
+
+      <img
+        class="avatar"
+        src="https://i.pravatar.cc/200?img=12"
+        alt="Achraf">
+
+      <div class="profileInfo">
+        <h1>Achraf Aza</h1>
+        <p>🇲🇦 From Morocco · Connecting the world</p>
+      </div>
+
+    </div>
+
+    <div style="margin-top:6px;color:#65676b;font-size:13px">
+      1,284 friends · 3.8K followers
+    </div>
+
+    <div class="profileButtons">
+      <button class="btn primary" onclick="followUser(this)">
+        Follow
+      </button>
+
+      <button class="btn secondary" onclick="openChat()">
+        Message
+      </button>
+    </div>
+
+  </div>
+
+  <div class="card">
+    <div class="introTitle">🌍 Intro</div>
+    <div>Sharing from Morocco 🇲🇦 · Building NOVA 🚀 · Connecting people worldwide.</div>
+  </div>
+
+  <!-- COMPOSER -->
+
+  <div class="card">
+
+    <div class="composer">
+
+      <img src="https://i.pravatar.cc/100?img=12">
+
+      <input
+        id="postText"
+        placeholder="What's on your mind, Achraf?">
+
+    </div>
+
+    <div id="mediaPreview"></div>
+
+    <div class="postActions">
+
+      <button class="action" onclick="document.getElementById('imageInput').click()">
+        📷 Photo
+      </button>
+
+      <button class="action" onclick="document.getElementById('videoInput').click()">
+        🎥 Video
+      </button>
+
+      <button class="action" onclick="addFeeling()">
+        😊 Feeling
+      </button>
+
+    </div>
+
+    <input
+      id="imageInput"
+      type="file"
+      accept="image/*"
+      hidden
+      onchange="previewMedia(this,'image')">
+
+    <input
+      id="videoInput"
+      type="file"
+      accept="video/*"
+      hidden
+      onchange="previewMedia(this,'video')">
+
+    <button
+      class="btn primary"
+      style="width:100%;margin-top:10px"
+      onclick="publishPost()">
+      Post
+    </button>
+
+  </div>
+
+  <div id="posts"></div>
+
+</section>
+
+
+<!-- MARKET -->
+
+<section id="marketPage" class="pageSection">
+
+  <div class="marketHeader">
+
+    <div style="font-size:21px;font-weight:900">
+      🛒 NOVA Marketplace
+    </div>
+
+    <div style="font-size:13px;margin-top:3px">
+      Buy & sell near you
+    </div>
+
+    <div class="marketSearch">
+      <input
+        id="marketSearch"
+        placeholder="Search products..."
+        oninput="renderMarket()">
+
+      <button onclick="openSell()">
+        + Sell
+      </button>
+    </div>
+
+  </div>
+
+  <div class="chips" id="chips"></div>
+
+  <div class="marketGrid" id="marketGrid"></div>
+
+</section>
+
+</main>
+
+
+<!-- BLABLA -->
+
+<div id="blabla" class="blabla">
+
+  <div class="blablaTop">
+
+    <div class="blablaTitle">
+      BLABLA
+      <span class="live">● LIVE</span>
+    </div>
+
+    <button
+      class="iconBtn"
+      onclick="closeBlabla()">
+      ✕
+    </button>
+
+  </div>
+
+  <div id="reels" class="reels"></div>
+
+</div>
+
+
+<!-- SELL MODAL -->
+
+<div id="sellModal" class="modal">
+
+  <div class="sheet">
+
+    <button class="close" onclick="closeSell()">✕</button>
+
+    <h2>Sell an item</h2>
+
+    <label class="fileBtn">
+      📷 Add product photo
+      <input
+        id="sellImage"
+        type="file"
+        accept="image/*"
+        hidden
+        onchange="previewSell(this)">
+    </label>
+
+    <div id="sellPreview"></div>
+
+    <input
+      id="sellName"
+      class="field"
+      placeholder="Product name">
+
+    <input
+      id="sellPrice"
+      class="field"
+      type="number"
+      placeholder="Price (DH)">
+
+    <input
+      id="sellCity"
+      class="field"
+      placeholder="City">
+
+    <select id="sellCategory" class="field">
+
+      <option value="phones">Phones</option>
+      <option value="electronics">Electronics</option>
+      <option value="sport">Sport</option>
+      <option value="fashion">Fashion</option>
+      <option value="home">Home</option>
+
+    </select>
+
+    <button
+      class="btn primary"
+      style="width:100%;margin-top:12px"
+      onclick="publishItem()">
+      Publish item
+    </button>
+
+  </div>
+
+</div>
+
+
+<!-- SEARCH MODAL -->
+
+<div id="searchModal" class="modal">
+
+  <div class="sheet">
+
+    <button class="close" onclick="closeSearch()">✕</button>
+
+    <h2>Search NOVA</h2>
+
+    <input
+      id="globalSearch"
+      class="field"
+      placeholder="People, posts, products...">
+
+    <button
+      class="btn primary"
+      style="width:100%;margin-top:12px"
+      onclick="runSearch()">
+      Search
+    </button>
+
+    <div id="searchResults"></div>
+
+  </div>
+
+</div>
+
+
+<!-- NOTIFICATIONS -->
+
+<div id="notificationModal" class="modal">
+
+  <div class="sheet">
+
+    <button class="close" onclick="closeNotifications()">✕</button>
+
+    <h2>🔔 Notifications</h2>
+
+    <div class="card">
+      ❤️ Someone liked your post
+    </div>
+
+    <div class="card">
+      👤 New follower on NOVA
+    </div>
+
+    <div class="card">
+      💬 New message
+    </div>
+
+  </div>
+
+</div>
+
+
+<!-- CHAT -->
+
+<div id="chatModal" class="modal">
+
+  <div class="sheet">
+
+    <button class="close" onclick="closeChat()">✕</button>
+
+    <h2>💬 NOVA Chat</h2>
+
+    <div id="chatMessages">
+
+      <div class="comment">
+        <b>NOVA:</b> Welcome to NOVA 🚀
+      </div>
+
+    </div>
+
+    <div style="display:flex;gap:7px;margin-top:10px">
+
+      <input
+        id="chatInput"
+        class="field"
+        placeholder="Write a message..."
+        onkeydown="if(event.key==='Enter')sendMessage()">
+
+      <button
+        class="btn primary"
+        style="max-width:90px"
+        onclick="sendMessage()">
+        Send
+      </button>
+
+    </div>
+
+  </div>
+
+</div>
+
+
+<!-- BOTTOM NAV -->
+
+<nav class="bottom">
+
+  <button
+    class="nav active"
+    onclick="showPage('homePage',this)">
+    <span>🏠</span>
+    Home
+  </button>
+
+  <button
+    class="nav"
+    onclick="openFriends()">
+    <span>👥</span>
+    Friends
+  </button>
+
+  <button
+    class="nav"
+    onclick="openBlabla()">
+    <span>🎬</span>
+    BLABLA
+  </button>
+
+  <button
+    class="nav"
+    onclick="showPage('marketPage',this)">
+    <span>🛒</span>
+    Market
+  </button>
+
+  <button
+    class="nav"
+    onclick="openChat()">
+    <span>💬</span>
+    Chat
+  </button>
+
+  <button
+    class="nav"
+    onclick="openProfile()">
+    <span>👤</span>
+    Profile
+  </button>
+
+</nav>
+
+
+<script>
+
+/* =========================
+   NOVA DATA
+========================= */
+
+let posts = JSON.parse(
+  localStorage.getItem("nova_posts") || "[]"
+);
+
+let products = JSON.parse(
+  localStorage.getItem("nova_products") || "[]"
+);
+
+let selectedMedia = null;
+let selectedMediaType = null;
+let selectedCategory = "all";
+
+
+/* =========================
+   HELPERS
+========================= */
+
+function saveData(){
+
+  localStorage.setItem(
+    "nova_posts",
+    JSON.stringify(posts)
+  );
+
+  localStorage.setItem(
+    "nova_products",
+    JSON.stringify(products)
+  );
+
+}
+
+function escapeHTML(value){
+
+  return String(value)
+    .replaceAll("&","&amp;")
+    .replaceAll("<","&lt;")
+    .replaceAll(">","&gt;")
+    .replaceAll('"',"&quot;")
+    .replaceAll("'","&#039;");
+
+}
+
+
+/* =========================
+   PAGES
+========================= */
+
+function showPage(id,button){
+
+  document.querySelectorAll(".pageSection")
+    .forEach(x=>x.classList.remove("active"));
+
+  document.getElementById(id)
+    .classList.add("active");
+
+  document.querySelectorAll(".nav")
+    .forEach(x=>x.classList.remove("active"));
+
+  if(button) button.classList.add("active");
+
+}
+
+
+/* =========================
+   FOLLOW
+========================= */
+
+function followUser(button){
+
+  if(button.dataset.followed==="1"){
+
+    button.textContent="Follow";
+    button.dataset.followed="0";
+
+  }else{
+
+    button.textContent="Following ✓";
+    button.dataset.followed="1";
+
+  }
+
+}
+
+
+/* =========================
+   MEDIA
+========================= */
+
+function previewMedia(input,type){
+
+  const file=input.files[0];
+
+  if(!file)return;
+
+  const reader=new FileReader();
+
+  reader.onload=e=>{
+
+    selectedMedia=e.target.result;
+    selectedMediaType=type;
+
+    if(type==="image"){
+
+      document.getElementById("mediaPreview").innerHTML=
+      `<img class="postMedia" src="${selectedMedia}">`;
+
+    }else{
+
+      document.getElementById("mediaPreview").innerHTML=
+      `<video class="postMedia" controls src="${selectedMedia}"></video>`;
+
+    }
+
+  };
+
+  reader.readAsDataURL(file);
+
+}
+
+
+/* =========================
+   POSTS
+========================= */
+
+function publishPost(){
+
+  const text=document
+    .getElementById("postText")
+    .value.trim();
+
+  if(!text && !selectedMedia){
+
+    alert("Write something or add media.");
+
+    return;
+  }
+
+  const post={
+
+    id:Date.now(),
+
+    user:"Achraf Aza",
+
+    avatar:"https://i.pravatar.cc/100?img=12",
+
+    text:text,
+
+    media:selectedMedia,
+
+    mediaType:selectedMediaType,
+
+    likes:0,
+
+    liked:false,
+
+    comments:[],
+
+    createdAt:new Date().toISOString()
+
+  };
+
+  posts.unshift(post);
+
+  saveData();
+
+  document.getElementById("postText").value="";
+
+  document.getElementById("mediaPreview").innerHTML="";
+
+  selectedMedia=null;
+  selectedMediaType=null;
+
+  renderPosts();
+
+}
+
+
+function renderPosts(){
+
+  const container=document.getElementById("posts");
+
+  if(!posts.length){
+
+    container.innerHTML=
+    `<div class="empty">
+      🚀 Your first NOVA post will appear here.
+    </div>`;
+
+    return;
+  }
+
+  container.innerHTML=posts.map(post=>{
+
+    const comments=post.comments||[];
+
+    const media=
+      post.media
+      ?
+      (
+        post.mediaType==="video"
+        ?
+        `<video class="postMedia" controls src="${post.media}"></video>`
+        :
+        `<img class="postMedia" src="${post.media}">`
+      )
+      :
+      "";
+
+    return`
+
+      <article class="post">
+
+        <div class="postHeader">
+
+          <img src="${post.avatar}">
+
+          <div>
+
+            <div class="postUser">
+              ${escapeHTML(post.user)}
+            </div>
+
+            <div class="postTime">
+              Just now · 🌍
+            </div>
+
+          </div>
+
+        </div>
+
+        ${
+          post.text
+          ?
+          `<div class="postText">
+            ${escapeHTML(post.text)}
+          </div>`
+          :
+          ""
+        }
+
+        ${media}
+
+        <div class="postStats">
+
+          <span>
+            ❤️ ${post.likes}
+          </span>
+
+          <span>
+            💬 ${comments.length} comments
+          </span>
+
+        </div>
+
+        <div class="postButtons">
+
+          <button
+            class="${post.liked?'liked':''}"
+            onclick="likePost(${post.id})">
+
+            ${post.liked?"❤️":"🤍"} Like
+
+          </button>
+
+          <button onclick="focusComment(${post.id})">
+            💬 Comment
+          </button>
+
+          <button onclick="sharePost(${post.id})">
+            ↗️ Share
+          </button>
+
+        </div>
+
+        <div class="comments">
+
+          ${comments.map(c=>
+            `<div class="comment">
+              <b>${escapeHTML(c.user)}:</b>
+              ${escapeHTML(c.text)}
+            </div>`
+          ).join("")}
+
+        </div>
+
+        <div class="commentBox">
+
+          <input
+            id="comment-${post.id}"
+            placeholder="Write a comment...">
+
+          <button
+            onclick="addComment(${post.id})">
+            Send
+          </button>
+
+        </div>
+
+      </article>
+
+    `;
+
+  }).join("");
+
+}
+
+
+function likePost(id){
+
+  const post=posts.find(p=>p.id===id);
+
+  if(!post)return;
+
+  post.liked=!post.liked;
+
+  post.likes += post.liked ? 1 : -1;
+
+  saveData();
+
+  renderPosts();
+
+}
+
+
+function addComment(id){
+
+  const input=document.getElementById("comment-"+id);
+
+  if(!input)return;
+
+  const text=input.value.trim();
+
+  if(!text)return;
+
+  const post=posts.find(p=>p.id===id);
+
+  if(!post)return;
+
+  post.comments.push({
+
+    user:"Achraf Aza",
+
+    text:text
+
+  });
+
+  saveData();
+
+  renderPosts();
+
+}
+
+
+function focusComment(id){
+
+  const input=document.getElementById("comment-"+id);
+
+  if(input){
+
+    input.focus();
+
+  }
+
+}
+
+
+function sharePost(id){
+
+  const post=posts.find(p=>p.id===id);
+
+  if(!post)return;
+
+  const text=post.text || "NOVA post";
+
+  if(navigator.share){
+
+    navigator.share({
+
+      title:"NOVA",
+
+      text:text
+
+    });
+
+  }else{
+
+    navigator.clipboard
+      ?.writeText(text);
+
+    alert("Post link copied.");
+
+  }
+
+}
+
+
+function addFeeling(){
+
+  const input=document.getElementById("postText");
+
+  input.value += " 😊";
+
+  input.focus();
+
+}
+
+
+/* =========================
+   BLABLA
+========================= */
+
+const reels=[
+
+  {
+    user:"@NOVA Morocco",
+    text:"From Morocco 🇲🇦 to the world 🌍",
+    img:"https://images.unsplash.com/photo-1539650116574-75c0c6d73f6e?w=900&q=70"
+  },
+
+  {
+    user:"@Explorer",
+    text:"Discover amazing places 🚀",
+    img:"https://images.unsplash.com/photo-1500534623283-312aade485b7?w=900&q=70"
+  },
+
+  {
+    user:"@NOVA Travel",
+    text:"Beautiful world ❤️",
+    img:"https://images.unsplash.com/photo-1501785888041-af3ef285b470?w=900&q=70"
+  }
+
+];
+
+
+function openBlabla(){
+
+  document.getElementById("blabla")
+    .classList.add("active");
+
+  renderReels();
+
+}
+
+
+function closeBlabla(){
+
+  document.getElementById("blabla")
+    .classList.remove("active");
+
+}
+
+
+function renderReels(){
+
+  document.getElementById("reels").innerHTML=
+
+  reels.map((r,i)=>`
+
+    <div class="reel">
+
+      <img src="${r.img}">
+
+      <div class="reelShade"></div>
+
+      <div class="reelInfo">
+
+        <div class="reelUser">
+          ${r.user}
+        </div>
+
+        <div class="reelCaption">
+          ${r.text}
+        </div>
+
+        <div style="margin-top:8px">
+          🎵 NOVA Mix · From Morocco 🇲🇦
+        </div>
+
+      </div>
+
+      <div class="reelActions">
+
+        <button onclick="likeReel(this)">
+          🤍
+          <small>0</small>
+        </button>
+
+        <button onclick="alert('Comments coming soon 🚀')">
+          💬
+          <small>12</small>
+        </button>
+
+        <button onclick="shareReel()">
+          ↗️
+          <small>Share</small>
+        </button>
+
+      </div>
+
+    </div>
+
+  `).join("");
+
+}
+
+
+function likeReel(button){
+
+  const small=button.querySelector("small");
+
+  let n=parseInt(small.textContent)||0;
+
+  if(button.dataset.liked==="1"){
+
+    button.innerHTML="🤍<small>"+(n-1)+"</small>";
+
+    button.dataset.liked="0";
+
+  }else{
+
+    button.innerHTML="❤️<small>"+(n+1)+"</small>";
+
+    button.dataset.liked="1";
+
+  }
+
+}
+
+
+function shareReel(){
+
+  if(navigator.share){
+
+    navigator.share({
+
+      title:"NOVA BLABLA",
+
+      text:"Check this BLABLA on NOVA 🚀"
+
+    });
+
+  }else{
+
+    alert("Share this BLABLA 🚀");
+
+  }
+
+}
+
+
+/* =========================
+   MARKETPLACE
+========================= */
+
+const demoProducts=[
+
+  {
+    id:1,
+    name:"iPhone 13 · 128GB",
+    price:4500,
+    city:"Casablanca",
+    category:"phones",
+    image:"https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?w=500&q=70"
+  },
+
+  {
+    id:2,
+    name:"Wireless Headphones",
+    price:350,
+    city:"Rabat",
+    category:"electronics",
+    image:"https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=500&q=70"
+  },
+
+  {
+    id:3,
+    name:"Mountain Bike",
+    price:1200,
+    city:"Marrakech",
+    category:"sport",
+    image:"https://images.unsplash.com/photo-1485965120184-e220f721d03e?w=500&q=70"
+  },
+
+  {
+    id:4,
+    name:"Sports Watch",
+    price:900,
+    city:"Tanger",
+    category:"fashion",
+    image:"https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=500&q=70"
+  }
+
+];
+
+
+function getProducts(){
+
+  return [...products,...demoProducts];
+
+}
+
+
+function renderChips(){
+
+  const cats=[
+    ["all","All"],
+    ["phones","Phones"],
+    ["electronics","Electronics"],
+    ["sport","Sport"],
+    ["fashion","Fashion"],
+    ["home","Home"]
+  ];
+
+  document.getElementById("chips").innerHTML=
+
+  cats.map(c=>`
+
+    <button
+      class="chip ${selectedCategory===c[0]?'active':''}"
+      onclick="selectCategory('${c[0]}')">
+
+      ${c[1]}
+
+    </button>
+
+  `).join("");
+
+}
+
+
+function selectCategory(cat){
+
+  selectedCategory=cat;
+
+  renderChips();
+
+  renderMarket();
+
+}
+
+
+function renderMarket(){
+
+  renderChips();
+
+  const q=document
+    .getElementById("marketSearch")
+    .value
+    .toLowerCase()
+    .trim();
+
+  const list=getProducts().filter(p=>{
+
+    const categoryOK=
+      selectedCategory==="all"
+      ||
+      p.category===selectedCategory;
+
+    const searchOK=
+      !q
+      ||
+      p.name.toLowerCase().includes(q)
+      ||
+      p.city.toLowerCase().includes(q);
+
+    return categoryOK && searchOK;
+
+  });
+
+  document.getElementById("marketGrid").innerHTML=
+
+  list.length
+
+  ?
+
+  list.map(p=>`
+
+    <div class="item">
+
+      <img src="${p.image}">
+
+      <div class="itemInfo">
+
+        <div class="itemPrice">
+          ${Number(p.price).toLocaleString()} DH
+        </div>
+
+        <div class="itemName">
+          ${escapeHTML(p.name)}
+        </div>
+
+        <div class="itemCity">
+          📍 ${escapeHTML(p.city)}
+        </div>
+
+      </div>
+
+    </div>
+
+  `).join("")
+
+  :
+
+  `<div class="empty" style="grid-column:1/-1">
+    No products found 😕
+  </div>`;
+
+}
+
+
+let sellImage=null;
+
+
+function openSell(){
+
+  document.getElementById("sellModal")
+    .classList.add("show");
+
+}
+
+
+function closeSell(){
+
+  document.getElementById("sellModal")
+    .classList.remove("show");
+
+}
+
+
+function previewSell(input){
+
+  const file=input.files[0];
+
+  if(!file)return;
+
+  const reader=new FileReader();
+
+  reader.onload=e=>{
+
+    sellImage=e.target.result;
+
+    document.getElementById("sellPreview").innerHTML=
+
+    `<img
+      src="${sellImage}"
+      style="width:80px;height:80px;object-fit:cover;border-radius:10px;margin-top:10px">`;
+
+  };
+
+  reader.readAsDataURL(file);
+
+}
+
+
+function publishItem(){
+
+  const name=document
+    .getElementById("sellName")
+    .value.trim();
+
+  const price=Number(
+    document.getElementById("sellPrice").value
+  );
+
+  const city=document
+    .getElementById("sellCity")
+    .value.trim();
+
+  const category=document
+    .getElementById("sellCategory")
+    .value;
+
+  if(!name || !price){
+
+    alert("Enter product name and price.");
+
+    return;
+
+  }
+
+  products.unshift({
+
+    id:Date.now(),
+
+    name:name,
+
+    price:price,
+
+    city:city || "Morocco",
+
+    category:category,
+
+    image:sellImage || "https://images.unsplash.com/photo-1542291026-7eec264c27aa?w=500&q=70"
+
+  });
+
+  saveData();
+
+  closeSell();
+
+  document.getElementById("sellName").value="";
+  document.getElementById("sellPrice").value="";
+  document.getElementById("sellCity").value="";
+  document.getElementById("sellPreview").innerHTML="";
+  sellImage=null;
+
+  renderMarket();
+
+  alert("Your product is now on NOVA Marketplace ✓");
+
+}
+
+
+/* =========================
+   CHAT
+========================= */
+
+function openChat(){
+
+  document.getElementById("chatModal")
+    .classList.add("show");
+
+}
+
+
+function closeChat(){
+
+  document.getElementById("chatModal")
+    .classList.remove("show");
+
+}
+
+
+function sendMessage(){
+
+  const input=document.getElementById("chatInput");
+
+  const text=input.value.trim();
+
+  if(!text)return;
+
+  document.getElementById("chatMessages").innerHTML+=`
+
+    <div class="comment">
+      <b>You:</b> ${escapeHTML(text)}
+    </div>
+
+  `;
+
+  input.value="";
+
+}
+
+
+/* =========================
+   SEARCH
+========================= */
+
+function openSearch(){
+
+  document.getElementById("searchModal")
+    .classList.add("show");
+
+}
+
+
+function closeSearch(){
+
+  document.getElementById("searchModal")
+    .classList.remove("show");
+
+}
+
+
+function runSearch(){
+
+  const q=document
+    .getElementById("globalSearch")
+    .value
+    .trim()
+    .toLowerCase();
+
+  if(!q){
+
+    document.getElementById("searchResults").innerHTML=
+    `<div class="empty">Type something to search.</div>`;
+
+    return;
+
+  }
+
+  const result=[];
+
+  posts.forEach(p=>{
+
+    if(
+      p.text &&
+      p.text.toLowerCase().includes(q)
+    ){
+
+      result.push(
+        `<div class="card">
+          📝 ${escapeHTML(p.text)}
+        </div>`
+      );
+
+    }
+
+  });
+
+  getProducts().forEach(p=>{
+
+    if(
+      p.name.toLowerCase().includes(q) ||
+      p.city.toLowerCase().includes(q)
+    ){
+
+      result.push(
+        `<div class="card">
+          🛒 ${escapeHTML(p.name)}
+          · ${p.price} DH
+        </div>`
+      );
+
+    }
+
+  });
+
+  document.getElementById("searchResults").innerHTML=
+
+    result.length
+    ?
+    result.join("")
+    :
+    `<div class="empty">No results found 😕</div>`;
+
+}
+
+
+/* =========================
+   NOTIFICATIONS
+========================= */
+
+function openNotifications(){
+
+  document.getElementById("notificationModal")
+    .classList.add("show");
+
+}
+
+
+function closeNotifications(){
+
+  document.getElementById("notificationModal")
+    .classList.remove("show");
+
+}
+
+
+/* =========================
+   PROFILE
+========================= */
+
+function openProfile(){
+
+  alert(
+    "NOVA Profile\n\n" +
+    "Achraf Aza\n" +
+    "From Morocco 🇲🇦\n\n" +
+    "Full profile system will connect to the NOVA backend."
+  );
+
+}
+
+
+function openFriends(){
+
+  alert(
+    "Friends\n\n" +
+    "The NOVA friends system will be connected to the backend."
+  );
+
+}
+
+
+/* =========================
+   START
+========================= */
+
+renderPosts();
+renderMarket();
+
+</script>
+
+</body>
+</html>
