@@ -2,123 +2,78 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1">
-<title>NOVA - Achraf Aza | From Morocco Connecting the World</title>
-<meta name="description" content="NOVA by Achraf Aza - From Morocco Connecting the world. 1,284 friends, sharing stories, BLABLA social feed.">
-<meta name="keywords" content="NOVA, Achraf Aza, Morocco, social, BLABLA">
-<meta name="author" content="Achraf Aza">
-<link rel="canonical" href="https://nova-achraf.github.io/nova/">
-<meta property="og:title" content="NOVA - Achraf Aza">
-<meta property="og:description" content="From Morocco - Connecting the world">
-<meta property="og:image" content="https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?w=800">
-<meta property="og:url" content="https://nova-achraf.github.io/nova/">
-<meta property="og:type" content="website">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>NOVA - Achraf Aza | From Morocco</title>
+<meta name="description" content="NOVA by Achraf Aza - From Morocco Connecting the world">
 <meta name="theme-color" content="#1877f2">
-<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='20' fill='%231877f2'/><text x='50' y='70' font-size='60' text-anchor='middle' fill='white' font-weight='900'>N</text></svg>">
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
-html{scroll-behavior:smooth}
-body{font-family:system-ui,-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;background:#f0f2f5;color:#050505;-webkit-tap-highlight-color:transparent}
-.header{position:sticky;top:0;z-index:1000;background:rgba(255,255,255,.95);backdrop-filter:blur(10px);display:flex;justify-content:space-between;align-items:center;padding:10px 16px;box-shadow:0 1px 2px rgba(0,0,0,.1)}
-.logo{width:44px;height:44px;background:#1877f2;color:#fff;border-radius:12px;display:grid;place-items:center;font-weight:900;font-size:24px;letter-spacing:-1px}
-.cover{position:relative;width:100%;height:32vh;max-height:340px;overflow:hidden;background:#e4e6eb}
-.cover img{width:100%;height:100%;object-fit:cover}
-.profile-wrap{background:#fff;padding:0 16px 16px;box-shadow:0 1px 2px rgba(0,0,0,.06);border-radius:0 0 12px 12px;margin-bottom:10px}
-.avatar-row{display:flex;gap:14px;align-items:flex-end;margin-top:-40px}
-.avatar{width:92px;height:92px;border-radius:50%;border:4px solid #fff;object-fit:cover;background:#ccc;box-shadow:0 2px 8px rgba(0,0,0,.15)}
-.info h1{font-size:24px;font-weight:800;line-height:1.1}
-.info p{color:#65676b;font-size:14px;margin-top:2px}
-.friends{font-weight:700;margin-top:4px;font-size:14px}
+body{font-family:system-ui,sans-serif;background:#f0f2f5;color:#050505}
+.header{position:sticky;top:0;z-index:100;background:#fff;display:flex;justify-content:space-between;align-items:center;padding:10px 14px;box-shadow:0 1px 2px rgba(0,0,0,.1)}
+.logo{width:42px;height:42px;background:#1877f2;color:#fff;border-radius:11px;display:grid;place-items:center;font-weight:900;font-size:22px}
+.cover{width:100%;height:38vh;max-height:380px;overflow:hidden;background:#ddd}
+.cover img{width:100%;height:100%;object-fit:cover;display:block}
+.profile-wrap{background:#fff;padding:0 16px 16px;box-shadow:0 1px 2px rgba(0,0,0,.06);position:relative}
+.avatar-row{display:flex;gap:12px;align-items:flex-start;margin-top:-32px;position:relative;z-index:5}
+.avatar{width:88px;height:88px;min-width:88px;border-radius:50%;border:4px solid #fff;object-fit:cover;background:#ccc;box-shadow:0 2px 6px rgba(0,0,0,.2)}
+.info{padding-top:34px;flex:1;min-width:0}
+.info h1{font-size:22px;font-weight:800;line-height:1.1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.info p{color:#65676b;font-size:13px;margin-top:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.friends{font-weight:700;margin-top:4px;font-size:13px}
 .btns{display:flex;gap:8px;margin-top:14px}
-.btn{flex:1;padding:10px;border-radius:8px;border:none;font-weight:600;font-size:15px;cursor:pointer;transition:.2s}
-.btn:active{transform:scale(.97)}
+.btn{flex:1;padding:10px;border-radius:8px;border:none;font-weight:700;font-size:14px;cursor:pointer}
 .btn-p{background:#1877f2;color:#fff}
-.btn-s{background:#e4e6eb;color:#050505}
-.card{background:#fff;border-radius:12px;padding:14px;margin:10px 12px;box-shadow:0 1px 2px rgba(0,0,0,.06)}
-.composer{display:flex;gap:10px;align-items:center;background:#fff;margin:10px 12px;padding:10px 14px;border-radius:28px;box-shadow:0 1px 2px rgba(0,0,0,.06)}
-.composer img{width:40px;height:40px;border-radius:50%}
-.composer input{flex:1;border:none;background:#f0f2f5;border-radius:20px;padding:12px 16px;font-size:15px;outline:none}
-.bottom{position:fixed;bottom:0;left:0;right:0;background:#fff;border-top:1px solid #dddfe2;display:flex;justify-content:space-around;padding:8px 0 calc(8px + env(safe-area-inset-bottom));z-index:1000}
-.nav{flex:1;display:flex;flex-direction:column;align-items:center;font-size:11px;color:#65676b;text-decoration:none;padding:4px}
+.btn-s{background:#e4e6eb;color:#000}
+.card{background:#fff;border-radius:12px;padding:12px;margin:10px 10px;box-shadow:0 1px 2px rgba(0,0,0,.06)}
+.composer{display:flex;gap:10px;align-items:center;background:#fff;margin:10px;padding:10px;border-radius:28px;box-shadow:0 1px 2px rgba(0,0,0,.06)}
+.composer img{width:38px;height:38px;border-radius:50%}
+.composer input{flex:1;border:none;background:#f0f2f5;border-radius:20px;padding:10px 14px;outline:none}
+.bottom{position:fixed;bottom:0;left:0;right:0;background:#fff;border-top:1px solid #ddd;display:flex;justify-content:space-around;padding:6px 0 calc(6px + env(safe-area-inset-bottom));z-index:100}
+.nav{flex:1;display:flex;flex-direction:column;align-items:center;font-size:10px;color:#65676b;text-decoration:none}
 .nav.active{color:#1877f2}
-.nav span:first-child{font-size:22px}
-.badge{background:#ff3b30;color:#fff;font-size:9px;padding:2px 5px;border-radius:10px;margin-left:2px}
-.blabla{display:none}
-.blabla.active{display:block}
-.post{content-visibility:auto;contain-intrinsic-size:0 150px}
-@media(min-width:768px){body{max-width:680px;margin:0 auto}.cover{height:42vh}.bottom{max-width:680px;margin:0 auto;left:50%;transform:translateX(-50%);border-radius:12px 12px 0 0}}
+.nav span:first-child{font-size:20px}
+.badge{background:#ff3b30;color:#fff;font-size:8px;padding:1px 4px;border-radius:8px;margin-left:2px}
+#blablaPage{display:none}#blablaPage.active{display:block}
+.post{content-visibility:auto}
 </style>
 </head>
 <body>
-<header class="header">
-<div class="logo">N</div>
-<select style="border:1px solid #dddfe2;border-radius:20px;padding:7px 12px;font-size:14px;background:#fff"><option>🌐 English</option><option>العربية</option><option>Français</option></select>
-</header>
+<div class="header"><div class="logo">N</div><div style="border:1px solid #ddd;border-radius:20px;padding:6px 12px;font-size:13px">🌐 English</div></div>
 
 <div class="cover">
-<img src="https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?w=800&q=60&auto=format&fit=crop"
-srcset="https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?w=480&q=60&auto=format 480w, https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?w=800&q=60&auto=format 800w"
-sizes="100vw" width="800" height="400" alt="Morocco mountains cover" fetchpriority="high" decoding="async">
+<img src="https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?w=800&q=60&auto=format&fit=crop" width="800" height="400" alt="cover" loading="eager" decoding="async">
 </div>
 
 <div class="profile-wrap">
 <div class="avatar-row">
-<img class="avatar" src="https://i.pravatar.cc/200?img=12" width="92" height="92" alt="Achraf Aza" loading="eager" decoding="async">
+<img class="avatar" src="https://i.pravatar.cc/200?img=12" alt="Achraf">
 <div class="info"><h1>Achraf Aza</h1><p>From Morocco · Connecting the world</p><div class="friends">1,284 friends</div></div>
 </div>
 <div class="btns"><button class="btn btn-p">Follow</button><button class="btn btn-s">Message</button></div>
 </div>
 
-<div class="card"><b>Intro</b><div style="margin-top:4px">Sharing from Morocco 🌍</div></div>
+<div class="card"><b>Intro</b><div style="margin-top:4px;font-size:14px">Sharing from Morocco 🌍</div></div>
+<div class="composer"><img src="https://i.pravatar.cc/100?img=12"><input placeholder="What's on your mind, Achraf?"></div>
+<div class="card"><div style="display:flex;gap:8px"><img src="https://i.pravatar.cc/100?img=12" width="36" height="36" style="border-radius:50%"><div><b style="font-size:14px">Achraf Aza</b><div style="font-size:11px;color:#65676b">Now · 🌍</div></div></div></div>
 
-<div class="composer"><img src="https://i.pravatar.cc/100?img=12" width="40" height="40" alt=""><input placeholder="What's on your mind, Achraf?" aria-label="Create post"></div>
-
-<div class="card"><div style="display:flex;gap:10px"><img src="https://i.pravatar.cc/100?img=12" width="40" height="40" style="border-radius:50%" loading="lazy"><div><b>Achraf Aza</b><div style="font-size:12px;color:#65676b">Now · 🌍</div></div></div></div>
-
-<div id="blablaPage" class="blabla">
-<div class="card" style="background:#1877f2;color:#fff"><h3>BLABLA - Global Feed</h3><p style="opacity:.9;font-size:13px;margin-top:4px">Ultra-fast · Loads 20 by 20 · Works on 2G</p></div>
-<div id="list"></div>
-<div id="loader" style="text-align:center;padding:24px;color:#65676b;font-size:14px">Scroll down for more...</div>
-</div>
+<div id="blablaPage"><div class="card" style="background:#1877f2;color:#fff"><b>BLABLA - Global Feed</b><div style="font-size:12px;opacity:.9">Ultra fast - 20 by 20</div></div><div id="list"></div><div id="loader" style="text-align:center;padding:20px;color:#888;font-size:13px">Scroll for more...</div></div>
 
 <nav class="bottom">
-<a class="nav" href="#" onclick="showPage('home');return false"><span>🏠</span>Home</a>
+<a class="nav" href="#" onclick="showHome();return false"><span>🏠</span>Home</a>
 <a class="nav" href="#"><span>👥</span>Friends</a>
-<a class="nav active" id="bBtn" href="#" onclick="openBlabla(event)"><span>💬<sup class="badge">NEW</sup></span>BLABLA</a>
+<a class="nav active" href="#" onclick="openBlabla(event)"><span>💬<sup class="badge">NEW</sup></span>BLABLA</a>
 <a class="nav" href="#"><span>💭</span>Chat</a>
 <a class="nav" href="#"><span>👤</span>Profile</a>
 </nav>
-<div style="height:80px"></div>
+<div style="height:75px"></div>
 
 <script>
 let page=0,loading=false;
 const list=document.getElementById('list'),loader=document.getElementById('loader');
-function makePost(n){
-  const el=document.createElement('div');
-  el.className='card post';
-  el.innerHTML=`<div style="display:flex;gap:10px"><img src="https://i.pravatar.cc/100?img=${(n%70)+1}" loading="lazy" width="40" height="40" style="border-radius:50%"><div style="flex:1"><b>User ${n}</b><div style="font-size:12px;color:#65676b">${n}m ago · 🌍</div><p style="margin-top:8px;font-size:15px;line-height:1.4">BLABLA post #${n} 🚀 Morocco to the world! This is optimized for speed and works even on slow networks.</p><div style="margin-top:10px;display:flex;gap:16px;color:#65676b;font-size:14px"><span>👍 Like</span><span>💬 Comment</span><span>↗️ Share</span></div></div></div>`;
-  return el;
-}
-function loadMore(){
-  if(loading) return;
-  loading=true;
-  setTimeout(()=>{
-    for(let i=0;i<20;i++){page++; list.appendChild(makePost(page));}
-    loading=false;
-  },80);
-}
-function openBlabla(e){
-  e.preventDefault();
-  document.getElementById('blablaPage').classList.add('active');
-  window.scrollTo({top:0,behavior:'smooth'});
-  if(page===0) loadMore();
-  const io=new IntersectionObserver(es=>{if(es[0].isIntersecting) loadMore();},{rootMargin:'600px'});
-  io.observe(loader);
-}
-function showPage(p){
-  document.getElementById('blablaPage').classList.remove('active');
-  window.scrollTo({top:0,behavior:'smooth'});
-}
+function make(n){const d=document.createElement('div');d.className='card post';d.innerHTML=`<div style="display:flex;gap:8px"><img src="https://i.pravatar.cc/100?img=${(n%70)+1}" loading="lazy" width="36" height="36" style="border-radius:50%"><div><b style="font-size:14px">User ${n}</b><div style="font-size:11px;color:#65676b">${n}m ago</div><p style="margin-top:6px;font-size:14px">BLABLA #${n} 🚀 Morocco to world!</p></div></div>`;return d;}
+function load(){if(loading)return;loading=true;setTimeout(()=>{for(let i=0;i<20;i++){page++;list.appendChild(make(page));}loading=false;},80);}
+function openBlabla(e){e.preventDefault();document.getElementById('blablaPage').classList.add('active');window.scrollTo({top:0,behavior:'smooth'});if(page==0)load();const io=new IntersectionObserver(es=>{if(es[0].isIntersecting)load();},{rootMargin:'400px'});io.observe(loader);}
+function showHome(){document.getElementById('blablaPage').classList.remove('active');window.scrollTo({top:0,behavior:'smooth'});}
 </script>
 </body>
 </html>
