@@ -498,3 +498,53 @@ if('serviceWorker' in navigator){window.addEventListener('load',function(){navig
   auth.getRedirectResult().catch(function () {});
 })();
 </script>
+<!-- ===== NOVA · Sign-In v2 (mobile) ===== -->
+<script>
+(function () {
+  const auth = firebase.auth();
+
+  const btn = document.createElement('button');
+  btn.id = 'nova-signin-btn';
+  btn.style.cssText = 'position:fixed;bottom:78px;right:12px;z-index:10000;background:#1877f2;color:#fff;border:none;border-radius:50%;width:52px;height:52px;font-size:22px;box-shadow:0 4px 12px rgba(0,0,0,.35);';
+  btn.innerHTML = '👤';
+  btn.title = 'Sign in with Google';
+  document.body.appendChild(btn);
+
+  document.querySelectorAll('button').forEach(function (b) {
+    if (b.id !== 'nova-signin-btn' && b.style.position === 'fixed' && b.style.backgroundColor === 'rgb(24, 119, 242)') {
+      b.style.display = 'none';
+    }
+  });
+
+  auth.onAuthStateChanged(function (user) {
+    if (user) {
+      const photo = user.photoURL || '';
+      btn.innerHTML = photo
+        ? '<img src="' + photo + '" alt="me" style="width:52px;height:52px;border-radius:50%;object-fit:cover;display:block;">'
+        : '👤';
+      btn.title = user.displayName || user.email || 'NOVA';
+    } else {
+      btn.innerHTML = '👤';
+      btn.title = 'Sign in with Google';
+    }
+  });
+
+  btn.addEventListener('click', function () {
+    const user = auth.currentUser;
+    if (user) {
+      if (confirm((user.displayName || user.email) + ' - Sign out ?')) auth.signOut();
+      return;
+    }
+    btn.innerHTML = '⏳';
+    const provider = new firebase.auth.GoogleAuthProvider();
+    auth.signInWithRedirect(provider).catch(function (err) {
+      alert('Sign-in error: ' + (err && err.code ? err.code : err));
+      btn.innerHTML = '👤';
+    });
+  });
+
+  auth.getRedirectResult().catch(function (err) {
+    alert('Sign-in error: ' + (err && err.code ? err.code : err));
+  });
+})();
+</script>
