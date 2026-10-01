@@ -447,3 +447,54 @@ applyLang(saved);
 if('serviceWorker' in navigator){window.addEventListener('load',function(){navigator.serviceWorker.register('sw.js').catch(function(){})})}  
 </script>  </body>  
 </html>
+<!-- ===== NOVA · Google Sign-In ===== -->
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
+<script>
+(function () {
+  const firebaseConfig = {
+    apiKey: "AIzaSyAPIKiat0MB5EKGWopUukm0LQMN1iQkApM",
+    authDomain: "nova-cb212.firebaseapp.com",
+    projectId: "nova-cb212",
+    storageBucket: "nova-cb212.firebasestorage.app",
+    messagingSenderId: "660417453842",
+    appId: "1:660417453842:web:047ccaa48dc441d5f6ddcb",
+    measurementId: "G-78X5WCEJWW"
+  };
+  firebase.initializeApp(firebaseConfig);
+  const auth = firebase.auth();
+
+  const btn = document.createElement('button');
+  btn.style.cssText = 'position:fixed;bottom:78px;right:12px;z-index:9999;background:#1877f2;color:#fff;border:none;border-radius:50%;width:52px;height:52px;font-size:22px;box-shadow:0 4px 12px rgba(0,0,0,.35);';
+  document.body.appendChild(btn);
+
+  auth.onAuthStateChanged(function (user) {
+    if (user) {
+      const photo = user.photoURL || '';
+      btn.innerHTML = photo
+        ? '<img src="' + photo + '" alt="me" style="width:52px;height:52px;border-radius:50%;object-fit:cover;display:block;">'
+        : '👤';
+      btn.title = user.displayName || user.email || 'NOVA';
+    } else {
+      btn.innerHTML = '👤';
+      btn.title = 'Sign in with Google';
+    }
+  });
+
+  btn.addEventListener('click', function () {
+    const user = auth.currentUser;
+    if (user) {
+      if (confirm((user.displayName || user.email) + ' - Sign out ?')) auth.signOut();
+      return;
+    }
+    const provider = new firebase.auth.GoogleAuthProvider();
+    auth.signInWithPopup(provider).catch(function (err) {
+      if (err && (err.code === 'auth/popup-blocked' || err.code === 'auth/operation-not-supported-in-this-environment')) {
+        auth.signInWithRedirect(provider);
+      }
+    });
+  });
+
+  auth.getRedirectResult().catch(function () {});
+})();
+</script>
