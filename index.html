@@ -1,12 +1,124 @@
-<!DOCTYPE html><html lang="en"><head><meta name="google-site-verification" content="uHUsGlU_1gJtp1VO5M-63vK03RSqxbAIUd7y0_MkdQY" /><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>NOVA - Achraf Aza Global</title><style>:root{--blue:#1877f2;--page:#f0f2f5}*{box-sizing:border-box;margin:0;padding:0}body{background:var(--page);font-family:system-ui,Tahoma,sans-serif;padding-bottom:75px}.topbar{position:sticky;top:0;z-index:10;background:#fff;display:flex;justify-content:space-between;align-items:center;padding:10px 15px;box-shadow:0 2px 5px rgba(0,0,0,.1)}.brand{width:42px;height:42px;background:var(--blue);color:#fff;border-radius:11px;display:grid;place-items:center;font-weight:900;font-size:22px}.lang{padding:6px 12px;border-radius:20px;background:#f0f2f5;display:flex;gap:6px}.lang select{border:0;background:transparent;font-weight:700}.avatar,.profile-avatar,.post-avatar{border-radius:50%!important;overflow:hidden;aspect-ratio:1/1}.avatar{width:42px;height:42px}.avatar img,.profile-avatar img,.post-avatar img{width:100%;height:100%;object-fit:cover;border-radius:50%!important}.profile-card{background:#fff;box-shadow:0 2px 8px rgba(0,0,0,.08)}.cover{height:280px;background:url(https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?w=1600) center/cover}.profile-info{display:flex;gap:15px;padding:0 20px 15px;flex-wrap:wrap;align-items:flex-end;justify-content:space-between}.profile-avatar{width:120px;height:120px;border:4px solid #fff;margin-top:-50px;background:#fff}.btn{padding:8px 14px;border-radius:8px;border:0;font-weight:700;cursor:pointer;background:#e4e6eb}.btn.blue{background:var(--blue);color:#fff}.main{max-width:1050px;margin:15px auto}.grid{display:grid;grid-template-columns:300px 1fr;gap:12px;padding:0 10px}@media(max-width:750px){.grid{grid-template-columns:1fr}}.card{background:#fff;border-radius:12px;padding:14px;box-shadow:0 1px 3px rgba(0,0,0,.07);margin-bottom:12px}.composer{width:100%;background:#f0f2f5;border:0;border-radius:20px;padding:10px 14px;color:#65676b;text-align:left}.post-media{width:100%;border-radius:10px;max-height:480px;object-fit:cover;margin-top:10px;background:#000}.post-avatar{width:40px;height:40px}.modal{position:fixed;inset:0;background:rgba(0,0,0,.6);display:none;align-items:center;justify-content:center;padding:15px;z-index:100}.modal.open{display:flex}.modal-panel{background:#fff;width:100%;max-width:520px;border-radius:12px;max-height:90vh;overflow:auto}.drop{border:2px dashed #1877f2;border-radius:12px;padding:18px;text-align:center;margin:12px;background:#e7f3ff;cursor:pointer}.preview{margin:12px;border-radius:12px;overflow:hidden;background:#000;position:relative;display:none}.preview img,.preview video{width:100%;max-height:340px;object-fit:contain}.blabla{position:fixed;inset:0;background:#000;z-index:200;display:none;flex-direction:column}.blabla.show{display:flex}.blabla-feed{flex:1;overflow-y:scroll;scroll-snap-type:y mandatory}.blabla-item{height:100vh;position:relative;scroll-snap-align:start}.blabla-item video{width:100%;height:100%;object-fit:cover}.blabla-overlay{position:absolute;bottom:0;left:0;right:0;padding:12px 70px 25px 12px;background:linear-gradient(transparent,rgba(0,0,0,.8));color:#fff}.blabla-right{position:absolute;right:10px;bottom:90px;display:flex;flex-direction:column;gap:16px}.blabla-btn{width:46px;height:46px;background:rgba(255,255,255,.2);border-radius:50%;display:grid;place-items:center;color:#fff}.bottom{position:fixed;bottom:0;left:0;right:0;background:#fff;display:flex;justify-content:space-around;padding:7px 0;border-top:1px solid #ddd;z-index:50}.bottom div{font-size:11px;color:#65676b;text-align:center;position:relative}.bottom div.active{color:var(--blue)}.new{position:absolute;top:-5px;right:0;background:#ff0050;color:#fff;font-size:7px;padding:2px 4px;border-radius:4px;font-weight:900}.toast{position:fixed;bottom:85px;left:50%;transform:translateX(-50%);background:#333;color:#fff;padding:8px 14px;border-radius:20px;opacity:0;transition:.3s;z-index:300}.toast.show{opacity:1}</style></head><body>
-<header class="topbar"><div class="brand">N</div><div class="lang">🌐<select id="lang"><option value="en">English</option><option value="ar">العربية</option><option value="fr">Français</option><option value="zgh">Tamazight</option><option value="tif">ⵜⴰⵎⴰⵣⵉⵖⵜ</option></select></div></header>
-<div class="profile-card"><div class="cover"></div><div class="profile-info"><div style="display:flex;gap:12px;align-items:flex-end"><div class="profile-avatar"><img src="https://i.pravatar.cc/300?img=12"></div><div><h2 data-t="name">Achraf Aza</h2><small data-t="sub">From Morocco · Connecting the world</small><br><b data-t="friends">1,284 friends</b></div></div><div style="display:flex;gap:8px"><button class="btn blue" data-t="follow">Follow</button><button class="btn" data-t="msg">Message</button></div></div></div>
-<div class="main"><div class="grid"><div><div class="card"><b data-t="intro">Intro</b><p data-t="bio">Sharing from Morocco 🌍</p></div></div><div><div class="card"><div style="display:flex;gap:10px"><div class="avatar"><img src="https://i.pravatar.cc/100?img=12"></div><button class="composer" onclick="openM()" data-t="whats">What's on your mind?</button></div></div><div id="posts"></div></div></div></div>
-<div class="modal" id="modal"><div class="modal-panel"><div style="display:flex;justify-content:space-between;padding:14px;border-bottom:1px solid #ddd"><b data-t="create">Create Post</b><button onclick="closeM()">✕</button></div><div style="padding:12px"><textarea id="txt" style="width:100%;min-height:70px;border:0;background:#f0f2f5;border-radius:10px;padding:10px"></textarea><div class="drop" onclick="document.getElementById('file').click()"><input id="file" type="file" accept="image/*,video/*" hidden>📷🎥 <b data-t="add">Add Photo / Video</b></div><div class="preview" id="prev"><img id="imgP" style="display:none"><video id="vidP" controls style="display:none"></video><button onclick="clearM()" style="position:absolute;top:8px;left:8px;border-radius:50%;width:30px;height:30px;border:0;background:rgba(0,0,0,.6);color:#fff">✕</button></div><button class="btn blue" style="width:100%;padding:12px;margin-top:10px" onclick="publish()" data-t="post">Post Now</button></div></div></div>
-<div class="blabla" id="blabla"><div style="position:absolute;top:0;left:0;right:0;padding:12px;display:flex;justify-content:space-between;color:#fff;z-index:10;background:linear-gradient(rgba(0,0,0,.6),transparent)"><button onclick="closeB()" style="width:34px;height:34px;border-radius:50%;border:0;background:rgba(255,255,255,.2);color:#fff">✕</button><b>BLABLA 🔥</b><div style="width:34px"></div></div><div class="blabla-feed" id="feed"></div><button onclick="openU()" style="position:absolute;bottom:18px;left:50%;transform:translateX(-50%);background:var(--blue);color:#fff;border:0;padding:10px 20px;border-radius:20px;font-weight:700;z-index:20">+ Upload BLABLA</button></div>
-<div class="modal" id="uModal"><div class="modal-panel"><div style="display:flex;justify-content:space-between;padding:14px;border-bottom:1px solid #ddd"><b>BLABLA 🔥 Upload</b><button onclick="document.getElementById('uModal').classList.remove('open')">✕</button></div><div style="padding:12px"><input id="cap" placeholder="Caption #blabla" style="width:100%;padding:10px;border:1px solid #ddd;border-radius:8px"><div class="drop" onclick="document.getElementById('bfile').click()"><input id="bfile" type="file" accept="video/*" hidden>🎥 Upload Video<video id="bprev" style="display:none;width:100%;margin-top:10px;border-radius:10px" controls></video></div><button id="bBtn" disabled onclick="postB()" style="width:100%;background:#ff0050;color:#fff;border:0;padding:12px;border-radius:8px">Post to BLABLA 🚀</button></div></div></div>
-<div class="bottom"><div onclick="location.reload()">🏠<br>Home</div><div>👥<br>Friends</div><div class="active" onclick="openB()"><span class="new">NEW</span>⚡<br>BLABLA</div><div>💬<br>Chat</div><div>👤<br>Profile</div></div><div class="toast" id="toast"></div>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1">
+<title>NOVA - Achraf Aza | From Morocco Connecting the World</title>
+<meta name="description" content="NOVA by Achraf Aza - From Morocco Connecting the world. 1,284 friends, sharing stories, BLABLA social feed.">
+<meta name="keywords" content="NOVA, Achraf Aza, Morocco, social, BLABLA">
+<meta name="author" content="Achraf Aza">
+<link rel="canonical" href="https://nova-achraf.github.io/nova/">
+<meta property="og:title" content="NOVA - Achraf Aza">
+<meta property="og:description" content="From Morocco - Connecting the world">
+<meta property="og:image" content="https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?w=800">
+<meta property="og:url" content="https://nova-achraf.github.io/nova/">
+<meta property="og:type" content="website">
+<meta name="theme-color" content="#1877f2">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='20' fill='%231877f2'/><text x='50' y='70' font-size='60' text-anchor='middle' fill='white' font-weight='900'>N</text></svg>">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{font-family:system-ui,-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;background:#f0f2f5;color:#050505;-webkit-tap-highlight-color:transparent}
+.header{position:sticky;top:0;z-index:1000;background:rgba(255,255,255,.95);backdrop-filter:blur(10px);display:flex;justify-content:space-between;align-items:center;padding:10px 16px;box-shadow:0 1px 2px rgba(0,0,0,.1)}
+.logo{width:44px;height:44px;background:#1877f2;color:#fff;border-radius:12px;display:grid;place-items:center;font-weight:900;font-size:24px;letter-spacing:-1px}
+.cover{position:relative;width:100%;height:32vh;max-height:340px;overflow:hidden;background:#e4e6eb}
+.cover img{width:100%;height:100%;object-fit:cover}
+.profile-wrap{background:#fff;padding:0 16px 16px;box-shadow:0 1px 2px rgba(0,0,0,.06);border-radius:0 0 12px 12px;margin-bottom:10px}
+.avatar-row{display:flex;gap:14px;align-items:flex-end;margin-top:-40px}
+.avatar{width:92px;height:92px;border-radius:50%;border:4px solid #fff;object-fit:cover;background:#ccc;box-shadow:0 2px 8px rgba(0,0,0,.15)}
+.info h1{font-size:24px;font-weight:800;line-height:1.1}
+.info p{color:#65676b;font-size:14px;margin-top:2px}
+.friends{font-weight:700;margin-top:4px;font-size:14px}
+.btns{display:flex;gap:8px;margin-top:14px}
+.btn{flex:1;padding:10px;border-radius:8px;border:none;font-weight:600;font-size:15px;cursor:pointer;transition:.2s}
+.btn:active{transform:scale(.97)}
+.btn-p{background:#1877f2;color:#fff}
+.btn-s{background:#e4e6eb;color:#050505}
+.card{background:#fff;border-radius:12px;padding:14px;margin:10px 12px;box-shadow:0 1px 2px rgba(0,0,0,.06)}
+.composer{display:flex;gap:10px;align-items:center;background:#fff;margin:10px 12px;padding:10px 14px;border-radius:28px;box-shadow:0 1px 2px rgba(0,0,0,.06)}
+.composer img{width:40px;height:40px;border-radius:50%}
+.composer input{flex:1;border:none;background:#f0f2f5;border-radius:20px;padding:12px 16px;font-size:15px;outline:none}
+.bottom{position:fixed;bottom:0;left:0;right:0;background:#fff;border-top:1px solid #dddfe2;display:flex;justify-content:space-around;padding:8px 0 calc(8px + env(safe-area-inset-bottom));z-index:1000}
+.nav{flex:1;display:flex;flex-direction:column;align-items:center;font-size:11px;color:#65676b;text-decoration:none;padding:4px}
+.nav.active{color:#1877f2}
+.nav span:first-child{font-size:22px}
+.badge{background:#ff3b30;color:#fff;font-size:9px;padding:2px 5px;border-radius:10px;margin-left:2px}
+.blabla{display:none}
+.blabla.active{display:block}
+.post{content-visibility:auto;contain-intrinsic-size:0 150px}
+@media(min-width:768px){body{max-width:680px;margin:0 auto}.cover{height:42vh}.bottom{max-width:680px;margin:0 auto;left:50%;transform:translateX(-50%);border-radius:12px 12px 0 0}}
+</style>
+</head>
+<body>
+<header class="header">
+<div class="logo">N</div>
+<select style="border:1px solid #dddfe2;border-radius:20px;padding:7px 12px;font-size:14px;background:#fff"><option>🌐 English</option><option>العربية</option><option>Français</option></select>
+</header>
+
+<div class="cover">
+<img src="https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?w=800&q=60&auto=format&fit=crop"
+srcset="https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?w=480&q=60&auto=format 480w, https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?w=800&q=60&auto=format 800w"
+sizes="100vw" width="800" height="400" alt="Morocco mountains cover" fetchpriority="high" decoding="async">
+</div>
+
+<div class="profile-wrap">
+<div class="avatar-row">
+<img class="avatar" src="https://i.pravatar.cc/200?img=12" width="92" height="92" alt="Achraf Aza" loading="eager" decoding="async">
+<div class="info"><h1>Achraf Aza</h1><p>From Morocco · Connecting the world</p><div class="friends">1,284 friends</div></div>
+</div>
+<div class="btns"><button class="btn btn-p">Follow</button><button class="btn btn-s">Message</button></div>
+</div>
+
+<div class="card"><b>Intro</b><div style="margin-top:4px">Sharing from Morocco 🌍</div></div>
+
+<div class="composer"><img src="https://i.pravatar.cc/100?img=12" width="40" height="40" alt=""><input placeholder="What's on your mind, Achraf?" aria-label="Create post"></div>
+
+<div class="card"><div style="display:flex;gap:10px"><img src="https://i.pravatar.cc/100?img=12" width="40" height="40" style="border-radius:50%" loading="lazy"><div><b>Achraf Aza</b><div style="font-size:12px;color:#65676b">Now · 🌍</div></div></div></div>
+
+<div id="blablaPage" class="blabla">
+<div class="card" style="background:#1877f2;color:#fff"><h3>BLABLA - Global Feed</h3><p style="opacity:.9;font-size:13px;margin-top:4px">Ultra-fast · Loads 20 by 20 · Works on 2G</p></div>
+<div id="list"></div>
+<div id="loader" style="text-align:center;padding:24px;color:#65676b;font-size:14px">Scroll down for more...</div>
+</div>
+
+<nav class="bottom">
+<a class="nav" href="#" onclick="showPage('home');return false"><span>🏠</span>Home</a>
+<a class="nav" href="#"><span>👥</span>Friends</a>
+<a class="nav active" id="bBtn" href="#" onclick="openBlabla(event)"><span>💬<sup class="badge">NEW</sup></span>BLABLA</a>
+<a class="nav" href="#"><span>💭</span>Chat</a>
+<a class="nav" href="#"><span>👤</span>Profile</a>
+</nav>
+<div style="height:80px"></div>
+
 <script>
-const D={en:{name:"Achraf Aza",sub:"From Morocco · Connecting the world",friends:"1,284 friends",follow:"Follow",msg:"Message",intro:"Intro",bio:"Sharing from Morocco 🌍",whats:"What's on your mind, Achraf?",create:"Create Post",add:"Add Photo / Video",post:"Post Now"},ar:{name:"أشرف أزا",sub:"من المغرب",friends:"١٬٢٨٤ صديق",follow:"متابعة",msg:"مراسلة",intro:"مقدمة",bio:"أشارك من المغرب 🌍",whats:"بماذا تفكر؟",create:"إنشاء منشور",add:"إضافة صورة",post:"نشر"},fr:{name:"Achraf Aza",sub:"Du Maroc",friends:"1 284 amis",follow:"Suivre",msg:"Message",intro:"Intro",bio:"Je partage du Maroc 🌍",whats:"Quoi de neuf?",create:"Créer",add:"Ajouter Photo",post:"Publier"},zgh:{name:"Achraf Aza",sub:"From Morocco",friends:"1,284 friends",follow:"Follow",msg:"Message",intro:"Intro",bio:"Sharing 🌍",whats:"Ma?",create:"Create",add:"Add",post:"Post"},tif:{name:"ⴰⵛⵔⴰⴼ ⴰⵣⴰ",sub:"ⵣⴳ ⵍⵎⵖⵔⵉⴱ",friends:"1,284",follow:"ⴹⴼⴰⵕ",msg:"ⵜⴰⴱⵔⴰⵜ",intro:"ⴰⵣⵡⴰⵔ",bio:"🌍",whats:"ⵎⴰ?",create:"ⵔⵏⵓ",add:"ⵔⵏⵓ",post:"ⵙⵙⴰⵔ"}};
-let L=localStorage.getItem('nova_lang')||'en';document.getElementById('lang').value=L;function apply(){let t=D[L]||D.en;document.querySelectorAll('[data-t]').forEach(e=>{let k=e.getAttribute('data-t');if(t[k])e.textContent=t[k]});document.documentElement.dir=L==='ar'?'rtl':'ltr';localStorage.setItem('nova_lang',L)}document.getElementById('lang').onchange=e=>{L=e.target.value;apply()};apply();const K="nova_posts";let sel=null,selType=null;function openM(){document.getElementById('modal').classList.add('open')}function closeM(){document.getElementById('modal').classList.remove('open')}function clearM(){sel=null;document.getElementById('prev').style.display='none';document.getElementById('file').value=''}function toast(m){let t=document.getElementById('toast');t.textContent=m;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),2200)}document.getElementById('file').onchange=e=>{let f=e.target.files[0];if(!f)return;let r=new FileReader();r.onload=ev=>{sel=ev.target.result;selType=f.type.startsWith('video')?'video':'image';document.getElementById('prev').style.display='block';if(selType==='video'){document.getElementById('vidP').src=sel;document.getElementById('vidP').style.display='block';document.getElementById('imgP').style.display='none'}else{document.getElementById('imgP').src=sel;document.getElementById('imgP').style.display='block';document.getElementById('vidP').style.display='none'}};r.readAsDataURL(f)};function render(){let c=document.getElementById('posts');c.innerHTML='';let p=[];try{p=JSON.parse(localStorage.getItem(K)||'[]')}catch{};let def=[{text:"Welcome to NOVA 🌍 Global - English Default ✅ 5 Languages ✅ BLABLA 🔥 NEW ✅ Circle 100% ✅ Made in Morocco 🇲🇦",media:"https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?w=800",mediaType:"image"}];[...p,...def].forEach(o=>{let d=document.createElement('div');d.className='card';d.innerHTML=`<div style="display:flex;gap:10px;align-items:center"><div class="post-avatar"><img src="https://i.pravatar.cc/100?img=12"></div><div><b>Achraf Aza</b><br><small>Now · 🌍</small></div></div><div style="margin-top:8px">${o.text||''}</div>${o.media? (o.mediaType==='video'||o.media.startsWith('data:video')?`<video class="post-media" src="${o.media}" controls></video>`:`<img class="post-media" src="${o.media}">`):''}`;c.appendChild(d)})}function publish(){let txt=document.getElementById('txt').value.trim();if(!txt&&!sel)return;let cur=[];try{cur=JSON.parse(localStorage.getItem(K)||'[]')}catch{};localStorage.setItem(K,JSON.stringify([{text:txt,media:sel,mediaType:selType},...cur]));document.getElementById('txt').value='';clearM();closeM();render();toast('Posted 🚀')}render();let B=[];try{B=JSON.parse(localStorage.getItem('nova_blabla')||'[]')}catch{};const S=[{url:'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4',user:'Lina 🇲🇦',cap:'BLABLA 🔥 Circle fixed!'},{url:'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4',user:'Adam',cap:'NOVA Global 🌍'}];function openB(){document.getElementById('blabla').classList.add('show');let f=document.getElementById('feed');f.innerHTML='';[...B,...S].forEach(v=>{let d=document.createElement('div');d.className='blabla-item';d.innerHTML=`<video src="${v.video||v.url}" loop playsinline onclick="this.paused?this.play():this.pause()"></video><div class="blabla-overlay"><b>@${v.user}</b><br>${v.cap||''}</div><div class="blabla-right"><div class="blabla-btn">❤️</div><div class="blabla-btn">💬</div><div class="blabla-btn">↗️</div></div>`;f.appendChild(d)});setTimeout(()=>{let v=f.querySelector('video');if(v)v.play().catch(()=>{})},400)}function closeB(){document.getElementById('blabla').classList.remove('show')}let tmp=null;document.getElementById('bfile').onchange=e=>{let f=e.target.files[0];if(!f)return;let r=new FileReader();r.onload=ev=>{tmp=ev.target.result;document.getElementById('bprev').src=tmp;document.getElementById('bprev').style.display='block';document.getElementById('bBtn').disabled=false};r.readAsDataURL(f)};function openU(){document.getElementById('uModal').classList.add('open')}function postB(){let cap=document.getElementById('cap').value||'My BLABLA 🔥';B.unshift({video:tmp,cap:cap,user:'Achraf Aza'});localStorage.setItem('nova_blabla',JSON.stringify(B));document.getElementById('uModal').classList.remove('open');openB()}
-</script></body></html>
+let page=0,loading=false;
+const list=document.getElementById('list'),loader=document.getElementById('loader');
+function makePost(n){
+  const el=document.createElement('div');
+  el.className='card post';
+  el.innerHTML=`<div style="display:flex;gap:10px"><img src="https://i.pravatar.cc/100?img=${(n%70)+1}" loading="lazy" width="40" height="40" style="border-radius:50%"><div style="flex:1"><b>User ${n}</b><div style="font-size:12px;color:#65676b">${n}m ago · 🌍</div><p style="margin-top:8px;font-size:15px;line-height:1.4">BLABLA post #${n} 🚀 Morocco to the world! This is optimized for speed and works even on slow networks.</p><div style="margin-top:10px;display:flex;gap:16px;color:#65676b;font-size:14px"><span>👍 Like</span><span>💬 Comment</span><span>↗️ Share</span></div></div></div>`;
+  return el;
+}
+function loadMore(){
+  if(loading) return;
+  loading=true;
+  setTimeout(()=>{
+    for(let i=0;i<20;i++){page++; list.appendChild(makePost(page));}
+    loading=false;
+  },80);
+}
+function openBlabla(e){
+  e.preventDefault();
+  document.getElementById('blablaPage').classList.add('active');
+  window.scrollTo({top:0,behavior:'smooth'});
+  if(page===0) loadMore();
+  const io=new IntersectionObserver(es=>{if(es[0].isIntersecting) loadMore();},{rootMargin:'600px'});
+  io.observe(loader);
+}
+function showPage(p){
+  document.getElementById('blablaPage').classList.remove('active');
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+</script>
+</body>
+</html>
