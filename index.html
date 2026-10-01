@@ -6,6 +6,11 @@
 <title>NOVA - Achraf Aza | From Morocco</title>
 <meta name="description" content="NOVA by Achraf Aza - From Morocco · Connecting the world">
 <meta name="theme-color" content="#ffffff">
+<link rel="manifest" href="manifest.json">
+<meta property="og:title" content="NOVA - Achraf Aza | From Morocco">
+<meta property="og:description" content="Social app from Morocco 🇲🇦 · BLABLA reels, live chat & marketplace">
+<meta property="og:image" content="https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?w=1200&q=60&auto=format&fit=crop">
+<meta property="og:type" content="website">
 <link rel="preconnect" href="https://images.unsplash.com">
 <link rel="preconnect" href="https://i.pravatar.cc">
 <style>
@@ -56,7 +61,6 @@ body{font-family:-apple-system,system-ui,'Segoe UI',Roboto,Tahoma,sans-serif;bac
 .modal.open{display:flex}
 .sheet{background:#fff;width:100%;border-radius:14px 14px 0 0;padding:16px;max-height:88vh;overflow-y:auto}
 .f{width:100%;border:1px solid #ddd;border-radius:8px;padding:10px 12px;font-size:14px;margin-top:10px;outline:none;font-family:inherit;background:#fff}
-/* ===== BLABLA TIKTOK MODE ===== */
 #blablaPage{display:none}
 #blablaPage.active{display:flex;flex-direction:column;position:fixed;inset:0;background:#000;z-index:50}
 .reelbar{display:flex;justify-content:space-between;align-items:center;background:#000;color:#fff;padding:8px 12px;flex-shrink:0}
@@ -112,7 +116,6 @@ body{font-family:-apple-system,system-ui,'Segoe UI',Roboto,Tahoma,sans-serif;bac
 
 <div class="card"><b data-i18n="intro">Intro</b><div style="margin-top:4px;font-size:14.5px" data-i18n="introTxt">Sharing from Morocco 🌍 Building NOVA 🚀</div></div>
 
-<!-- POST COMPOSER WITH PHOTO/VIDEO -->
 <div class="card">
 <div class="composer">
 <img src="https://i.pravatar.cc/100?img=12" alt="" loading="lazy" decoding="async">
@@ -129,7 +132,6 @@ body{font-family:-apple-system,system-ui,'Segoe UI',Roboto,Tahoma,sans-serif;bac
 
 <div id="homePosts"></div>
 
-<!-- BLABLA · TIKTOK MODE -->
 <div id="blablaPage">
 <div class="reelbar">
 <div class="t">BLABLA <span class="live">● LIVE</span></div>
@@ -143,7 +145,6 @@ body{font-family:-apple-system,system-ui,'Segoe UI',Roboto,Tahoma,sans-serif;bac
 </div>
 </div>
 
-<!-- MARKETPLACE -->
 <div id="marketPage">
 <div class="card" style="background:#1877f2;color:#fff"><b data-i18n="mktTitle">Marketplace</b><div style="font-size:12px;opacity:.9" data-i18n="mktSub">Buy &amp; sell near you · NOVA</div></div>
 <div class="card" style="padding:10px">
@@ -156,7 +157,6 @@ body{font-family:-apple-system,system-ui,'Segoe UI',Roboto,Tahoma,sans-serif;bac
 <div class="mkt-grid" id="mktGrid"></div>
 </div>
 
-<!-- SELL MODAL -->
 <div class="modal" id="sellModal" onclick="if(event.target===this)closeSell()">
 <div class="sheet">
 <div style="display:flex;justify-content:space-between;align-items:center"><b data-i18n="sellTitle">Sell an item</b><button onclick="closeSell()" style="background:none;border:none;font-size:22px;cursor:pointer">✕</button></div>
@@ -177,7 +177,6 @@ body{font-family:-apple-system,system-ui,'Segoe UI',Roboto,Tahoma,sans-serif;bac
 </div>
 </div>
 
-<!-- ITEM DETAIL MODAL -->
 <div class="modal" id="detailModal" onclick="if(event.target===this)closeDetail()">
 <div class="sheet">
 <button onclick="closeDetail()" style="background:#e4e6eb;border:none;border-radius:50%;width:32px;height:32px;font-size:16px;cursor:pointer;position:sticky;top:0;float:right">✕</button>
@@ -193,7 +192,6 @@ body{font-family:-apple-system,system-ui,'Segoe UI',Roboto,Tahoma,sans-serif;bac
 </div>
 </div>
 
-<!-- CAMERA MODAL -->
 <div id="camModal" style="display:none;position:fixed;inset:0;background:#000;z-index:300">
 <video id="camView" autoplay playsinline muted style="width:100%;height:100%;object-fit:cover"></video>
 <div class="camctrls">
@@ -222,268 +220,4 @@ const I18N={
 en:{dir:'ltr',title:'NOVA - Achraf Aza | From Morocco',tagline:'From Morocco · Connecting the world',friends:'1,284 friends',follow:'Follow',message:'Message',intro:'Intro',introTxt:'Sharing from Morocco 🌍 Building NOVA 🚀',composer:"What's on your mind, Achraf?",photo:'Photo',video:'Video',feeling:'Feeling',post:'Post',home:'Home',myfriends:'Friends',chat:'Chat',profile:'Profile',blablaTitle:'BLABLA',scroll:'↓',loading:'Loading...',now:'Now · 🌍',empty:'Write something or add photo/video',remove:'❌ Remove',share:'↗️ Share',explorer:'Explorer',ago:n=>n+'m ago',postTxt:n=>'BLABLA #'+n+' from Morocco 🚀',market:'Market',mktTitle:'Marketplace',mktSub:'Buy & sell near you · NOVA',search:'Search items...',sell:'Sell',catAll:'All',catPhones:'Phones',catElectro:'Electronics',catSport:'Sport',catFashion:'Fashion',catHome:'Home',sellTitle:'Sell an item',itemName:'Item name',priceLbl:'Price (DH)',city:'City',cancel:'Cancel',soldBy:'Sold by',msgSeller:'Message seller',msgSoon:'Chat coming soon 🚀',posted:'Your item is live! ✓',fillAll:'Fill the name and the price',noRes:'No results 😕',mnow:'Just now',it1:'iPhone 13 · 128GB',it2:'Wireless headphones',it3:'Mountain bike',it4:'Sports watch',it5:'Camera + lens',it6:'Laptop 16"',c1:'Casablanca',c2:'Rabat',c3:'Marrakech',c4:'Tanger',c5:'Fès',c6:'Agadir',say:'Say something...',send:'Send',camErr:'Camera not available 😕',you:'You',r1:'Cool! 🔥',r2:'Haha 😂',r3:'Wow 🤩'},
 ar:{dir:'rtl',title:'NOVA - أشرف أزا | من المغرب',tagline:'من المغرب · ربط العالم',friends:'1,284 صديق',follow:'متابعة',message:'رسالة',intro:'نبذة',introTxt:'أشارك من المغرب 🌍 نبني NOVA 🚀',composer:'شنو فبالك يا أشرف؟',photo:'صورة',video:'فيديو',feeling:'شعور',post:'نشر',home:'الرئيسية',myfriends:'الأصدقاء',chat:'دردشة',profile:'الملف',blablaTitle:'BLABLA',scroll:'↓',loading:'جاري التحميل...',now:'الآن · 🌍',empty:'اكتب شي حاجة ولا زيد صورة/فيديو',remove:'❌ حذف',share:'↗️ مشاركة',explorer:'مستكشف',ago:n=>'منذ '+n+' د',postTxt:n=>'BLABLA رقم '+n+' من المغرب 🚀',market:'السوق',mktTitle:'سوق NOVA',mktSub:'بيع وشري قريب منك',search:'بحث عن منتج...',sell:'بيع',catAll:'الكل',catPhones:'هواتف',catElectro:'إلكترونيك',catSport:'رياضة',catFashion:'موضة',catHome:'بيت',sellTitle:'بيع شي حاجة',itemName:'سمية المنتج',priceLbl:'الثمن (درهم)',city:'المدينة',cancel:'إلغاء',soldBy:'البائع',msgSeller:'راسل البائع',msgSoon:'الدردشة جاية قريبا 🚀',posted:'المنتج ديالك تنشر! ✓',fillAll:'عمّر الاسم والثمن',noRes:'ما كاين حتى نتيجة 😕',mnow:'الآن',it1:'آيفون 13 · 128GB',it2:'سماعات بلوتوث',it3:'بيسكليت جبلي',it4:'ساعة رياضية',it5:'كاميرا مع عدسة',it6:'لابتوب 16"',c1:'الدار البيضاء',c2:'الرباط',c3:'مراكش',c4:'طنجة',c5:'فاس',c6:'أكادير',say:'قول شي حاجة...',send:'إرسال',camErr:'الكاميرا ما متوفرةش 😕',you:'نتا',r1:'زوينة! 🔥',r2:'هههه 😂',r3:'وااو 🤩'},
 fr:{dir:'ltr',title:'NOVA - Achraf Aza | Du Maroc',tagline:'Du Maroc · Connecter le monde',friends:'1 284 amis',follow:'Suivre',message:'Message',intro:'Intro',introTxt:'Partager du Maroc 🌍 Construire NOVA 🚀',composer:'Quoi de neuf, Achraf ?',photo:'Photo',video:'Vidéo',feeling:'Humeur',post:'Publier',home:'Accueil',myfriends:'Amis',chat:'Chat',profile:'Profil',blablaTitle:'BLABLA',scroll:'↓',loading:'Chargement...',now:'Maintenant · 🌍',empty:'Écrivez quelque chose ou ajoutez une photo/vidéo',remove:'❌ Retirer',share:'↗️ Partager',explorer:'Explorateur',ago:n=>'il y a '+n+' min',postTxt:n=>'BLABLA #'+n+' du Maroc 🚀',market:'Marché',mktTitle:'Marketplace',mktSub:'Achetez & vendez près de vous',search:'Rechercher...',sell:'Vendre',catAll:'Tout',catPhones:'Téléphones',catElectro:'Électronique',catSport:'Sport',catFashion:'Mode',catHome:'Maison',sellTitle:'Vendre un article',itemName:"Nom de l'article",priceLbl:'Prix (DH)',city:'Ville',cancel:'Annuler',soldBy:'Vendu par',msgSeller:'Contacter le vendeur',msgSoon:'Chat bientôt disponible 🚀',posted:'Article publié ! ✓',fillAll:'Remplissez le nom et le prix',noRes:'Aucun résultat 😕',mnow:"À l'instant",it1:'iPhone 13 · 128 Go',it2:'Casque sans fil',it3:'VTT',it4:'Montre sport',it5:'Appareil photo + objectif',it6:'Ordinateur 16"',c1:'Casablanca',c2:'Rabat',c3:'Marrakech',c4:'Tanger',c5:'Fès',c6:'Agadir',say:'Dire quelque chose...',send:'Envoyer',camErr:'Caméra indisponible 😕',you:'Vous',r1:'Trop fort ! 🔥',r2:'Haha 😂',r3:'Waouh 🤩'},
-es:{dir:'ltr',title:'NOVA - Achraf Aza | De Marruecos',tagline:'De Marruecos · Conectando el mundo',friends:'1 284 amigos',follow:'Seguir',message:'Mensaje',intro:'Intro',introTxt:'Compartiendo desde Marruecos 🌍 Construyendo NOVA 🚀',composer:'¿En qué piensas, Achraf?',photo:'Foto',video:'Vídeo',feeling:'Ánimo',post:'Publicar',home:'Inicio',myfriends:'Amigos',chat:'Chat',profile:'Perfil',blablaTitle:'BLABLA',scroll:'↓',loading:'Cargando...',now:'Ahora · 🌍',empty:'Escribe algo o añade foto/vídeo',remove:'❌ Quitar',share:'↗️ Compartir',explorer:'Explorador',ago:n=>'hace '+n+' min',postTxt:n=>'BLABLA #'+n+' de Marruecos 🚀',market:'Mercado',mktTitle:'Marketplace',mktSub:'Compra y vende cerca de ti',search:'Buscar...',sell:'Vender',catAll:'Todo',catPhones:'Teléfonos',catElectro:'Electrónica',catSport:'Deporte',catFashion:'Moda',catHome:'Hogar',sellTitle:'Vender un artículo',itemName:'Nombre del artículo',priceLbl:'Precio (DH)',city:'Ciudad',cancel:'Cancelar',soldBy:'Vendido por',msgSeller:'Contactar al vendedor',msgSoon:'Chat próximamente 🚀',posted:'¡Artículo publicado! ✓',fillAll:'Completa el nombre y el precio',noRes:'Sin resultados 😕',mnow:'Ahora mismo',it1:'iPhone 13 · 128GB',it2:'Auriculares inalámbricos',it3:'Bicicleta de montaña',it4:'Reloj deportivo',it5:'Cámara + lente',it6:'Portátil 16"',c1:'Casablanca',c2:'Rabat',c3:'Marrakech',c4:'Tánger',c5:'Fez',c6:'Agadir',say:'Di algo...',send:'Enviar',camErr:'Cámara no disponible 😕',you:'Tú',r1:'¡Genial! 🔥',r2:'Jaja 😂',r3:'Guau 🤩'},
-pt:{dir:'ltr',title:'NOVA - Achraf Aza | De Marrocos',tagline:'De Marrocos · Conectando o mundo',friends:'1 284 amigos',follow:'Seguir',message:'Mensagem',intro:'Intro',introTxt:'Compartilhando de Marrocos 🌍 Construindo NOVA 🚀',composer:'No que você está pensando, Achraf?',photo:'Foto',video:'Vídeo',feeling:'Humor',post:'Publicar',home:'Início',myfriends:'Amigos',chat:'Bate-papo',profile:'Perfil',blablaTitle:'BLABLA',scroll:'↓',loading:'Carregando...',now:'Agora · 🌍',empty:'Escreva algo ou adicione foto/vídeo',remove:'❌ Remover',share:'↗️ Compartilhar',explorer:'Explorador',ago:n=>'há '+n+' min',postTxt:n=>'BLABLA #'+n+' de Marrocos 🚀',market:'Mercado',mktTitle:'Marketplace',mktSub:'Compre e venda perto de você',search:'Buscar...',sell:'Vender',catAll:'Tudo',catPhones:'Celulares',catElectro:'Eletrônicos',catSport:'Esporte',catFashion:'Moda',catHome:'Casa',sellTitle:'Vender um item',itemName:'Nome do item',priceLbl:'Preço (DH)',city:'Cidade',cancel:'Cancelar',soldBy:'Vendido por',msgSeller:'Falar com o vendedor',msgSoon:'Chat em breve 🚀',posted:'Item publicado! ✓',fillAll:'Preencha o nome e o preço',noRes:'Sem resultados 😕',mnow:'Agora mesmo',it1:'iPhone 13 · 128GB',it2:'Fones sem fio',it3:'Bicicleta de montanha',it4:'Relógio esportivo',it5:'Câmera + lente',it6:'Notebook 16"',c1:'Casablanca',c2:'Rabat',c3:'Marrakech',c4:'Tânger',c5:'Fés',c6:'Agadir',say:'Diga algo...',send:'Enviar',camErr:'Câmera não disponível 😕',you:'Você',r1:'Legal! 🔥',r2:'Haha 😂',r3:'Uau 🤩'},
-hi:{dir:'ltr',title:'NOVA - अचरफ़ अज़ा | मोरक्को से',tagline:'मोरक्को से · दुनिया से जुड़ना',friends:'1,284 दोस्त',follow:'फ़ॉलो',message:'संदेश',intro:'परिचय',introTxt:'मोरक्को से साझा करना 🌍 NOVA बनाना 🚀',composer:'आज क्या सोच रहे हैं, अचरफ़?',photo:'फ़ोटो',video:'वीडियो',feeling:'महसूस',post:'पोस्ट',home:'होम',myfriends:'दोस्त',chat:'चैट',profile:'प्रोफ़ाइल',blablaTitle:'BLABLA',scroll:'↓',loading:'लोड हो रहा है...',now:'अभी · 🌍',empty:'कुछ लिखें या फ़ोटो/वीडियो जोड़ें',remove:'❌ हटाएँ',share:'↗️ शेयर',explorer:'एक्सप्लोरर',ago:n=>n+' मिन पहले',postTxt:n=>'मोरक्को से BLABLA #'+n+' 🚀',market:'बाज़ार',mktTitle:'मार्केटप्लेस',mktSub:'आपके पास खरीदें और बेचें',search:'खोजें...',sell:'बेचें',catAll:'सभी',catPhones:'फ़ोन',catElectro:'इलेक्ट्रॉनिक्स',catSport:'खेल',catFashion:'फ़ैशन',catHome:'घर',sellTitle:'आइटम बेचें',itemName:'आइटम का नाम',priceLbl:'क़ीमत (DH)',city:'शहर',cancel:'रद्द करें',soldBy:'विक्रेता',msgSeller:'विक्रेता से बात करें',msgSoon:'चैट जल्द आ रहा है 🚀',posted:'आइटम पोस्ट हो गया! ✓',fillAll:'नाम और क़ीमत भरें',noRes:'कोई नतीजा नहीं 😕',mnow:'अभी',it1:'आइफ़ोन 13 · 128GB',it2:'वायरलेस हेडफ़ोन',it3:'माउंटेन बाइक',it4:'स्पोर्ट्स घड़ी',it5:'कैमरा + लेंस',it6:'लैपटॉप 16"',c1:'कासाब्लांका',c2:'रबात',c3:'मारकेच',c4:'टैंजियर',c5:'फ़ेज़',c6:'अगादिर',say:'कुछ कहें...',send:'भेजें',camErr:'कैमरा उपलब्ध नहीं 😕',you:'आप',r1:'कमाल! 🔥',r2:'हहा 😂',r3:'वाह 🤩'}
-};
-
-function esc(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;')}
-
-function applyLang(L){
-if(!I18N[L])L='en';
-cur=L;const t=I18N[L];
-document.documentElement.lang=L;
-document.documentElement.dir=t.dir;
-document.title=t.title;
-document.querySelectorAll('[data-i18n]').forEach(el=>{const k=el.dataset.i18n;if(t[k]!=null)el.textContent=t[k]});
-document.querySelectorAll('[data-i18n-ph]').forEach(el=>{const k=el.dataset.i18nPh;if(t[k]!=null)el.placeholder=t[k]});
-try{localStorage.setItem('novaLang',L)}catch(e){}
-renderChips();renderMarket();
-if(document.getElementById('blablaPage').classList.contains('active'))renderReels();
-}
-function onLang(L){applyLang(L)}
-
-function preview(input,type){
-const file=input.files[0];if(!file)return;
-const r=new FileReader();
-r.onload=e=>{
-currentMedia=e.target.result;currentType=type;
-const t=I18N[cur];
-const rm='<button onclick="clearPreview()" style="margin-top:6px;padding:6px 12px;background:#e4e6eb;border:none;border-radius:6px">'+t.remove+'</button>';
-if(type==='img')document.getElementById('preview').innerHTML='<img src="'+e.target.result+'" alt="" style="width:100%;border-radius:10px;max-height:320px;object-fit:cover;margin-top:10px">'+rm;
-else document.getElementById('preview').innerHTML='<video src="'+e.target.result+'" controls playsinline style="width:100%;border-radius:10px;max-height:320px;margin-top:10px"></video>'+rm;
-};
-r.readAsDataURL(file);
-}
-function clearPreview(){document.getElementById('preview').innerHTML='';currentMedia=null;currentType=null;}
-
-function publishPost(){
-const t=I18N[cur];
-const txt=document.getElementById('postInput').value;
-if(!txt&&!currentMedia)return alert(t.empty);
-let mediaHtml='';
-if(currentMedia){mediaHtml=currentType==='img'?'<img src="'+currentMedia+'" alt="" loading="lazy" style="width:100%;border-radius:10px;margin-top:10px">':'<video src="'+currentMedia+'" controls playsinline style="width:100%;border-radius:10px;margin-top:10px;max-height:360px"></video>';}
-const d=document.createElement('div');d.className='card';
-d.innerHTML='<div class="post-head"><img src="https://i.pravatar.cc/100?img=12" alt="" width="40" height="40" loading="lazy"><div><b>Achraf Aza</b><div style="font-size:11px;color:#65676b">'+t.now+'</div></div></div><p style="margin-top:10px">'+esc(txt)+'</p>'+mediaHtml;
-home.prepend(d);
-document.getElementById('postInput').value='';clearPreview();
-}
-
-/* ===== BLABLA · TIKTOK REELS ===== */
-const MUSIC='♫ NOVA Mix — From Morocco 🇲🇦';
-const REEL_DEMO=[
-{n:7,likes:384,av:33,img:'https://images.unsplash.com/photo-1506744038136-46273834b3fb?w=600&q=55&auto=format&fit=crop'},
-{n:12,likes:512,av:47,img:'https://images.unsplash.com/photo-1470071459604-3b5ec3a7fe05?w=600&q=55&auto=format&fit=crop'},
-{n:21,likes:977,av:60,img:'https://images.unsplash.com/photo-1501785888041-af3ef285b470?w=600&q=55&auto=format&fit=crop'},
-{n:33,likes:1290,av:5,img:'https://images.unsplash.com/photo-1441974231531-c6227db76b6e?w=600&q=55&auto=format&fit=crop'},
-{n:44,likes:845,av:16,img:'https://images.unsplash.com/photo-1472214103451-9374bd1c798e?w=600&q=55&auto=format&fit=crop'}
-];
-let userReels=[];try{userReels=JSON.parse(localStorage.getItem('novaReels')||'[]')}catch(e){}
-let ALL_REELS=[],LIKED={};try{LIKED=JSON.parse(localStorage.getItem('novaLikes')||'{}')}catch(e){}
-
-function renderReels(){
-const t=I18N[cur];
-const rc=document.getElementById('reels');
-const keepScroll=rc.scrollTop;
-ALL_REELS=userReels.concat(REEL_DEMO);
-let html='';
-ALL_REELS.forEach((r,i)=>{
-const key=r.you?('u'+r.id):('d'+r.n);
-const liked=!!LIKED[key];
-const author=r.you?t.you:t.explorer+' '+r.n;
-const cap=r.you?t.introTxt:t.postTxt(r.n);
-const av=r.you?12:r.av;
-const likes=(r.you?0:r.likes)+(liked?1:0);
-html+='<div class="reel"><img class="bgimg" src="'+r.img+'" alt="" loading="lazy" decoding="async"><div class="shade"></div>'
-+'<div class="rail"><button class="rb" onclick="likeReel('+i+',this)">'+(liked?'❤️':'🤍')+'<div class="cnt">'+likes.toLocaleString('en-US')+'</div></button>'
-+'<span class="rb">💬<div class="cnt">'+(r.you?0:Math.max(1,Math.round(r.likes/7)))+'</div></span>'
-+'<span class="rb">↗️<div class="cnt">'+(r.you?0:Math.round(r.likes/3))+'</div></span></div>'
-+'<div class="caption"><img src="https://i.pravatar.cc/100?img='+av+'" width="32" height="32" alt="" style="border-radius:50%;vertical-align:-10px;margin-right:6px;border:2px solid #fff"><b>@'+esc(author)+'</b>'
-+'<div style="font-size:13px;margin-top:6px">'+cap+'</div>'
-+'<div style="font-size:12px;opacity:.95;margin-top:8px"><span class="disc">🎵</span> '+MUSIC+'</div></div></div>';
-});
-document.getElementById('reels').innerHTML=html;
-rc.scrollTop=keepScroll;
-}
-function likeReel(i,btn){
-const r=ALL_REELS[i];
-const key=r.you?('u'+r.id):('d'+r.n);
-LIKED[key]=!LIKED[key];
-try{localStorage.setItem('novaLikes',JSON.stringify(LIKED))}catch(e){}
-const liked=LIKED[key];
-const likes=(r.you?0:r.likes)+(liked?1:0);
-btn.innerHTML=(liked?'❤️':'🤍')+'<div class="cnt">'+likes.toLocaleString('en-US')+'</div>';
-}
-
-/* ===== LIVE CHAT ===== */
-let CHAT=[{a:'Explorer 7',t:'🔥🔥'},{a:'Explorer 12',t:'NOVA 🚀🚀'},{a:'Explorer 21',t:'🇲🇦 ❤️'}];
-try{const sc=localStorage.getItem('novaChat');if(sc)CHAT=JSON.parse(sc)}catch(e){}
-function renderChat(){
-document.getElementById('chatmsgs').innerHTML=CHAT.slice(-6).map(m=>'<div class="msg"><b>'+esc(m.a)+':</b> '+esc(m.t)+'</div>').join('');
-}
-function pushChat(m){
-CHAT.push(m);CHAT=CHAT.slice(-20);
-try{localStorage.setItem('novaChat',JSON.stringify(CHAT))}catch(e){}
-renderChat();
-}
-function sendChat(){
-const inp=document.getElementById('chatInput');const v=inp.value.trim();if(!v)return;
-const t=I18N[cur];
-pushChat({a:t.you,t:v});inp.value='';
-setTimeout(()=>{pushChat({a:t.explorer+' '+(7+Math.floor(Math.random()*40)),t:t['r'+(1+Math.floor(Math.random()*3))]})},1200+Math.random()*1300);
-}
-
-/* ===== CAMERA (SWITCH FRONT/BACK) ===== */
-let camStream=null,front=true;
-async function openCam(){
-document.getElementById('camModal').style.display='block';
-stopStream();
-try{
-camStream=await navigator.mediaDevices.getUserMedia({video:{facingMode:front?'user':'environment'},audio:false});
-document.getElementById('camView').srcObject=camStream;
-}catch(err){closeCam();alert(I18N[cur].camErr)}
-}
-function switchCam(){front=!front;openCam()}
-function stopStream(){if(camStream){camStream.getTracks().forEach(tr=>tr.stop());camStream=null}}
-function closeCam(){stopStream();document.getElementById('camModal').style.display='none'}
-function snap(){
-const v=document.getElementById('camView');
-const c=document.createElement('canvas');
-c.width=v.videoWidth||720;c.height=v.videoHeight||1280;
-c.getContext('2d').drawImage(v,0,0,c.width,c.height);
-const img=c.toDataURL('image/jpeg',.75);
-userReels.unshift({id:Date.now(),img:img,you:true});
-try{localStorage.setItem('novaReels',JSON.stringify(userReels))}catch(e){}
-closeCam();
-renderReels();
-document.getElementById('reels').scrollTop=0;
-alert(I18N[cur].posted);
-}
-
-/* ===== MARKETPLACE ===== */
-const FALLBACK_IMG='https://images.unsplash.com/photo-1542291026-7eec264c27ff?w=400&q=55&auto=format&fit=crop';
-const DEMO=[
-{img:'https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?w=400&q=55&auto=format&fit=crop',price:4500,cat:'phones',time:'2h',it:'it1',c:'c1'},
-{img:'https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=400&q=55&auto=format&fit=crop',price:350,cat:'electro',time:'5h',it:'it2',c:'c2'},
-{img:'https://images.unsplash.com/photo-1485965120184-e220f721d03e?w=400&q=55&auto=format&fit=crop',price:1200,cat:'sport',time:'1d',it:'it3',c:'c3'},
-{img:'https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=400&q=55&auto=format&fit=crop',price:900,cat:'fashion',time:'3d',it:'it4',c:'c4'},
-{img:'https://images.unsplash.com/photo-1516035069371-29a1b244cc32?w=400&q=55&auto=format&fit=crop',price:2900,cat:'electro',time:'6h',it:'it5',c:'c5'},
-{img:'https://images.unsplash.com/photo-1496181133206-80ce9b88a853?w=400&q=55&auto=format&fit=crop',price:6500,cat:'electro',time:'1w',it:'it6',c:'c6'}
-];
-let userItems=[];try{userItems=JSON.parse(localStorage.getItem('novaItems')||'[]')}catch(e){}
-function getItems(){return userItems.concat(DEMO)}
-function itemTitle(it){return it.it?I18N[cur][it.it]:it.name}
-function itemCity(it){return it.c?I18N[cur][it.c]:it.city}
-function itemTime(it){return I18N[cur][it.time]?I18N[cur][it.time]:it.time}
-function fmtPrice(p){return p.toLocaleString('en-US')+' DH'}
-
-const CATS=[['all','catAll'],['phones','catPhones'],['electro','catElectro'],['sport','catSport'],['fashion','catFashion'],['home','catHome']];
-function renderChips(){
-const t=I18N[cur];
-document.getElementById('mktChips').innerHTML=CATS.map(c=>'<button class="chip'+(curCat===c[0]?' on':'')+'" onclick="setCat(\''+c[0]+'\')">'+t[c[1]]+'</button>').join('');
-}
-function setCat(c){curCat=c;renderChips();renderMarket()}
-
-let RENDERED=[];
-function renderMarket(){
-const t=I18N[cur];
-const q=document.getElementById('mktSearch').value.toLowerCase();
-RENDERED=[];
-let html='';
-getItems().forEach(it=>{
-const title=itemTitle(it);
-if(curCat!=='all'&&it.cat!==curCat)return;
-if(q&&title.toLowerCase().indexOf(q)<0&&itemCity(it).toLowerCase().indexOf(q)<0)return;
-RENDERED.push(it);
-html+='<div class="item" onclick="openDetail('+(RENDERED.length-1)+')"><img src="'+it.img+'" loading="lazy" decoding="async" alt=""><div class="pad"><div class="price">'+fmtPrice(it.price)+'</div><div class="iname">'+esc(title)+'</div><div class="iloc">'+esc(itemCity(it))+' · '+itemTime(it)+'</div></div></div>';
-});
-document.getElementById('mktGrid').innerHTML=html||'<div style="grid-column:1/-1;text-align:center;padding:30px;color:#65676b">'+t.noRes+'</div>';
-}
-
-function openDetail(i){
-const t=I18N[cur];const it=RENDERED[i];
-document.getElementById('dImg').src=it.img;
-document.getElementById('dPrice').textContent=fmtPrice(it.price);
-document.getElementById('dName').textContent=itemTitle(it);
-document.getElementById('dLoc').textContent=itemCity(it)+' · '+itemTime(it);
-document.getElementById('dSeller').textContent=t.soldBy+' · NOVA';
-document.getElementById('dMsg').textContent=t.msgSeller;
-document.getElementById('detailModal').classList.add('open');
-}
-function closeDetail(){document.getElementById('detailModal').classList.remove('open')}
-function openSell(){document.getElementById('sellModal').classList.add('open')}
-function closeSell(){document.getElementById('sellModal').classList.remove('open')}
-
-function pickSellPhoto(input){
-const f=input.files[0];if(!f)return;
-const r=new FileReader();
-r.onload=e=>{
-const im=new Image();
-im.onload=()=>{
-let w=im.width,h=im.height;const max=800;
-if(w>max){h=Math.round(h*max/w);w=max}
-if(h>max){w=Math.round(w*max/h);h=max}
-const c=document.createElement('canvas');c.width=w;c.height=h;
-c.getContext('2d').drawImage(im,0,0,w,h);
-sellImg=c.toDataURL('image/jpeg',.8);
-document.getElementById('sellThumb').innerHTML='<img src="'+sellImg+'" alt="" style="width:64px;height:64px;object-fit:cover;border-radius:8px">';
-};
-im.src=e.target.result;
-};
-r.readAsDataURL(f);
-}
-
-function publishItem(){
-const t=I18N[cur];
-const name=document.getElementById('sName').value.trim();
-const price=parseInt(document.getElementById('sPrice').value,10);
-const city=document.getElementById('sCity').value.trim();
-if(!name||!price)return alert(t.fillAll);
-userItems.unshift({name:name,price:price,city:city||t.city,cat:document.getElementById('sCat').value,time:'mnow',img:sellImg||FALLBACK_IMG});
-try{localStorage.setItem('novaItems',JSON.stringify(userItems))}catch(e){}
-document.getElementById('sName').value='';document.getElementById('sPrice').value='';document.getElementById('sCity').value='';document.getElementById('sellThumb').innerHTML='';sellImg=null;
-closeSell();renderMarket();alert(t.posted);
-}
-
-/* ===== NAV ===== */
-function setActive(id){['homeNav','blablaNav','marketNav'].forEach(n=>document.getElementById(n).classList.toggle('active',n===id))}
-function openBlabla(e){
-e.preventDefault();
-document.getElementById('blablaPage').classList.add('active');
-document.getElementById('marketPage').classList.remove('active');
-home.style.display='none';
-setActive('blablaNav');
-const bp=document.getElementById('blablaPage');
-bp.style.paddingTop=document.querySelector('.header').offsetHeight+'px';
-bp.style.paddingBottom=document.querySelector('.bottom').offsetHeight+'px';
-if(!ALL_REELS.length)renderReels();
-renderChat();
-}
-function openMarket(e){
-e.preventDefault();
-document.getElementById('marketPage').classList.add('active');
-document.getElementById('blablaPage').classList.remove('active');
-home.style.display='none';
-setActive('marketNav');
-renderChips();renderMarket();
-}
-function showHome(e){
-if(e)e.preventDefault();
-document.getElementById('blablaPage').classList.remove('active');
-document.getElementById('marketPage').classList.remove('active');
-home.style.display='block';
-setActive('homeNav');
-}
-
-let saved='en';try{saved=localStorage.getItem('novaLang')||'en'}catch(e){}
-if(!I18N[saved])saved='en';
-document.getElementById('langSel').value=saved;
-applyLang(saved);
-</script>
-</body>
-</html>
-كيفاش ترفعو: نفس الخطوات — GitHub → index.html → ✏️ → مسح القديم → لصق الجديد → Commit ✅
-ملاحظتين صغار:
-📷 الكاميرا كتخدم غير فالمواقع الآمنة HTTPS — وGitHub Pages HTTPS، يعني غادي تخدم مزيان. غير خاص المتصفح يستأذن الزائر أول مرة
-الـ reels والرسائل واللايكات كيتسالو محلياً فجهاز كل زائر — إلا بغيتي غداً دردشة حقيقية بين الناس من بلدان مختلفة، غادي نحتاجو Backend (بحال Firebase) ونعاونك فيه
-جربو وقليا شنو بان ليك! 🚀 شكراً على الثقة 🙏
+es:{dir:'ltr',title:'NOVA - Achraf Aza | De Marruecos',tagline:'De Marruecos · Conectando el mundo',friends:'1 284 amigos',follow:'Seguir',message:'Mensaje',intro:'Intro',introTxt:'Compartiendo desde Marruecos 🌍 Construyendo NOVA 🚀',composer:'¿En qué piensas, Achraf?',photo:'Foto',video:'Vídeo',feeling:'Ánimo',post:'Publicar',home:'Inicio',myfriends:'Amigos',chat:'Chat',profile:'Perfil',blablaTitle:'BLABLA',scroll:'↓',loading:'Cargando...',now:'Ahora · 🌍',empty:'Escribe algo o añade foto/vídeo',remove:'❌ Quitar',share:'↗️ Compartir',explorer:'Explorador',ago:n=>'hace '+n+' min',postTxt:n=>'BLABLA #'+n+' de Marruecos 🚀',market:'Mercado',mktTitle:'Marketplace',mktSub:'Compra y vende cerca de ti',search:'Buscar...',sell:'Vender',catAll:'Todo',catPhones:'Teléfonos',catElectro:'Electrónica',catSport:'Deporte',catFashion:'Moda',catHome:'Hogar',sellTitle:'Vender un artículo',itemName:'Nombre del artículo',priceLbl:'Precio (DH)',city:'Ciudad',cancel:'Cancelar',soldBy:'Vendido por',msgSeller:'Contactar al vendedor',msgSoon:'Chat próximamente 🚀',posted:'¡Artículo publicado! ✓',fillAll:'Completa el nombre y el precio',noRes:'Sin resultados 😕',mnow:'Ahora mismo',it1:'iPhone 13 · 128GB',it2:'Auriculares inalámbricos',it3:'Bicicleta de montaña',it4:'Reloj deportivo',it5:'Cámara + lente',it6:'Portátil 16"',c1:'Casablanca',c2:'Rabat',c3:'Marrakech',c4:'Tánger',c5:'Fez',c6:'Agadir',say:'Di algo...',send:'Enviar',camErr:'Cá
