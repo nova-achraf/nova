@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>NOVA Icons</title>
+</head>
+<body style="background:#111;color:#fff;font-family:Arial;text-align:center;padding:24px">
+<h2>NOVA - Icon Maker</h2>
+<p>Touch the buttons, icons go to your Downloads</p>
+<canvas id="c" width="512" height="512" style="display:none"></canvas>
+<p>
+<button onclick="makeIcon(192)" style="padding:14px 22px;font-size:18px;margin:6px">icon-192.png</button>
+<button onclick="makeIcon(512)" style="padding:14px 22px;font-size:18px;margin:6px">icon-512.png</button>
+</p>
+<script>
+function makeIcon(size) {
+  var c = document.getElementById('c');
+  c.width = size;
+  c.height = size;
+  var x = c.getContext('2d');
+  x.fillStyle = '#1877f2';
+  x.fillRect(0, 0, size, size);
+  x.fillStyle = '#ffffff';
+  x.font = 'bold ' + Math.round(size * 0.6) + 'px Arial';
+  x.textAlign = 'center';
+  x.textBaseline = 'middle';
+  x.fillText('N', size / 2, size * 0.54);
+  var a = document.createElement('a');
+  a.href = c.toDataURL('image/png');
+  a.download = 'icon-' + size + '.png';
+  document.body.appendChild(a);
+  a.click();
+  a.remove();
+}
+</script>
+</body>
+</html>
