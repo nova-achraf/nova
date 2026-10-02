@@ -2060,3 +2060,85 @@ renderMarket();
 
 </body>
 </html>
+<!-- ===== NOVA · Sign-In v4 (popup) ===== -->
+<script>
+(function () {
+  const cfg = {
+    apiKey: "AIzaSyAP1KiAtoMB5EkGWopUuKm0LQMNi1QkApM",
+    authDomain: "nova-cb212.firebaseapp.com",
+    projectId: "nova-cb212",
+    storageBucket: "nova-cb212.firebasestorage.app",
+    messagingSenderId: "660417453842",
+    appId: "1:660417453842:web:047ccaa48dc441d5f6ddcb",
+    measurementId: "G-78X5WCEJWW"
+  };
+  const app = firebase.initializeApp(cfg, 'nova-fix4');
+  const auth = firebase.auth(app);
+
+  const btn = document.createElement('button');
+  btn.id = 'nova-signin-btn4';
+  btn.style.cssText = 'position:fixed;bottom:78px;right:12px;z-index:10002;background:#1877f2;color:#fff;border:none;border-radius:50%;width:52px;height:52px;font-size:22px;box-shadow:0 4px 12px rgba(0,0,0,.35);';
+  btn.innerHTML = '👤';
+  btn.title = 'Sign in with Google';
+  document.body.appendChild(btn);
+
+  function hideOthers() {
+    document.querySelectorAll('button').forEach(function (b) {
+      if (b.id !== 'nova-signin-btn4' && b.style.position === 'fixed' && b.style.backgroundColor === 'rgb(24, 119, 242)') {
+        b.style.display = 'none';
+      }
+    });
+    btn.style.display = 'block';
+  }
+  hideOthers();
+  setTimeout(hideOthers, 800);
+  setTimeout(hideOthers, 2500);
+
+  auth.onAuthStateChanged(function (user) {
+    if (user) {
+      const photo = user.photoURL || '';
+      btn.innerHTML = photo
+        ? '<img src="' + photo + '" alt="me" style="width:52px;height:52px;border-radius:50%;object-fit:cover;display:block;">'
+        : '👤';
+      btn.title = user.displayName || user.email || 'NOVA';
+    } else {
+      btn.innerHTML = '👤';
+      btn.title = 'Sign in with Google';
+    }
+  });
+
+  btn.addEventListener('click', function () {
+    const user = auth.currentUser;
+    if (user) {
+      if (confirm((user.displayName || user.email) + ' - Sign out ?')) auth.signOut();
+      return;
+    }
+    btn.innerHTML = '⏳';
+    const provider = new firebase.auth.GoogleAuthProvider();
+    auth.signInWithPopup(provider).then(function (res) {
+      if (res && res.user) {
+        alert('NOVA ✅ مرحبا ' + (res.user.displayName || res.user.email || '') + '!');
+      }
+      btn.innerHTML = '👤';
+    }).catch(function (err) {
+      if (err && (err.code === 'auth/popup-blocked' || err.code === 'auth/operation-not-supported-in-this-environment')) {
+        auth.signInWithRedirect(provider).catch(function (e2) {
+          alert('Sign-in error: ' + (e2 && e2.code ? e2.code : e2));
+          btn.innerHTML = '👤';
+        });
+        return;
+      }
+      alert('Sign-in error: ' + (err && err.code ? err.code : err));
+      btn.innerHTML = '👤';
+    });
+  });
+
+  auth.getRedirectResult().then(function (res) {
+    if (res && res.user) {
+      alert('NOVA ✅ مرحبا ' + (res.user.displayName || res.user.email || '') + '!');
+    }
+  }).catch(function (err) {
+    alert('Sign-in error: ' + (err && err.code ? err.code : err));
+  });
+})();
+</script>
