@@ -16,7 +16,7 @@
 *{margin:0;padding:0;box-sizing:border-box}  
 body{font-family:-apple-system,system-ui,'Segoe UI',Roboto,Tahoma,sans-serif;background:#f0f2f5;color:#050505;overflow-x:hidden}  
 .header{position:sticky;top:0;z-index:100;background:#fff;display:flex;justify-content:space-between;align-items:center;padding:10px 14px;box-shadow:0 1px 2px rgba(0,0,0,.1)}  
-.logo{width:42px;height:42px;background:#1877f2;color:#fff;border-radius:11px;display:grid;place-items:center;font-weight:900;font-size:22px}  
+.logo{width:42px;height:42px;background:linear-gradient(135deg,#4f46e5,#7c3aed);color:#fff;border-radius:11px;display:grid;place-items:center;font-weight:900;font-size:22px}  
 .lang{border:1px solid #ddd;border-radius:20px;padding:6px 12px;font-size:13px;background:#fff;font-family:inherit;cursor:pointer;max-width:48vw}  
 .cover{width:100%;height:clamp(180px,38vw,300px);background:#ddd;overflow:hidden}  
 .cover img{width:100%;height:100%;object-fit:cover;display:block}  
@@ -29,7 +29,7 @@ body{font-family:-apple-system,system-ui,'Segoe UI',Roboto,Tahoma,sans-serif;bac
 .friends{font-weight:700;font-size:13.5px;margin-top:4px}  
 .btns{display:flex;gap:8px;margin-top:14px}  
 .btn{flex:1;padding:11px;border-radius:8px;border:none;font-weight:700;font-size:14.5px;cursor:pointer}  
-.btn-p{background:#1877f2;color:#fff}  
+.btn-p{background:linear-gradient(135deg,#4f46e5,#7c3aed);color:#fff}  
 .btn-s{background:#e4e6eb}  
 .card{background:#fff;border-radius:12px;padding:12px;margin:10px;box-shadow:0 1px 2px rgba(0,0,0,.06)}  
 .composer{display:flex;gap:10px;align-items:center}  
@@ -41,14 +41,14 @@ body{font-family:-apple-system,system-ui,'Segoe UI',Roboto,Tahoma,sans-serif;bac
 .post-head img{width:40px;height:40px;border-radius:50%}  
 .bottom{position:fixed;bottom:0;left:0;right:0;background:#fff;border-top:1px solid #ddd;display:flex;justify-content:space-around;padding:7px 0 calc(7px + env(safe-area-inset-bottom));z-index:100}  
 .nav{flex:1;display:flex;flex-direction:column;align-items:center;font-size:10px;color:#65676b;text-decoration:none;gap:2px}  
-.nav.active{color:#1877f2;font-weight:700}  
+.nav.active{color:#6d28d9;font-weight:700}  
 .nav span.ico{font-size:19px}  
 #marketPage{display:none}#marketPage.active{display:block}  
 .msearch{flex:1;min-width:0;border:none;background:#f0f2f5;border-radius:20px;padding:10px 14px;outline:none;font-size:14px}  
 .chips{display:flex;gap:8px;overflow-x:auto;padding:10px 0 2px;-ms-overflow-style:none;scrollbar-width:none}  
 .chips::-webkit-scrollbar{display:none}  
 .chip{border:none;background:#e4e6eb;border-radius:20px;padding:7px 14px;font-size:13px;font-weight:600;white-space:nowrap;cursor:pointer}  
-.chip.on{background:#1877f2;color:#fff}  
+.chip.on{background:linear-gradient(135deg,#4f46e5,#7c3aed);color:#fff}  
 .mkt-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;padding:0 10px}  
 .item{background:#fff;border-radius:12px;overflow:hidden;box-shadow:0 1px 2px rgba(0,0,0,.06);cursor:pointer}  
 .item img{width:100%;aspect-ratio:1/1;object-fit:cover;display:block}  
@@ -83,7 +83,7 @@ body{font-family:-apple-system,system-ui,'Segoe UI',Roboto,Tahoma,sans-serif;bac
 @keyframes pop{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}  
 .chatbar{display:flex;gap:8px;padding:8px 10px;background:#000;flex-shrink:0}  
 .chatbar input{flex:1;min-width:0;border:none;background:#262626;color:#fff;border-radius:20px;padding:10px 14px;outline:none;font-size:14px}  
-.sendbtn{border:none;background:#1877f2;color:#fff;border-radius:20px;padding:8px 16px;font-weight:700;font-size:13px;cursor:pointer}  
+.sendbtn{border:none;background:linear-gradient(135deg,#4f46e5,#7c3aed);color:#fff;border-radius:20px;padding:8px 16px;font-weight:700;font-size:13px;cursor:pointer}  
 .camctrls{position:absolute;bottom:26px;left:0;right:0;display:flex;justify-content:space-around;align-items:center;z-index:5}  
 .camb{background:rgba(0,0,0,.55);color:#fff;border:none;width:46px;height:46px;border-radius:50%;font-size:20px;cursor:pointer}  
 .snapbtn{width:70px;height:70px;border-radius:50%;background:#f3425f;border:5px solid #fff;cursor:pointer}  
@@ -91,10 +91,14 @@ body{font-family:-apple-system,system-ui,'Segoe UI',Roboto,Tahoma,sans-serif;bac
 .viewers{display:inline-block;color:#fff;font-size:12px;font-weight:700;background:rgba(255,255,255,.16);padding:3px 10px;border-radius:12px;margin-left:6px}  
 .giftbar{display:grid;grid-template-columns:repeat(5,1fr);gap:8px;margin-top:12px}  
 .giftbar button{background:#fff;border:2px solid #ffd9e8;border-radius:12px;padding:10px 2px;font-size:24px;cursor:pointer}  
-.giftbar button small{display:block;font-size:11px;font-weight:800;color:#1877f2;margin-top:3px}  
-.wallet{display:flex;justify-content:space-between;align-items:center;background:#e8f0fe;border-radius:12px;padding:10px 14px;margin-top:12px;font-weight:800;color:#1877f2}  
+.giftbar button small{display:block;font-size:11px;font-weight:800;color:#6d28d9;margin-top:3px}  
+.wallet{display:flex;justify-content:space-between;align-items:center;background:#e8f0fe;border-radius:12px;padding:10px 14px;margin-top:12px;font-weight:800;color:#6d28d9}  
 .payopt{display:flex;justify-content:space-between;align-items:center;border:2px solid #e4e6eb;border-radius:12px;padding:12px 14px;margin-top:10px;font-weight:700;cursor:pointer}  
 .fol{display:flex;align-items:center;gap:10px;padding:9px 0;border-bottom:1px solid #eee}  
+#chatPage{display:none}#chatPage.active{display:block}  
+#profilePage{display:none}#profilePage.active{display:block}  
+.langBtn{border:1px solid #ddd;border-radius:8px;padding:9px 6px;font-size:13px;font-weight:700;background:#fff;cursor:pointer}  
+.setRow{display:flex;align-items:center;gap:10px;padding:11px;border-bottom:1px solid #eee;font-weight:700;font-size:14px;cursor:pointer}  
 </style>  
 </head>  
 <body>  <div class="header"><div class="logo">N</div>  
@@ -112,7 +116,7 @@ body{font-family:-apple-system,system-ui,'Segoe UI',Roboto,Tahoma,sans-serif;bac
 <img class="avatar" src="https://i.pravatar.cc/200?img=12" width="86" height="86" alt="Achraf" loading="eager" decoding="async">  
 <div class="info"><h1>Achraf Aza</h1><p data-i18n="tagline">From Morocco · Connecting the world</p><div class="friends" data-i18n="friends">1,284 friends</div></div>  
 </div>  
-<div class="btns"><button class="btn btn-p" data-i18n="follow" onclick="toggleFollow(this)">Follow</button><button class="btn btn-s" data-i18n="message" onclick="openBlabla(event)">Message</button></div>  
+<div class="btns"><button class="btn btn-p" data-i18n="follow" onclick="toggleFollow(this)">Follow</button><button class="btn btn-s" data-i18n="message" onclick="openBlabla(event)">Message</button><button class="btn btn-s" onclick="shareNova()">Partager ↗️</button></div>  
 </div>  <div class="card"><b data-i18n="intro">Intro</b><div style="margin-top:4px;font-size:14.5px" data-i18n="introTxt">Sharing from Morocco 🌍 Building NOVA 🚀</div></div>  <div class="card">  
 <div class="composer">  
 <img src="https://i.pravatar.cc/100?img=12" alt="" loading="lazy" decoding="async">  
@@ -124,11 +128,11 @@ body{font-family:-apple-system,system-ui,'Segoe UI',Roboto,Tahoma,sans-serif;bac
 <label class="opt" style="color:#f7b928">😊 <span data-i18n="feeling">Feeling</span></label>  
 </div>  
 <div id="preview"></div>  
-<button onclick="publishPost()" data-i18n="post" style="width:100%;margin-top:10px;padding:10px;background:#1877f2;color:#fff;border:none;border-radius:8px;font-weight:700">Post</button>  
+<button onclick="publishPost()" data-i18n="post" style="width:100%;margin-top:10px;padding:10px;background:linear-gradient(135deg,#4f46e5,#7c3aed);color:#fff;border:none;border-radius:8px;font-weight:700">Post</button>  
 </div>  <div id="homePosts"></div>  <div id="blablaPage">  
 <div class="reelbar">  
 <div class="t">BLABLA <span class="live">● LIVE</span> <span class="viewers">👁️ <span id="viewers">1,247</span></span></div>  
-<button class="cambtn" onclick="openCam()">📷</button>  
+<button class="cambtn" onclick="openCam()" style="background:#42b72a">📷</button>  
 </div>  
 <div class="reels" id="reels"></div>  
 <div class="chatmsgs" id="chatmsgs"></div>  
@@ -137,7 +141,7 @@ body{font-family:-apple-system,system-ui,'Segoe UI',Roboto,Tahoma,sans-serif;bac
 <button class="sendbtn" data-i18n="send" onclick="sendChat()">Send</button>  
 </div>  
 </div>  <div id="marketPage">  
-<div class="card" style="background:#1877f2;color:#fff"><b data-i18n="mktTitle">Marketplace</b><div style="font-size:12px;opacity:.9" data-i18n="mktSub">Buy &amp; sell near you · NOVA</div></div>  
+<div class="card" style="background:linear-gradient(135deg,#4f46e5,#7c3aed);color:#fff"><b data-i18n="mktTitle">Marketplace</b><div style="font-size:12px;opacity:.9" data-i18n="mktSub">Buy &amp; sell near you · NOVA</div></div>  
 <div class="card" style="padding:10px">  
 <div style="display:flex;gap:8px">  
 <input id="mktSearch" class="msearch" data-i18n-ph="search" placeholder="Search items...">  
@@ -147,13 +151,45 @@ body{font-family:-apple-system,system-ui,'Segoe UI',Roboto,Tahoma,sans-serif;bac
 </div>  
 <div class="mkt-grid" id="mktGrid"></div>  
 </div>  <div id="friendsPage">  
-<div class="card" style="background:#1877f2;color:#fff"><b data-i18n="followers">Followers</b><div style="font-size:12px;opacity:.9" id="folCount">1,284 + 0</div></div>  
+<div class="card" style="background:linear-gradient(135deg,#4f46e5,#7c3aed);color:#fff"><b data-i18n="followers">Followers</b><div style="font-size:12px;opacity:.9" id="folCount">1,284 + 0</div></div>  
 <div class="card">  
 <b data-i18n="join">Join as follower</b>  
 <input id="folName" class="f" data-i18n-ph="namePh" placeholder="Your name">  
 <button onclick="registerFollower()" style="width:100%;margin-top:12px;padding:11px;background:#42b72a;color:#fff;border:none;border-radius:8px;font-weight:700;font-size:15px" data-i18n="join">Join as follower</button>  
 </div>  
 <div class="card"><b data-i18n="myfriends">Friends</b><div id="folList" style="margin-top:4px"></div></div>  
+</div>  <div id="chatPage">  
+<div class="card" style="background:linear-gradient(135deg,#4f46e5,#7c3aed);color:#fff"><b>NOVA Chat 💬</b><div style="font-size:12px;opacity:.9">Talk with your friends · NOVA</div></div>  
+<div class="card">  
+<div id="novaChatBox" style="display:flex;flex-direction:column;gap:6px;max-height:46vh;overflow-y:auto;min-height:120px"></div>  
+<div style="display:flex;gap:8px;margin-top:10px">  
+<input id="novaChatInput" class="msearch" placeholder="Write a message..." onkeydown="if(event.key==='Enter')novaChatSend()">  
+<button onclick="novaChatSend()" style="padding:10px 16px;background:linear-gradient(135deg,#4f46e5,#7c3aed);color:#fff;border:none;border-radius:20px;font-weight:700;font-size:13px;white-space:nowrap">Send</button>  
+</div>  
+</div>  
+</div>  <div id="profilePage">  
+<div class="card" style="text-align:center">  
+<img id="pfpImg" src="https://i.pravatar.cc/200?img=12" style="width:96px;height:96px;border-radius:50%;object-fit:cover;border:4px solid #fff;box-shadow:0 2px 8px rgba(0,0,0,.25);margin:0 auto;display:block">  
+<div id="pfpName" style="font-size:20px;font-weight:800;margin-top:10px">Achraf Aza</div>  
+<div id="pfpMail" style="font-size:13px;color:#65676b;margin-top:2px">From Morocco 🇲🇦</div>  
+<button id="pfpBtn" onclick="document.getElementById('nova-signin-btn7').click()" style="width:100%;margin-top:12px;padding:11px;background:linear-gradient(135deg,#4f46e5,#7c3aed);color:#fff;border:none;border-radius:8px;font-weight:700;font-size:15px">Log in</button>  
+</div>  
+<div class="card">  
+<b>🌐 Langues · Languages</b>  
+<div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:10px">  
+<button class="langBtn" onclick="setLangBtn('en')">English</button>  
+<button class="langBtn" onclick="setLangBtn('ar')">العربية</button>  
+<button class="langBtn" onclick="setLangBtn('fr')">Français</button>  
+<button class="langBtn" onclick="setLangBtn('es')">Español</button>  
+<button class="langBtn" onclick="setLangBtn('pt')">Português</button>  
+<button class="langBtn" onclick="setLangBtn('hi')">हिन्दी</button>  
+</div>  
+</div>  
+<div class="card">  
+<b>⚙️ Paramètres · Settings</b>  
+<div class="setRow" onclick="shareNova()">↗️ Partager NOVA avec des amis</div>  
+<div class="setRow" style="border-bottom:none">ℹ️ NOVA v8 · Made in Morocco 🇲🇦 🚀</div>  
+</div>  
 </div>  <div class="modal" id="sellModal" onclick="if(event.target===this)closeSell()">  
 <div class="sheet">  
 <div style="display:flex;justify-content:space-between;align-items:center"><b data-i18n="sellTitle">Sell an item</b><button onclick="closeSell()" style="background:none;border:none;font-size:22px;cursor:pointer">✕</button></div>  
@@ -170,7 +206,7 @@ body{font-family:-apple-system,system-ui,'Segoe UI',Roboto,Tahoma,sans-serif;bac
 <option value="fashion" data-i18n="catFashion">Fashion</option>  
 <option value="home" data-i18n="catHome">Home</option>  
 </select>  
-<button onclick="publishItem()" data-i18n="post" style="width:100%;margin-top:14px;padding:11px;background:#1877f2;color:#fff;border:none;border-radius:8px;font-weight:700;font-size:15px">Post</button>  
+<button onclick="publishItem()" data-i18n="post" style="width:100%;margin-top:14px;padding:11px;background:linear-gradient(135deg,#4f46e5,#7c3aed);color:#fff;border:none;border-radius:8px;font-weight:700;font-size:15px">Post</button>  
 </div>  
 </div>  <div class="modal" id="detailModal" onclick="if(event.target===this)closeDetail()">  
 <div class="sheet">  
@@ -183,12 +219,12 @@ body{font-family:-apple-system,system-ui,'Segoe UI',Roboto,Tahoma,sans-serif;bac
 <img src="https://i.pravatar.cc/100?img=12" width="40" height="40" alt="" style="border-radius:50%">  
 <div><b>Achraf Aza</b><div style="font-size:11px;color:#65676b" id="dSeller"></div></div>  
 </div>  
-<button id="dMsg" onclick="alert(I18N[cur].msgSoon)" style="width:100%;margin-top:14px;padding:11px;background:#1877f2;color:#fff;border:none;border-radius:8px;font-weight:700;font-size:15px"></button>  
+<button id="dMsg" onclick="alert(I18N[cur].msgSoon)" style="width:100%;margin-top:14px;padding:11px;background:linear-gradient(135deg,#4f46e5,#7c3aed);color:#fff;border:none;border-radius:8px;font-weight:700;font-size:15px"></button>  
 </div>  
 </div>  <div class="modal" id="giftModal" onclick="if(event.target===this)closeModal('giftModal')">  
 <div class="sheet">  
 <div style="display:flex;justify-content:space-between;align-items:center"><b>🎁 <span data-i18n="choose">Choose a gift</span></b><button onclick="closeModal('giftModal')" style="background:none;border:none;font-size:22px;cursor:pointer">✕</button></div>  
-<div class="wallet"><span>💰 <span data-i18n="coins">Coins</span>: <span id="coinsTxt">100</span></span><button onclick="openPay()" style="background:#1877f2;color:#fff;border:none;border-radius:20px;padding:8px 14px;font-weight:700;font-size:13px" data-i18n="recharge">Recharge</button></div>  
+<div class="wallet"><span>💰 <span data-i18n="coins">Coins</span>: <span id="coinsTxt">100</span></span><button onclick="openPay()" style="background:linear-gradient(135deg,#4f46e5,#7c3aed);color:#fff;border:none;border-radius:20px;padding:8px 14px;font-weight:700;font-size:13px" data-i18n="recharge">Recharge</button></div>  
 <div class="giftbar">  
 <button onclick="sendGift('🌹',5)">🌹<small>💰 5</small></button>  
 <button onclick="sendGift('⭐',10)">⭐<small>💰 10</small></button>  
@@ -220,8 +256,8 @@ body{font-family:-apple-system,system-ui,'Segoe UI',Roboto,Tahoma,sans-serif;bac
 <a class="nav" id="friendsNav" href="#" onclick="openFriends(event)"><span class="ico">👥</span><span data-i18n="myfriends">Friends</span></a>  
 <a class="nav" id="blablaNav" href="#" onclick="openBlabla(event)"><span class="ico">💬</span><span>BLABLA</span></a>  
 <a class="nav" id="marketNav" href="#" onclick="openMarket(event)"><span class="ico">🛒</span><span data-i18n="market">Market</span></a>  
-<a class="nav" href="#"><span class="ico">💭</span><span data-i18n="chat">Chat</span></a>  
-<a class="nav" href="#"><span class="ico">👤</span><span data-i18n="profile">Profile</span></a>  
+<a class="nav" id="chatNav" href="#" onclick="openChatPage(event)"><span class="ico">💭</span><span data-i18n="chat">Chat</span></a>  
+<a class="nav" id="profileNav" href="#" onclick="openProfilePage(event)"><span class="ico">👤</span><span data-i18n="profile">Profile</span></a>  
 </nav>  <script>  
 let currentMedia=null,currentType=null,cur='en',curCat='all',sellImg=null,postSeq=0,POSTS={};  
 const home=document.getElementById('homePosts');  
@@ -270,457 +306,4 @@ const t=I18N[cur];
 const txt=document.getElementById('postInput').value;  
 if(!txt&&!currentMedia)return alert(t.empty);  
 let mediaHtml='';  
-if(currentMedia){mediaHtml=currentType==='img'?'<img src="'+currentMedia+'" alt="" loading="lazy" style="width:100%;border-radius:10px;margin-top:10px">':'<video src="'+currentMedia+'" controls playsinline style="width:100%;border-radius:10px;margin-top:10px;max-height:360px"></video>';}  
-const d=document.createElement('div');d.className='card';postSeq++;POSTS[postSeq]={txt:txt,media:currentMedia,type:currentType};  
-d.innerHTML='<div class="post-head"><img src="https://i.pravatar.cc/100?img=12" alt="" width="40" height="40" loading="lazy"><div><b>Achraf Aza</b><div style="font-size:11px;color:#65676b">'+t.now+'</div></div></div><p style="margin-top:10px">'+esc(txt)+'</p>'+mediaHtml+'<button onclick="sharePost('+postSeq+')" style="margin-top:10px;padding:6px 14px;background:#e4e6eb;border:none;border-radius:20px;font-weight:700;font-size:13px">'+t.share+' ↗️</button>'  
-+' <button onclick="giftOpen(\'p'+postSeq+'\')" style="margin-top:10px;padding:6px 14px;background:#ffe7f0;border:none;border-radius:20px;font-weight:700;font-size:13px">🎁 <span id="pgc'+postSeq+'">0</span></button>';  
-home.prepend(d);  
-document.getElementById('postInput').value='';clearPreview();  
-}  
-  
-const MUSIC='♫ NOVA Mix — From Morocco 🇲🇦';  
-const REEL_DEMO=[  
-{n:7,likes:384,av:33,img:'https://images.unsplash.com/photo-1506744038136-46273834b3fb?w=600&q=55&auto=format&fit=crop'},  
-{n:12,likes:512,av:47,img:'https://images.unsplash.com/photo-1470071459604-3b5ec3a7fe05?w=600&q=55&auto=format&fit=crop'},  
-{n:21,likes:977,av:60,img:'https://images.unsplash.com/photo-1501785888041-af3ef285b470?w=600&q=55&auto=format&fit=crop'},  
-{n:33,likes:1290,av:5,img:'https://images.unsplash.com/photo-1441974231531-c6227db76b6e?w=600&q=55&auto=format&fit=crop'},  
-{n:44,likes:845,av:16,img:'https://images.unsplash.com/photo-1472214103451-9374bd1c798e?w=600&q=55&auto=format&fit=crop'}  
-];  
-let userReels=[];try{userReels=JSON.parse(localStorage.getItem('novaReels')||'[]')}catch(e){}  
-let ALL_REELS=[],LIKED={};try{LIKED=JSON.parse(localStorage.getItem('novaLikes')||'{}')}catch(e){}  
-  
-function renderReels(){  
-const t=I18N[cur];  
-const rc=document.getElementById('reels');  
-const keepScroll=rc.scrollTop;  
-ALL_REELS=userReels.concat(REEL_DEMO);  
-let html='';  
-ALL_REELS.forEach((r,i)=>{  
-const key=r.you?('u'+r.id):('d'+r.n);  
-const liked=!!LIKED[key];  
-const author=r.you?t.you:t.explorer+' '+r.n;  
-const cap=r.you?t.introTxt:t.postTxt(r.n);  
-const av=r.you?12:r.av;  
-const likes=(r.you?0:r.likes)+(liked?1:0);  
-html+='<div class="reel"><img class="bgimg" src="'+r.img+'" alt="" loading="lazy" decoding="async"><div class="shade"></div>'  
-+'<div class="rail"><button class="rb" onclick="likeReel('+i+',this)">'+(liked?'❤️':'🤍')+'<div class="cnt">'+likes.toLocaleString('en-US')+'</div></button>'  
-+'<span class="rb">💬<div class="cnt">'+(r.you?0:Math.max(1,Math.round(r.likes/7)))+'</div></span>'  
-+'<button class="rb" onclick="giftOpen(\''+key+'\')">🎁<div class="cnt">'+(GIFTS[key]||0)+'</div></button>'  
-+'<button class="rb" onclick="shareReel('+i+')">↗️<div class="cnt">'+(r.you?0:Math.round(r.likes/3))+'</div></button></div>'  
-+'<div class="caption"><img src="https://i.pravatar.cc/100?img='+av+'" width="32" height="32" alt="" style="border-radius:50%;vertical-align:-10px;margin-right:6px;border:2px solid #fff"><b>@'+esc(author)+'</b>'  
-+'<div style="font-size:13px;margin-top:6px">'+cap+'</div>'  
-+'<div style="font-size:12px;opacity:.95;margin-top:8px"><span class="disc">🎵</span> '+MUSIC+'</div></div></div>';  
-});  
-document.getElementById('reels').innerHTML=html;  
-rc.scrollTop=keepScroll;  
-}  
-function likeReel(i,btn){  
-const r=ALL_REELS[i];  
-const key=r.you?('u'+r.id):('d'+r.n);  
-LIKED[key]=!LIKED[key];  
-try{localStorage.setItem('novaLikes',JSON.stringify(LIKED))}catch(e){}  
-const liked=LIKED[key];  
-const likes=(r.you?0:r.likes)+(liked?1:0);  
-btn.innerHTML=(liked?'❤️':'🤍')+'<div class="cnt">'+likes.toLocaleString('en-US')+'</div>';  
-}  
-  
-function shareReel(i){
-const r=ALL_REELS[i];if(!r)return;
-const t=I18N[cur];
-if(!navigator.share){try{navigator.clipboard.writeText(r.img)}catch(e){}alert('Copied ✓');return;}
-if(r.you&&r.img&&r.img.indexOf('data:')===0){
-fetch(r.img).then(function(res){return res.blob()}).then(function(b){
-const f=new File([b],'nova.jpg',{type:b.type||'image/jpeg'});
-if(navigator.canShare&&navigator.canShare({files:[f]})){navigator.share({files:[f],title:'NOVA',text:'NOVA 🚀'}).catch(function(){})}
-else{navigator.share({title:'NOVA',text:'NOVA 🚀'}).catch(function(){})}
-}).catch(function(){});
-}else{
-navigator.share({title:'NOVA',text:t.postTxt(r.n),url:r.img}).catch(function(){});
-}
-}
-function sharePost(n){
-const p=POSTS[n];if(!p)return;
-if(!navigator.share){try{navigator.clipboard.writeText(p.txt||'NOVA')}catch(e){}alert('Copied ✓');return;}
-if(p.media&&p.media.indexOf('data:')===0){
-fetch(p.media).then(function(res){return res.blob()}).then(function(b){
-const isV=(p.type==='video');
-const f=new File([b],isV?'nova.mp4':'nova.jpg',{type:b.type||(isV?'video/mp4':'image/jpeg')});
-if(navigator.canShare&&navigator.canShare({files:[f]})){navigator.share({files:[f],title:'NOVA',text:p.txt||'NOVA 🚀'}).catch(function(){})}
-else{navigator.share({title:'NOVA',text:p.txt||'NOVA 🚀'}).catch(function(){})}
-}).catch(function(){});
-}else{
-navigator.share({title:'NOVA',text:p.txt||'NOVA 🚀'}).catch(function(){});
-}
-}
-let CHAT=[{a:'Explorer 7',t:'🔥🔥'},{a:'Explorer 12',t:'NOVA 🚀🚀'},{a:'Explorer 21',t:'🇲🇦 ❤️'}];  
-try{const sc=localStorage.getItem('novaChat');if(sc)CHAT=JSON.parse(sc)}catch(e){}  
-function renderChat(){  
-document.getElementById('chatmsgs').innerHTML=CHAT.slice(-6).map(m=>'<div class="msg"><b>'+esc(m.a)+':</b> '+esc(m.t)+'</div>').join('');  
-}  
-function pushChat(m){  
-CHAT.push(m);CHAT=CHAT.slice(-20);  
-try{localStorage.setItem('novaChat',JSON.stringify(CHAT))}catch(e){}  
-renderChat();  
-}  
-function sendChat(){  
-const inp=document.getElementById('chatInput');const v=inp.value.trim();if(!v)return;  
-const t=I18N[cur];  
-pushChat({a:t.you,t:v});inp.value='';  
-setTimeout(()=>{pushChat({a:t.explorer+' '+(7+Math.floor(Math.random()*40)),t:t['r'+(1+Math.floor(Math.random()*3))]})},1200+Math.random()*1300);  
-}  
-  
-let camStream=null,front=true;  
-async function openCam(){  
-document.getElementById('camModal').style.display='block';  
-stopStream();  
-try{  
-camStream=await navigator.mediaDevices.getUserMedia({video:{facingMode:front?'user':'environment'},audio:false});  
-document.getElementById('camView').srcObject=camStream;  
-}catch(err){closeCam();alert(I18N[cur].camErr)}  
-}  
-function switchCam(){front=!front;openCam()}  
-function stopStream(){if(camStream){camStream.getTracks().forEach(tr=>tr.stop());camStream=null}}  
-function closeCam(){stopStream();document.getElementById('camModal').style.display='none'}  
-function snap(){  
-const v=document.getElementById('camView');  
-const c=document.createElement('canvas');  
-c.width=v.videoWidth||720;c.height=v.videoHeight||1280;  
-c.getContext('2d').drawImage(v,0,0,c.width,c.height);  
-const img=c.toDataURL('image/jpeg',.75);  
-userReels.unshift({id:Date.now(),img:img,you:true});  
-try{localStorage.setItem('novaReels',JSON.stringify(userReels))}catch(e){}  
-closeCam();  
-renderReels();  
-document.getElementById('reels').scrollTop=0;  
-alert(I18N[cur].posted);  
-}  
-  
-const FALLBACK_IMG='https://images.unsplash.com/photo-1542291026-7eec264c27ff?w=400&q=55&auto=format&fit=crop';  
-const DEMO=[  
-{img:'https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?w=400&q=55&auto=format&fit=crop',price:4500,cat:'phones',time:'2h',it:'it1',c:'c1'},  
-{img:'https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=400&q=55&auto=format&fit=crop',price:350,cat:'electro',time:'5h',it:'it2',c:'c2'},  
-{img:'https://images.unsplash.com/photo-1485965120184-e220f721d03e?w=400&q=55&auto=format&fit=crop',price:1200,cat:'sport',time:'1d',it:'it3',c:'c3'},  
-{img:'https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=400&q=55&auto=format&fit=crop',price:900,cat:'fashion',time:'3d',it:'it4',c:'c4'},  
-{img:'https://images.unsplash.com/photo-1516035069371-29a1b244cc32?w=400&q=55&auto=format&fit=crop',price:2900,cat:'electro',time:'6h',it:'it5',c:'c5'},  
-{img:'https://images.unsplash.com/photo-1496181133206-80ce9b88a853?w=400&q=55&auto=format&fit=crop',price:6500,cat:'electro',time:'1w',it:'it6',c:'c6'}  
-];  
-let userItems=[];try{userItems=JSON.parse(localStorage.getItem('novaItems')||'[]')}catch(e){}  
-function getItems(){return userItems.concat(DEMO)}  
-function itemTitle(it){return it.it?I18N[cur][it.it]:it.name}  
-function itemCity(it){return it.c?I18N[cur][it.c]:it.city}  
-function itemTime(it){return I18N[cur][it.time]?I18N[cur][it.time]:it.time}  
-function fmtPrice(p){return p.toLocaleString('en-US')+' DH'}  
-  
-const CATS=[['all','catAll'],['phones','catPhones'],['electro','catElectro'],['sport','catSport'],['fashion','catFashion'],['home','catHome']];  
-function renderChips(){  
-const t=I18N[cur];  
-document.getElementById('mktChips').innerHTML=CATS.map(c=>'<button class="chip'+(curCat===c[0]?' on':'')+'" onclick="setCat(\''+c[0]+'\')">'+t[c[1]]+'</button>').join('');  
-}  
-function setCat(c){curCat=c;renderChips();renderMarket()}  
-  
-let RENDERED=[];  
-function renderMarket(){  
-const t=I18N[cur];  
-const q=document.getElementById('mktSearch').value.toLowerCase();  
-RENDERED=[];  
-let html='';  
-getItems().forEach(it=>{  
-const title=itemTitle(it);  
-if(curCat!=='all'&&it.cat!==curCat)return;  
-if(q&&title.toLowerCase().indexOf(q)<0&&itemCity(it).toLowerCase().indexOf(q)<0)return;  
-RENDERED.push(it);  
-html+='<div class="item" onclick="openDetail('+(RENDERED.length-1)+')"><img src="'+it.img+'" loading="lazy" decoding="async" alt=""><div class="pad"><div class="price">'+fmtPrice(it.price)+'</div><div class="iname">'+esc(title)+'</div><div class="iloc">'+esc(itemCity(it))+' · '+itemTime(it)+'</div></div></div>';  
-});  
-document.getElementById('mktGrid').innerHTML=html||'<div style="grid-column:1/-1;text-align:center;padding:30px;color:#65676b">'+t.noRes+'</div>';  
-}  
-  
-function openDetail(i){  
-const t=I18N[cur];const it=RENDERED[i];  
-document.getElementById('dImg').src=it.img;  
-document.getElementById('dPrice').textContent=fmtPrice(it.price);  
-document.getElementById('dName').textContent=itemTitle(it);  
-document.getElementById('dLoc').textContent=itemCity(it)+' · '+itemTime(it);  
-document.getElementById('dSeller').textContent=t.soldBy+' · NOVA';  
-document.getElementById('dMsg').textContent=t.msgSeller;  
-document.getElementById('detailModal').classList.add('open');  
-}  
-function closeDetail(){document.getElementById('detailModal').classList.remove('open')}  
-function openSell(){document.getElementById('sellModal').classList.add('open')}  
-function closeSell(){document.getElementById('sellModal').classList.remove('open')}  
-  
-function pickSellPhoto(input){  
-const f=input.files[0];if(!f)return;  
-const r=new FileReader();  
-r.onload=e=>{  
-const im=new Image();  
-im.onload=()=>{  
-let w=im.width,h=im.height;const max=800;  
-if(w>max){h=Math.round(h*max/w);w=max}  
-if(h>max){w=Math.round(w*max/h);h=max}  
-const c=document.createElement('canvas');c.width=w;c.height=h;  
-c.getContext('2d').drawImage(im,0,0,w,h);  
-sellImg=c.toDataURL('image/jpeg',.8);  
-document.getElementById('sellThumb').innerHTML='<img src="'+sellImg+'" alt="" style="width:64px;height:64px;object-fit:cover;border-radius:8px">';  
-};  
-im.src=e.target.result;  
-};  
-r.readAsDataURL(f);  
-}  
-  
-function publishItem(){  
-const t=I18N[cur];  
-const name=document.getElementById('sName').value.trim();  
-const price=parseInt(document.getElementById('sPrice').value,10);  
-const city=document.getElementById('sCity').value.trim();  
-if(!name||!price)return alert(t.fillAll);  
-userItems.unshift({name:name,price:price,city:city||t.city,cat:document.getElementById('sCat').value,time:'mnow',img:sellImg||FALLBACK_IMG});  
-try{localStorage.setItem('novaItems',JSON.stringify(userItems))}catch(e){}  
-document.getElementById('sName').value='';document.getElementById('sPrice').value='';document.getElementById('sCity').value='';document.getElementById('sellThumb').innerHTML='';sellImg=null;  
-closeSell();renderMarket();alert(t.posted);  
-}  
-  
-function toggleFollow(b){
-const t=I18N[cur];
-if(b.dataset.on==='1'){b.dataset.on='0';b.textContent=t.follow;b.style.background='#1877f2'}
-else{b.dataset.on='1';b.textContent='✓ '+t.follow;b.style.background='#42b72a'}
-}
-let COINS=100;try{COINS=parseInt(localStorage.getItem('novaCoins'),10);if(isNaN(COINS))COINS=100}catch(e){}
-let GIFTS={};try{GIFTS=JSON.parse(localStorage.getItem('novaGifts')||'{}')}catch(e){}
-let GSENT=0,GRECV=0;try{var _gt=JSON.parse(localStorage.getItem('novaGT')||'{}');GSENT=_gt.s||0;GRECV=_gt.r||0}catch(e){}
-let giftTarget=null,FOLLOWERS=[];
-try{FOLLOWERS=JSON.parse(localStorage.getItem('novaFollowers')||'[]')}catch(e){}
-function saveG(){try{localStorage.setItem('novaCoins',String(COINS));localStorage.setItem('novaGifts',JSON.stringify(GIFTS));localStorage.setItem('novaGT',JSON.stringify({s:GSENT,r:GRECV}))}catch(e){}}
-function updateWallet(){document.getElementById('coinsTxt').textContent=COINS;document.getElementById('sentTxt').textContent=GSENT;document.getElementById('recvTxt').textContent=GRECV}
-function giftOpen(target){giftTarget=target;updateWallet();document.getElementById('giftModal').classList.add('open')}
-function closeModal(id){document.getElementById(id).classList.remove('open')}
-function openPay(){document.getElementById('payModal').classList.add('open')}
-function payNow(amount){const t=I18N[cur];COINS+=amount*5;saveG();updateWallet();closeModal('payModal');alert(t.paid+' +'+(amount*5)+' 💰')}
-function sendGift(emoji,cost){
-const t=I18N[cur];
-if(COINS<cost){alert(t.notEnough);openPay();return}
-COINS-=cost;GSENT++;GIFTS[giftTarget]=(GIFTS[giftTarget]||0)+1;saveG();updateWallet();
-pushChat({a:t.you,t:'🎁 '+emoji+' → NOVA'});
-if(giftTarget.indexOf('p')===0){var pc=document.getElementById('pgc'+giftTarget.slice(1));if(pc)pc.textContent=GIFTS[giftTarget]}
-else renderReels();
-alert(emoji+' ✓');
-if(Math.random()<.45){setTimeout(function(){GRECV++;saveG();updateWallet();pushChat({a:t.explorer+' '+(7+Math.floor(Math.random()*40)),t:'🎁 → '+t.you+' 💙'})},1600+Math.random()*2400)}
-}
-function renderFollowers(){
-document.getElementById('folCount').textContent='1,284 + '+FOLLOWERS.length;
-document.getElementById('folList').innerHTML=FOLLOWERS.length?FOLLOWERS.map(function(f){return '<div class="fol"><img src="https://i.pravatar.cc/100?img='+f.img+'" width="40" height="40" alt="" style="border-radius:50%"><div><b>'+esc(f.name)+'</b><div style="font-size:11px;color:#65676b">NOVA ✓</div></div></div>'}).join(''):'<div style="color:#65676b;font-size:13px">—</div>';
-}
-function registerFollower(){
-const t=I18N[cur];
-if(localStorage.getItem('novaJoined')==='1')return alert(t.already);
-const n=document.getElementById('folName').value.trim();
-if(!n)return alert(t.namePh);
-FOLLOWERS.unshift({name:n,img:1+Math.floor(Math.random()*70)});
-try{localStorage.setItem('novaFollowers',JSON.stringify(FOLLOWERS));localStorage.setItem('novaJoined','1')}catch(e){}
-document.getElementById('folName').value='';
-renderFollowers();alert(t.joined);
-}
-function openFriends(e){
-e.preventDefault();
-document.getElementById('friendsPage').classList.add('active');
-document.getElementById('blablaPage').classList.remove('active');
-document.getElementById('marketPage').classList.remove('active');
-home.style.display='none';
-setActive('friendsNav');
-renderFollowers();
-}
-let viewersN=1247;
-setInterval(function(){if(!document.getElementById('blablaPage').classList.contains('active'))return;viewersN=Math.max(900,viewersN+Math.floor(Math.random()*41)-18);var v=document.getElementById('viewers');if(v)v.textContent=viewersN.toLocaleString('en-US')},2500);
-function setActive(id){['homeNav','blablaNav','marketNav','friendsNav'].forEach(n=>document.getElementById(n).classList.toggle('active',n===id))}  
-function openBlabla(e){  
-e.preventDefault();  
-document.getElementById('blablaPage').classList.add('active');  
-document.getElementById('marketPage').classList.remove('active');  
-document.getElementById('friendsPage').classList.remove('active');  
-home.style.display='none';  
-setActive('blablaNav');  
-const bp=document.getElementById('blablaPage');  
-bp.style.paddingTop=document.querySelector('.header').offsetHeight+'px';  
-bp.style.paddingBottom=document.querySelector('.bottom').offsetHeight+'px';  
-if(!ALL_REELS.length)renderReels();  
-renderChat();  
-}  
-function openMarket(e){  
-e.preventDefault();  
-document.getElementById('marketPage').classList.add('active');  
-document.getElementById('blablaPage').classList.remove('active');  
-document.getElementById('friendsPage').classList.remove('active');  
-home.style.display='none';  
-setActive('marketNav');  
-renderChips();renderMarket();  
-}  
-function showHome(e){  
-if(e)e.preventDefault();  
-document.getElementById('blablaPage').classList.remove('active');  
-document.getElementById('marketPage').classList.remove('active');  
-document.getElementById('friendsPage').classList.remove('active');  
-home.style.display='block';  
-setActive('homeNav');  
-}  
-  
-let saved='en';try{saved=localStorage.getItem('novaLang')||'en'}catch(e){}  
-if(!I18N[saved])saved='en';  
-document.getElementById('langSel').value=saved;  
-applyLang(saved);  
-  
-if('serviceWorker' in navigator){window.addEventListener('load',function(){navigator.serviceWorker.register('sw.js').catch(function(){})})}  
-</script>  </body>  
-</html>
-<!-- ===== NOVA · v7 : Sign-In page (Google GIS + Email/Password) ===== -->
-<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
-<script src="https://accounts.google.com/gsi/client" async defer></script>
-<script>
-(function () {
-  const cfg = {
-    apiKey: "AIzaSyAP1KiAtoMB5EkGWopUuKm0LQMNi1QkApM",
-    authDomain: "nova-cb212.firebaseapp.com",
-    projectId: "nova-cb212",
-    storageBucket: "nova-cb212.firebasestorage.app",
-    messagingSenderId: "660417453842",
-    appId: "1:660417453842:web:047ccaa48dc441d5f6ddcb",
-    measurementId: "G-78X5WCEJWW"
-  };
-  const app = firebase.initializeApp(cfg, 'nova-fix7');
-  const auth = firebase.auth(app);
-  const CLIENT_ID = '660417453842-ki52nv5fpa9idfm0sq4g864rf4ij3ubv.apps.googleusercontent.com';
-
-  /* floating button */
-  const btn = document.createElement('button');
-  btn.id = 'nova-signin-btn7';
-  btn.style.cssText = 'position:fixed;bottom:78px;right:12px;z-index:10002;background:#1877f2;color:#fff;border:none;border-radius:50%;width:52px;height:52px;font-size:22px;box-shadow:0 4px 12px rgba(0,0,0,.35);';
-  btn.innerHTML = '👤';
-  btn.title = 'Sign in to NOVA';
-  document.body.appendChild(btn);
-
-  function hideOthers() {
-    document.querySelectorAll('button').forEach(function (b) {
-      if (b.id !== 'nova-signin-btn7' && b.style.position === 'fixed' && b.style.backgroundColor === 'rgb(24, 119, 242)') {
-        b.style.display = 'none';
-      }
-    });
-    btn.style.display = 'block';
-  }
-  hideOthers();
-  setTimeout(hideOthers, 800);
-  setTimeout(hideOthers, 2500);
-
-  /* Facebook-style login window */
-  const ov = document.createElement('div');
-  ov.id = 'nova-login-ov7';
-  ov.style.cssText = 'position:fixed;top:0;left:0;right:0;bottom:0;z-index:11000;background:rgba(0,0,0,.55);display:none;align-items:center;justify-content:center;padding:16px;';
-  ov.innerHTML = '<div style="background:#fff;border-radius:14px;max-width:340px;width:100%;padding:20px 18px 18px;text-align:center;box-shadow:0 8px 30px rgba(0,0,0,.3);font-family:system-ui,Segoe UI,Roboto,sans-serif;position:relative;box-sizing:border-box;">'
-    + '<div id="nova-login-x7" style="position:absolute;top:6px;right:8px;font-size:20px;color:#65676b;cursor:pointer;padding:4px 10px;">✕</div>'
-    + '<div style="color:#1877f2;font-weight:800;font-size:30px;letter-spacing:1px;margin-bottom:2px;">N</div>'
-    + '<div style="font-size:17px;font-weight:700;color:#050505;margin-bottom:14px;">Log in to NOVA</div>'
-    + '<input id="nova-em7" type="email" placeholder="Email" style="width:100%;box-sizing:border-box;padding:11px 12px;border:1px solid #dddfe2;border-radius:8px;font-size:15px;margin-bottom:8px;outline:none;background:#f0f2f5;">'
-    + '<input id="nova-pw7" type="password" placeholder="Password" style="width:100%;box-sizing:border-box;padding:11px 12px;border:1px solid #dddfe2;border-radius:8px;font-size:15px;margin-bottom:10px;outline:none;background:#f0f2f5;">'
-    + '<button id="nova-login-btn7" style="width:100%;padding:11px;background:#1877f2;color:#fff;border:none;border-radius:8px;font-size:16px;font-weight:700;margin-bottom:8px;">Log in</button>'
-    + '<button id="nova-create-btn7" style="width:100%;padding:11px;background:#42b72a;color:#fff;border:none;border-radius:8px;font-size:16px;font-weight:700;">Create account</button>'
-    + '<div style="display:flex;align-items:center;gap:10px;color:#8a8d91;font-size:12px;margin:14px 0 10px;"><div style="flex:1;height:1px;background:#dddfe2;"></div>OR<div style="flex:1;height:1px;background:#dddfe2;"></div></div>'
-    + '<div id="nova-gbtn7" style="display:flex;justify-content:center;min-height:44px;"></div>'
-    + '<div id="nova-err7" style="color:#d93025;font-size:12.5px;margin-top:8px;display:none;text-align:center;"></div>'
-    + '</div>';
-  document.body.appendChild(ov);
-
-  function openLogin() { errBox(''); ov.style.display = 'flex'; }
-  function closeLogin() { ov.style.display = 'none'; }
-  function errBox(msg) {
-    const e = document.getElementById('nova-err7');
-    if (!e) return;
-    e.textContent = msg;
-    e.style.display = msg ? 'block' : 'none';
-  }
-  ov.addEventListener('click', function (ev) { if (ev.target === ov) closeLogin(); });
-
-  function okLogin(user) {
-    closeLogin();
-    alert('NOVA ✅ مرحبا ' + ((user && (user.displayName || user.email)) || '') + '!');
-  }
-  function friendly(e) {
-    const c = e && e.code ? e.code : '';
-    if (c === 'auth/email-already-in-use') return 'This email already has an account. Press Log in.';
-    if (c === 'auth/invalid-email') return 'Invalid email address.';
-    if (c === 'auth/weak-password') return 'Password too short (min 6 characters).';
-    if (c === 'auth/wrong-password' || c === 'auth/invalid-credential' || c === 'auth/user-not-found') return 'Wrong email or password.';
-    if (c === 'auth/operation-not-allowed' || c === 'auth/admin-restricted-operation') return 'Email sign-in is not enabled yet in Firebase Console.';
-    if (c === 'auth/too-many-requests') return 'Too many tries. Wait a little.';
-    if (c === 'auth/network-request-failed') return 'Network problem. Check your connection.';
-    return 'Error: ' + (c || (e && e.message ? e.message : 'unknown'));
-  }
-  function getVals() {
-    const emEl = document.getElementById('nova-em7');
-    const pwEl = document.getElementById('nova-pw7');
-    return { em: emEl ? emEl.value : '', pw: pwEl ? pwEl.value : '' };
-  }
-
-  document.getElementById('nova-login-x7').addEventListener('click', closeLogin);
-  document.getElementById('nova-login-btn7').addEventListener('click', function () {
-    const v = getVals();
-    if (!v.em.trim() || !v.pw) { errBox('Write your email and password.'); return; }
-    errBox('');
-    auth.signInWithEmailAndPassword(v.em.trim(), v.pw).then(function (res) { okLogin(res.user); }).catch(function (e) { errBox(friendly(e)); });
-  });
-  document.getElementById('nova-create-btn7').addEventListener('click', function () {
-    const v = getVals();
-    if (!v.em.trim() || !v.pw) { errBox('Write your email and password.'); return; }
-    if (v.pw.length < 6) { errBox('Password too short (min 6 characters).'); return; }
-    errBox('');
-    auth.createUserWithEmailAndPassword(v.em.trim(), v.pw).then(function (res) {
-      const nm = v.em.trim().split('@')[0];
-      if (res.user && res.user.updateProfile) res.user.updateProfile({ displayName: nm }).catch(function () {});
-      okLogin(res.user);
-    }).catch(function (e) { errBox(friendly(e)); });
-  });
-
-  /* Google button (new GIS) - opens inside the page, no redirect, no error */
-  function renderGoogle(tries) {
-    const box = document.getElementById('nova-gbtn7');
-    if (!box) return;
-    if (window.google && google.accounts && google.accounts.id) {
-      google.accounts.id.initialize({
-        client_id: CLIENT_ID,
-        callback: function (resp) {
-          if (!resp || !resp.credential) { errBox('Google error. Try again.'); return; }
-          try {
-            const cred = firebase.auth.GoogleAuthProvider.credential(resp.credential);
-            auth.signInWithCredential(cred).then(function (res) { okLogin(res.user); }).catch(function (e) { errBox(friendly(e)); });
-          } catch (ex) { errBox('Google error. Try again.'); }
-        }
-      });
-      google.accounts.id.renderButton(box, { theme: 'outline', size: 'large', text: 'continue_with', shape: 'pill' });
-      return;
-    }
-    if (tries > 40) { box.innerHTML = '<span style="font-size:12px;color:#8a8d91;">Google button loading...</span>'; return; }
-    setTimeout(function () { renderGoogle(tries + 1); }, 500);
-  }
-  renderGoogle(0);
-
-  auth.onAuthStateChanged(function (user) {
-    if (user) {
-      const photo = user.photoURL || '';
-      btn.innerHTML = photo
-        ? '<img src="' + photo + '" alt="me" style="width:52px;height:52px;border-radius:50%;object-fit:cover;display:block;">'
-        : '👤';
-      btn.title = (user.displayName || user.email || 'NOVA') + ' - Sign out ?';
-      closeLogin();
-    } else {
-      btn.innerHTML = '👤';
-      btn.title = 'Sign in to NOVA';
-    }
-  });
-
-  btn.addEventListener('click', function () {
-    const user = auth.currentUser;
-    if (user) {
-      if (confirm((user.displayName || user.email) + ' - Sign out ?')) auth.signOut();
-      return;
-    }
-    openLogin();
-  });
-})();
-</script>
+if(currentMedia){mediaHtml=currentType==='img'?'<img src="'+currentMedia+'" alt="" loading="lazy" style="width:100%;border-radius:10px;margin-top:10px">':'<video src="'+currentMedia+'" controls playsinline style="width:100%;border
