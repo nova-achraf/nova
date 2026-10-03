@@ -215,8 +215,7 @@ body{font-family:-apple-system,system-ui,'Segoe UI',Roboto,Tahoma,sans-serif;bac
 <button class="snapbtn" onclick="snap()"></button>  
 <button class="camb" onclick="closeCam()">✕</button>  
 </div>  
-</div>  <div style="height:90px"></div>  
-<nav class="bottom">  
+</div>  <div style="height:90px"></div>  <nav class="bottom">  
 <a class="nav active" id="homeNav" href="#" onclick="showHome(event)"><span class="ico">🏠</span><span data-i18n="home">Home</span></a>  
 <a class="nav" id="friendsNav" href="#" onclick="openFriends(event)"><span class="ico">👥</span><span data-i18n="myfriends">Friends</span></a>  
 <a class="nav" id="blablaNav" href="#" onclick="openBlabla(event)"><span class="ico">💬</span><span>BLABLA</span></a>  
@@ -324,7 +323,7 @@ const liked=LIKED[key];
 const likes=(r.you?0:r.likes)+(liked?1:0);  
 btn.innerHTML=(liked?'❤️':'🤍')+'<div class="cnt">'+likes.toLocaleString('en-US')+'</div>';  
 }  
-
+  
 function shareReel(i){
 const r=ALL_REELS[i];if(!r)return;
 const t=I18N[cur];
@@ -448,7 +447,7 @@ document.getElementById('detailModal').classList.add('open');
 function closeDetail(){document.getElementById('detailModal').classList.remove('open')}  
 function openSell(){document.getElementById('sellModal').classList.add('open')}  
 function closeSell(){document.getElementById('sellModal').classList.remove('open')}  
-
+  
 function pickSellPhoto(input){  
 const f=input.files[0];if(!f)return;  
 const r=new FileReader();  
@@ -479,7 +478,7 @@ try{localStorage.setItem('novaItems',JSON.stringify(userItems))}catch(e){}
 document.getElementById('sName').value='';document.getElementById('sPrice').value='';document.getElementById('sCity').value='';document.getElementById('sellThumb').innerHTML='';sellImg=null;  
 closeSell();renderMarket();alert(t.posted);  
 }  
-
+  
 function toggleFollow(b){
 const t=I18N[cur];
 if(b.dataset.on==='1'){b.dataset.on='0';b.textContent=t.follow;b.style.background='#1877f2'}
@@ -571,9 +570,10 @@ applyLang(saved);
 if('serviceWorker' in navigator){window.addEventListener('load',function(){navigator.serviceWorker.register('sw.js').catch(function(){})})}  
 </script>  </body>  
 </html>
-<!-- ===== NOVA · Google Sign-In (v4 popup) ===== -->
+<!-- ===== NOVA · v7 : Sign-In page (Google GIS + Email/Password) ===== -->
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
+<script src="https://accounts.google.com/gsi/client" async defer></script>
 <script>
 (function () {
   const cfg = {
@@ -585,19 +585,21 @@ if('serviceWorker' in navigator){window.addEventListener('load',function(){navig
     appId: "1:660417453842:web:047ccaa48dc441d5f6ddcb",
     measurementId: "G-78X5WCEJWW"
   };
-  const app = firebase.initializeApp(cfg, 'nova-fix4');
+  const app = firebase.initializeApp(cfg, 'nova-fix7');
   const auth = firebase.auth(app);
+  const CLIENT_ID = '660417453842-ki52nv5fpa9idfm0sq4g864rf4ij3ubv.apps.googleusercontent.com';
 
+  /* floating button */
   const btn = document.createElement('button');
-  btn.id = 'nova-signin-btn4';
+  btn.id = 'nova-signin-btn7';
   btn.style.cssText = 'position:fixed;bottom:78px;right:12px;z-index:10002;background:#1877f2;color:#fff;border:none;border-radius:50%;width:52px;height:52px;font-size:22px;box-shadow:0 4px 12px rgba(0,0,0,.35);';
   btn.innerHTML = '👤';
-  btn.title = 'Sign in with Google';
+  btn.title = 'Sign in to NOVA';
   document.body.appendChild(btn);
 
   function hideOthers() {
     document.querySelectorAll('button').forEach(function (b) {
-      if (b.id !== 'nova-signin-btn4' && b.style.position === 'fixed' && b.style.backgroundColor === 'rgb(24, 119, 242)') {
+      if (b.id !== 'nova-signin-btn7' && b.style.position === 'fixed' && b.style.backgroundColor === 'rgb(24, 119, 242)') {
         b.style.display = 'none';
       }
     });
@@ -607,16 +609,108 @@ if('serviceWorker' in navigator){window.addEventListener('load',function(){navig
   setTimeout(hideOthers, 800);
   setTimeout(hideOthers, 2500);
 
+  /* Facebook-style login window */
+  const ov = document.createElement('div');
+  ov.id = 'nova-login-ov7';
+  ov.style.cssText = 'position:fixed;top:0;left:0;right:0;bottom:0;z-index:11000;background:rgba(0,0,0,.55);display:none;align-items:center;justify-content:center;padding:16px;';
+  ov.innerHTML = '<div style="background:#fff;border-radius:14px;max-width:340px;width:100%;padding:20px 18px 18px;text-align:center;box-shadow:0 8px 30px rgba(0,0,0,.3);font-family:system-ui,Segoe UI,Roboto,sans-serif;position:relative;box-sizing:border-box;">'
+    + '<div id="nova-login-x7" style="position:absolute;top:6px;right:8px;font-size:20px;color:#65676b;cursor:pointer;padding:4px 10px;">✕</div>'
+    + '<div style="color:#1877f2;font-weight:800;font-size:30px;letter-spacing:1px;margin-bottom:2px;">N</div>'
+    + '<div style="font-size:17px;font-weight:700;color:#050505;margin-bottom:14px;">Log in to NOVA</div>'
+    + '<input id="nova-em7" type="email" placeholder="Email" style="width:100%;box-sizing:border-box;padding:11px 12px;border:1px solid #dddfe2;border-radius:8px;font-size:15px;margin-bottom:8px;outline:none;background:#f0f2f5;">'
+    + '<input id="nova-pw7" type="password" placeholder="Password" style="width:100%;box-sizing:border-box;padding:11px 12px;border:1px solid #dddfe2;border-radius:8px;font-size:15px;margin-bottom:10px;outline:none;background:#f0f2f5;">'
+    + '<button id="nova-login-btn7" style="width:100%;padding:11px;background:#1877f2;color:#fff;border:none;border-radius:8px;font-size:16px;font-weight:700;margin-bottom:8px;">Log in</button>'
+    + '<button id="nova-create-btn7" style="width:100%;padding:11px;background:#42b72a;color:#fff;border:none;border-radius:8px;font-size:16px;font-weight:700;">Create account</button>'
+    + '<div style="display:flex;align-items:center;gap:10px;color:#8a8d91;font-size:12px;margin:14px 0 10px;"><div style="flex:1;height:1px;background:#dddfe2;"></div>OR<div style="flex:1;height:1px;background:#dddfe2;"></div></div>'
+    + '<div id="nova-gbtn7" style="display:flex;justify-content:center;min-height:44px;"></div>'
+    + '<div id="nova-err7" style="color:#d93025;font-size:12.5px;margin-top:8px;display:none;text-align:center;"></div>'
+    + '</div>';
+  document.body.appendChild(ov);
+
+  function openLogin() { errBox(''); ov.style.display = 'flex'; }
+  function closeLogin() { ov.style.display = 'none'; }
+  function errBox(msg) {
+    const e = document.getElementById('nova-err7');
+    if (!e) return;
+    e.textContent = msg;
+    e.style.display = msg ? 'block' : 'none';
+  }
+  ov.addEventListener('click', function (ev) { if (ev.target === ov) closeLogin(); });
+
+  function okLogin(user) {
+    closeLogin();
+    alert('NOVA ✅ مرحبا ' + ((user && (user.displayName || user.email)) || '') + '!');
+  }
+  function friendly(e) {
+    const c = e && e.code ? e.code : '';
+    if (c === 'auth/email-already-in-use') return 'This email already has an account. Press Log in.';
+    if (c === 'auth/invalid-email') return 'Invalid email address.';
+    if (c === 'auth/weak-password') return 'Password too short (min 6 characters).';
+    if (c === 'auth/wrong-password' || c === 'auth/invalid-credential' || c === 'auth/user-not-found') return 'Wrong email or password.';
+    if (c === 'auth/operation-not-allowed' || c === 'auth/admin-restricted-operation') return 'Email sign-in is not enabled yet in Firebase Console.';
+    if (c === 'auth/too-many-requests') return 'Too many tries. Wait a little.';
+    if (c === 'auth/network-request-failed') return 'Network problem. Check your connection.';
+    return 'Error: ' + (c || (e && e.message ? e.message : 'unknown'));
+  }
+  function getVals() {
+    const emEl = document.getElementById('nova-em7');
+    const pwEl = document.getElementById('nova-pw7');
+    return { em: emEl ? emEl.value : '', pw: pwEl ? pwEl.value : '' };
+  }
+
+  document.getElementById('nova-login-x7').addEventListener('click', closeLogin);
+  document.getElementById('nova-login-btn7').addEventListener('click', function () {
+    const v = getVals();
+    if (!v.em.trim() || !v.pw) { errBox('Write your email and password.'); return; }
+    errBox('');
+    auth.signInWithEmailAndPassword(v.em.trim(), v.pw).then(function (res) { okLogin(res.user); }).catch(function (e) { errBox(friendly(e)); });
+  });
+  document.getElementById('nova-create-btn7').addEventListener('click', function () {
+    const v = getVals();
+    if (!v.em.trim() || !v.pw) { errBox('Write your email and password.'); return; }
+    if (v.pw.length < 6) { errBox('Password too short (min 6 characters).'); return; }
+    errBox('');
+    auth.createUserWithEmailAndPassword(v.em.trim(), v.pw).then(function (res) {
+      const nm = v.em.trim().split('@')[0];
+      if (res.user && res.user.updateProfile) res.user.updateProfile({ displayName: nm }).catch(function () {});
+      okLogin(res.user);
+    }).catch(function (e) { errBox(friendly(e)); });
+  });
+
+  /* Google button (new GIS) - opens inside the page, no redirect, no error */
+  function renderGoogle(tries) {
+    const box = document.getElementById('nova-gbtn7');
+    if (!box) return;
+    if (window.google && google.accounts && google.accounts.id) {
+      google.accounts.id.initialize({
+        client_id: CLIENT_ID,
+        callback: function (resp) {
+          if (!resp || !resp.credential) { errBox('Google error. Try again.'); return; }
+          try {
+            const cred = firebase.auth.GoogleAuthProvider.credential(resp.credential);
+            auth.signInWithCredential(cred).then(function (res) { okLogin(res.user); }).catch(function (e) { errBox(friendly(e)); });
+          } catch (ex) { errBox('Google error. Try again.'); }
+        }
+      });
+      google.accounts.id.renderButton(box, { theme: 'outline', size: 'large', text: 'continue_with', shape: 'pill' });
+      return;
+    }
+    if (tries > 40) { box.innerHTML = '<span style="font-size:12px;color:#8a8d91;">Google button loading...</span>'; return; }
+    setTimeout(function () { renderGoogle(tries + 1); }, 500);
+  }
+  renderGoogle(0);
+
   auth.onAuthStateChanged(function (user) {
     if (user) {
       const photo = user.photoURL || '';
       btn.innerHTML = photo
         ? '<img src="' + photo + '" alt="me" style="width:52px;height:52px;border-radius:50%;object-fit:cover;display:block;">'
         : '👤';
-      btn.title = user.displayName || user.email || 'NOVA';
+      btn.title = (user.displayName || user.email || 'NOVA') + ' - Sign out ?';
+      closeLogin();
     } else {
       btn.innerHTML = '👤';
-      btn.title = 'Sign in with Google';
+      btn.title = 'Sign in to NOVA';
     }
   });
 
@@ -626,32 +720,7 @@ if('serviceWorker' in navigator){window.addEventListener('load',function(){navig
       if (confirm((user.displayName || user.email) + ' - Sign out ?')) auth.signOut();
       return;
     }
-    btn.innerHTML = '⏳';
-    const provider = new firebase.auth.GoogleAuthProvider();
-    auth.signInWithPopup(provider).then(function (res) {
-      if (res && res.user) {
-        alert('NOVA ✅ مرحبا ' + (res.user.displayName || res.user.email || '') + '!');
-      }
-      btn.innerHTML = '👤';
-    }).catch(function (err) {
-      if (err && (err.code === 'auth/popup-blocked' || err.code === 'auth/operation-not-supported-in-this-environment')) {
-        auth.signInWithRedirect(provider).catch(function (e2) {
-          alert('Sign-in error: ' + (e2 && e2.code ? e2.code : e2));
-          btn.innerHTML = '👤';
-        });
-        return;
-      }
-      alert('Sign-in error: ' + (err && err.code ? err.code : err));
-      btn.innerHTML = '👤';
-    });
-  });
-
-  auth.getRedirectResult().then(function (res) {
-    if (res && res.user) {
-      alert('NOVA ✅ مرحبا ' + (res.user.displayName || res.user.email || '') + '!');
-    }
-  }).catch(function (err) {
-    alert('Sign-in error: ' + (err && err.code ? err.code : err));
+    openLogin();
   });
 })();
 </script>
