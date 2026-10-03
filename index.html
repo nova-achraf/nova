@@ -7,7 +7,7 @@
 <meta name="theme-color" content="#FB7299">  
 <link rel="manifest" href="manifest.json">  
 <meta property="og:title" content="NOVA - Achraf Aza | From Morocco">  
-<meta property="og:description" content="Social app from Morocco 🇲🇦 · BLABLA reels, live chat &amp; marketplace">  
+<meta property="og:description" content="Social app from Morocco 🇲🇦 · BLABLA reels, live chat & marketplace">  
 <meta property="og:image" content="https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?w=1200&q=60&auto=format&fit=crop">  
 <meta property="og:type" content="website">  
 <link rel="preconnect" href="https://images.unsplash.com">  
@@ -261,7 +261,8 @@ body{font-family:-apple-system,system-ui,'Segoe UI',Roboto,Tahoma,sans-serif;bac
 </div>  
 <div style="display:flex;gap:14px;margin-top:12px;font-size:13px;color:#65676b"><span>📤 <span data-i18n="sent">Sent</span>: <b id="sentTxt">0</b></span><span>📥 <span data-i18n="received">Received</span>: <b id="recvTxt">0</b></span></div>  
 </div>  
-</div>  <div class="modal" id="payModal" onclick="if(event.target===this)closeModal('payModal')">  
+</div>  
+<div class="modal" id="payModal" onclick="if(event.target===this)closeModal('payModal')">  
 <div class="sheet">  
 <div style="display:flex;justify-content:space-between;align-items:center"><b>NOVA Pay 💳</b><button onclick="closeModal('payModal')" style="background:none;border:none;font-size:22px;cursor:pointer">✕</button></div>  
 <div style="font-size:13px;color:#65676b;margin-top:6px" data-i18n="payDemo">Demo payment — real PayPal/Stripe coming soon 🚀</div>  
@@ -277,7 +278,8 @@ body{font-family:-apple-system,system-ui,'Segoe UI',Roboto,Tahoma,sans-serif;bac
 <button class="snapbtn" onclick="snap()"></button>  
 <button class="camb" onclick="closeCam()">✕</button>  
 </div>  
-</div>  <div class="drawerOver" id="drawerOver" onclick="closeDrawer()"></div>
+</div>  
+<div class="drawerOver" id="drawerOver" onclick="closeDrawer()"></div>
 <div class="drawer" id="drawer">
 <div class="drawerHead">
 <img class="av" id="drawerAv" src="https://i.pravatar.cc/200?img=12" alt="">
@@ -307,4 +309,570 @@ const home=document.getElementById('homePosts');
 const I18N={  
 en:{dir:'ltr',title:'NOVA - Achraf Aza | From Morocco',tagline:'From Morocco · Connecting the world',friends:'1,284 friends',follow:'Follow',message:'Message',intro:'Intro',introTxt:'Sharing from Morocco 🌍 Building NOVA 🚀',composer:"What's on your mind, Achraf?",photo:'Photo',video:'Video',feeling:'Feeling',post:'Post',home:'Home',myfriends:'Friends',chat:'Chat',profile:'Profile',blablaTitle:'BLABLA',scroll:'↓',loading:'Loading...',now:'Now · 🌍',empty:'Write something or add photo/video',remove:'❌ Remove',share:'↗️ Share',explorer:'Explorer',ago:n=>n+'m ago',postTxt:n=>'BLABLA #'+n+' from Morocco 🚀',market:'Market',mktTitle:'Marketplace',mktSub:'Buy & sell near you · NOVA',search:'Search items...',sell:'Sell',catAll:'All',catPhones:'Phones',catElectro:'Electronics',catSport:'Sport',catFashion:'Fashion',catHome:'Home',sellTitle:'Sell an item',itemName:'Item name',priceLbl:'Price (DH)',city:'City',cancel:'Cancel',soldBy:'Sold by',msgSeller:'Message seller',msgSoon:'Chat coming soon 🚀',posted:'Your item is live! ✓',fillAll:'Fill the name and the price',noRes:'No results 😕',mnow:'Just now',it1:'iPhone 13 · 128GB',it2:'Wireless headphones',it3:'Mountain bike',it4:'Sports watch',it5:'Camera + lens',it6:'Laptop 16"',c1:'Casablanca',c2:'Rabat',c3:'Marrakech',c4:'Tanger',c5:'Fès',c6:'Agadir',say:'Say something...',send:'Send',camErr:'Camera not available 😕',you:'You',r1:'Cool! 🔥',r2:'Haha 😂',r3:'Wow 🤩',choose:'Choose a gift',coins:'Coins',recharge:'Recharge',sent:'Sent',received:'Received',notEnough:'Not enough coins! Recharge 💳',payDemo:'Demo payment — real PayPal/Stripe coming soon 🚀',paid:'Payment OK ✓ Coins added:',followers:'Followers',join:'Join as follower',namePh:'Your name',joined:'Welcome to NOVA ✓ You are a follower now!',already:'You are already registered ✓'},  
 ar:{dir:'rtl',title:'NOVA - أشرف أزا | من المغرب',tagline:'من المغرب · ربط العالم',friends:'1,284 صديق',follow:'متابعة',message:'رسالة',intro:'نبذة',introTxt:'أشارك من المغرب 🌍 نبني NOVA 🚀',composer:'شنو فبالك يا أشرف؟',photo:'صورة',video:'فيديو',feeling:'شعور',post:'نشر',home:'الرئيسية',myfriends:'الأصدقاء',chat:'دردشة',profile:'الملف',blablaTitle:'BLABLA',scroll:'↓',loading:'جاري التحميل...',now:'الآن · 🌍',empty:'اكتب شي حاجة ولا زيد صورة/فيديو',remove:'❌ حذف',share:'↗️ مشاركة',explorer:'مستكشف',ago:n=>'منذ '+n+' د',postTxt:n=>'BLABLA رقم '+n+' من المغرب 🚀',market:'السوق',mktTitle:'سوق NOVA',mktSub:'بيع وشري قريب منك',search:'بحث عن منتج...',sell:'بيع',catAll:'الكل',catPhones:'هواتف',catElectro:'إلكترونيك',catSport:'رياضة',catFashion:'موضة',catHome:'بيت',sellTitle:'بيع شي حاجة',itemName:'سمية المنتج',priceLbl:'الثمن (درهم)',city:'المدينة',cancel:'إلغاء',soldBy:'البائع',msgSeller:'راسل البائع',msgSoon:'الدردشة جاية قريبا 🚀',posted:'المنتج ديالك تنشر! ✓',fillAll:'عمّر الاسم والثمن',noRes:'ما كاين حتى نتيجة 😕',mnow:'الآن',it1:'آيفون 13 · 128GB',it2:'سماعات بلوتوث',it3:'بيسكليت جبلي',it4:'ساعة رياضية',it5:'كاميرا مع عدسة',it6:'لابتوب 16"',c1:'الدار البيضاء',c2:'الرباط',c3:'مراكش',c4:'طنجة',c5:'فاس',c6:'أكادير',say:'قول شي حاجة...',send:'إرسال',camErr:'الكاميرا ما متوفرةش 😕',you:'نتا',r1:'زوينة! 🔥',r2:'هههه 😂',r3:'وااو 🤩',choose:'ختار هدية 🎁',coins:'العملات',recharge:'شحن',sent:'أرسلت',received:'توصلت',notEnough:'العملات ما كافياش! دير شحن 💳',payDemo:'دفع تجريبي — PayPal/Stripe الحقيقي جاي قريبا 🚀',paid:'الدفع تم ✓ زدنا ليك العملات:',followers:'المتابعين',join:'سجل كمتابع',namePh:'سميتك',joined:'مرحبا بيك فNOVA ✓ ولايتي متابع دابا!',already:'نتا مسجل من قبل ✓'},  
-fr:{dir:'ltr',title:'NOVA - Achraf Aza | Du Maroc',tagline:'Du Maroc · Connecter le monde',friends:'1 284 amis',follow:'Suivre',message:'Message',intro:'Intro',introTxt:'Partager du Maroc 🌍 Construire NOVA 🚀',composer:'Quoi de neuf, Achraf ?',photo:'Photo',video:'Vidéo',feeling:'Humeur',post:'Publier',home:'Accueil',myfriends:'Amis',chat:'Chat',profile:'Profil',blablaTitle:'BLABLA',scroll:'↓',loading:'Chargement...',now:'Maintenant · 🌍',empty:'Écrivez quelque chose ou ajoutez une photo/vidéo',remove:'❌ Retirer',share:'↗️ Partager',explorer:'Explorateur',ago:n=>'il y a '+n+' min',postTxt:n=>'BLABLA #'+n+' du Maroc 🚀',market:'Marché',mktTitle:'Marketplace',mktSub:'Achetez & vendez près de vous',search:'Rechercher...',sell:'Vendre',catAll:'Tout',catPhones:'Téléphones',catElectro:'Électronique',catSport:'Sport',catFashion:'Mode',catHome:'Maison',sellTitle:'Vendre un article',itemName:"Nom de l'article",priceLbl:'Prix (DH)',city:'Ville',cancel:'Annuler',soldBy:'Vendu par',msgSeller:'Contacter le vendeur',msgSoon:'Chat bientôt disponible 🚀',posted:'Article publié ! ✓',fillAll:'Remplissez le nom et le prix',noRes:'Aucun résultat 😕',mnow:"À l'instant",it1:'iPhone 13 · 128 Go',it2:'Casque sans fil',it3:'VTT',it4:'Montre sport',it5:'Appareil photo + objectif',it6:'Ordinateur 16"',c1:'Casablanca',
+fr:{dir:'ltr',title:'NOVA - Achraf Aza | Du Maroc',tagline:'Du Maroc · Connecter le monde',friends:'1 284 amis',follow:'Suivre',message:'Message',intro:'Intro',introTxt:'Partager du Maroc 🌍 Construire NOVA 🚀',composer:'Quoi de neuf, Achraf ?',photo:'Photo',video:'Vidéo',feeling:'Humeur',post:'Publier',home:'Accueil',myfriends:'Amis',chat:'Chat',profile:'Profil',blablaTitle:'BLABLA',scroll:'↓',loading:'Chargement...',now:'Maintenant · 🌍',empty:'Écrivez quelque chose ou ajoutez une photo/vidéo',remove:'❌ Retirer',share:'↗️ Partager',explorer:'Explorateur',ago:n=>'il y a '+n+' min',postTxt:n=>'BLABLA #'+n+' du Maroc 🚀',market:'Marché',mktTitle:'Marketplace',mktSub:'Achetez & vendez près de vous',search:'Rechercher...',sell:'Vendre',catAll:'Tout',catPhones:'Téléphones',catElectro:'Électronique',catSport:'Sport',catFashion:'Mode',catHome:'Maison',sellTitle:'Vendre un article',itemName:"Nom de l'article",priceLbl:'Prix (DH)',city:'Ville',cancel:'Annuler',soldBy:'Vendu par',msgSeller:'Contacter le vendeur',msgSoon:'Chat bientôt disponible 🚀',posted:'Article publié ! ✓',fillAll:'Remplissez le nom et le prix',noRes:'Aucun résultat 😕',mnow:"À l'instant",it1:'iPhone 13 · 128 Go',it2:'Casque sans fil',it3:'VTT',it4:'Montre sport',it5:'Appareil photo + objectif',it6:'Ordinateur 16"',c1:'Casablanca',c2:'Rabat',c3:'Marrakech',c4:'Tanger',c5:'Fès',c6:'Agadir',say:'Dire quelque chose...',send:'Envoyer',camErr:'Caméra indisponible 😕',you:'Vous',r1:'Trop fort ! 🔥',r2:'Haha 😂',r3:'Waouh 🤩',choose:'Choisis un cadeau 🎁',coins:'Pièces',recharge:'Recharger',sent:'Envoyés',received:'Reçus',notEnough:'Pas assez de pièces! Recharger 💳',payDemo:'Paiement démo — vrai PayPal/Stripe bientôt 🚀',paid:'Paiement OK ✓ Pièces ajoutées :',followers:'Abonnés',join:'Devenir abonné',namePh:'Ton nom',joined:'Bienvenue sur NOVA ✓ Tu es abonné!',already:'Déjà enregistré ✓'},  
+es:{dir:'ltr',title:'NOVA - Achraf Aza | De Marruecos',tagline:'De Marruecos · Conectando el mundo',friends:'1 284 amigos',follow:'Seguir',message:'Mensaje',intro:'Intro',introTxt:'Compartiendo desde Marruecos 🌍 Construyendo NOVA 🚀',composer:'¿En qué piensas, Achraf?',photo:'Foto',video:'Vídeo',feeling:'Ánimo',post:'Publicar',home:'Inicio',myfriends:'Amigos',chat:'Chat',profile:'Perfil',blablaTitle:'BLABLA',scroll:'↓',loading:'Cargando...',now:'Ahora · 🌍',empty:'Escribe algo o añade foto/vídeo',remove:'❌ Quitar',share:'↗️ Compartir',explorer:'Explorador',ago:n=>'hace '+n+' min',postTxt:n=>'BLABLA #'+n+' de Marruecos 🚀',market:'Mercado',mktTitle:'Marketplace',mktSub:'Compra y vende cerca de ti',search:'Buscar...',sell:'Vender',catAll:'Todo',catPhones:'Teléfonos',catElectro:'Electrónica',catSport:'Deporte',catFashion:'Moda',catHome:'Hogar',sellTitle:'Vender un artículo',itemName:'Nombre del artículo',priceLbl:'Precio (DH)',city:'Ciudad',cancel:'Cancelar',soldBy:'Vendido por',msgSeller:'Contactar al vendedor',msgSoon:'Chat próximamente 🚀',posted:'¡Artículo publicado! ✓',fillAll:'Completa el nombre y el precio',noRes:'Sin resultados 😕',mnow:'Ahora mismo',it1:'iPhone 13 · 128GB',it2:'Auriculares inalámbricos',it3:'Bicicleta de montaña',it4:'Reloj deportivo',it5:'Cámara + lente',it6:'Portátil 16"',c1:'Casablanca',c2:'Rabat',c3:'Marrakech',c4:'Tánger',c5:'Fez',c6:'Agadir',say:'Di algo...',send:'Enviar',camErr:'Cámara no disponible 😕',you:'Tú',r1:'¡Genial! 🔥',r2:'Jaja 😂',r3:'Guau 🤩',choose:'Elige un regalo 🎁',coins:'Monedas',recharge:'Recargar',sent:'Enviados',received:'Recibidos',notEnough:'¡No hay monedas! Recarga 💳',payDemo:'Pago demo — PayPal/Stripe real pronto 🚀',paid:'Pago OK ✓ Monedas añadidas:',followers:'Seguidores',join:'Únete como seguidor',namePh:'Tu nombre',joined:'Bienvenido a NOVA ✓',already:'Ya estás registrado ✓'},  
+pt:{dir:'ltr',title:'NOVA - Achraf Aza | De Marrocos',tagline:'De Marrocos · Conectando o mundo',friends:'1 284 amigos',follow:'Seguir',message:'Mensagem',intro:'Intro',introTxt:'Compartilhando de Marrocos 🌍 Construindo NOVA 🚀',composer:'No que você está pensando, Achraf?',photo:'Foto',video:'Vídeo',feeling:'Humor',post:'Publicar',home:'Início',myfriends:'Amigos',chat:'Bate-papo',profile:'Perfil',blablaTitle:'BLABLA',scroll:'↓',loading:'Carregando...',now:'Agora · 🌍',empty:'Escreva algo ou adicione foto/vídeo',remove:'❌ Remover',share:'↗️ Compartilhar',explorer:'Explorador',ago:n=>'há '+n+' min',postTxt:n=>'BLABLA #'+n+' de Marrocos 🚀',market:'Mercado',mktTitle:'Marketplace',mktSub:'Compre e venda perto de você',search:'Buscar...',sell:'Vender',catAll:'Tudo',catPhones:'Celulares',catElectro:'Eletrônicos',catSport:'Esporte',catFashion:'Moda',catHome:'Casa',sellTitle:'Vender um item',itemName:'Nome do item',priceLbl:'Preço (DH)',city:'Cidade',cancel:'Cancelar',soldBy:'Vendido por',msgSeller:'Falar com o vendedor',msgSoon:'Chat em breve 🚀',posted:'Item publicado! ✓',fillAll:'Preencha o nome e o preço',noRes:'Sem resultados 😕',mnow:'Agora mesmo',it1:'iPhone 13 · 128GB',it2:'Fones sem fio',it3:'Bicicleta de montanha',it4:'Relógio esportivo',it5:'Câmera + lente',it6:'Notebook 16"',c1:'Casablanca',c2:'Rabat',c3:'Marrakech',c4:'Tânger',c5:'Fés',c6:'Agadir',say:'Diga algo...',send:'Enviar',camErr:'Câmera não disponível 😕',you:'Você',r1:'Legal! 🔥',r2:'Haha 😂',r3:'Uau 🤩',choose:'Escolha um presente 🎁',coins:'Moedas',recharge:'Recarregar',sent:'Enviados',received:'Recebidos',notEnough:'Sem moedas! Recarregue 💳',payDemo:'Pagamento demo — PayPal/Stripe real em breve 🚀',paid:'Pagamento OK ✓ Moedas adicionadas:',followers:'Seguidores',join:'Junte-se como seguidor',namePh:'Seu nome',joined:'Bem-vindo ao NOVA ✓',already:'Já registrado ✓'},  
+hi:{dir:'ltr',title:'NOVA - अचरफ़ अज़ा | मोरक्को से',tagline:'मोरक्को से · दुनिया से जुड़ना',friends:'1,284 दोस्त',follow:'फ़ॉलो',message:'संदेश',intro:'परिचय',introTxt:'मोरक्को से साझा करना 🌍 NOVA बनाना 🚀',composer:'आज क्या सोच रहे हैं, अचरफ़?',photo:'फ़ोटो',video:'वीडियो',feeling:'महसूस',post:'पोस्ट',home:'होम',myfriends:'दोस्त',chat:'चैट',profile:'प्रोफ़ाइल',blablaTitle:'BLABLA',scroll:'↓',loading:'लोड हो रहा है...',now:'अभी · 🌍',empty:'कुछ लिखें या फ़ोटो/वीडियो जोड़ें',remove:'❌ हटाएँ',share:'↗️ शेयर',explorer:'एक्सप्लोरर',ago:n=>n+' मिन पहले',postTxt:n=>'मोरक्को से BLABLA #'+n+' 🚀',market:'बाज़ार',mktTitle:'मार्केटप्लेस',mktSub:'आपके पास खरीदें और बेचें',search:'खोजें...',sell:'बेचें',catAll:'सभी',catPhones:'फ़ोन',catElectro:'इलेक्ट्रॉनिक्स',catSport:'खेल',catFashion:'फ़ैशन',catHome:'घर',sellTitle:'आइटम बेचें',itemName:'आइटम का नाम',priceLbl:'क़ीमत (DH)',city:'शहर',cancel:'रद्द करें',soldBy:'विक्रेता',msgSeller:'विक्रेता से बात करें',msgSoon:'चैट जल्द आ रहा है 🚀',posted:'आइटम पोस्ट हो गया! ✓',fillAll:'नाम और क़ीमत भरें',noRes:'कोई नतीजा नहीं 😕',mnow:'अभी',it1:'आइफ़ोन 13 · 128GB',it2:'वायरलेस हेडफ़ोन',it3:'माउंटेन बाइक',it4:'स्पोर्ट्स घड़ी',it5:'कैमरा + लेंस',it6:'लैपटॉप 16"',c1:'कासाब्लांका',c2:'रबात',c3:'मारकेच',c4:'टैंजियर',c5:'फ़ेज़',c6:'अगादिर',say:'कुछ कहें...',send:'भेजें',camErr:'कैमरा उपलब्ध नहीं 😕',you:'आप',r1:'कमाल! 🔥',r2:'हहा 😂',r3:'वाह 🤩',choose:'गिफ़्ट चुनें 🎁',coins:'सिक्के',recharge:'रिचार्ज',sent:'भेजे',received:'मिले',notEnough:'सिक्के कम हैं! रिचार्ज करें 💳',payDemo:'डेमो भुगतान — असली PayPal/Stripe जल्द आ रहा है 🚀',paid:'भुगतान OK ✓ सिक्के जुड़े:',followers:'फ़ॉलोअर्स',join:'फ़ॉलोअर बनें',namePh:'आपका नाम',joined:'NOVA में स्वागत है ✓',already:'पहले से पंजीकृत ✓'},  
+zh:{dir:'ltr',title:'NOVA - Achraf Aza | 来自摩洛哥',tagline:'来自摩洛哥 · 连接世界',friends:'1,284 位好友',follow:'关注',message:'私信',intro:'简介',introTxt:'来自摩洛哥 🌍 正在打造 NOVA 🚀',composer:'Achraf，你在想什么？',photo:'照片',video:'视频',feeling:'心情',post:'发布',home:'首页',myfriends:'好友',chat:'聊天',profile:'个人主页',blablaTitle:'BLABLA',scroll:'↓',loading:'加载中...',now:'刚刚 · 🌍',empty:'写点什么，或添加照片/视频',remove:'❌ 移除',share:'↗️ 分享',explorer:'探索者',ago:n=>n+' 分钟前',postTxt:n=>'来自摩洛哥的 BLABLA #'+n+' 🚀',market:'市场',mktTitle:'市场',mktSub:'在你身边买卖 · NOVA',search:'搜索商品...',sell:'出售',catAll:'全部',catPhones:'手机',catElectro:'电子产品',catSport:'运动',catFashion:'时尚',catHome:'家居',sellTitle:'出售商品',itemName:'商品名称',priceLbl:'价格 (DH)',city:'城市',cancel:'取消',soldBy:'卖家',msgSeller:'联系卖家',msgSoon:'聊天功能即将上线 🚀',posted:'商品已发布！ ✓',fillAll:'请填写名称和价格',noRes:'暂无结果 😕',mnow:'刚刚',it1:'iPhone 13 · 128GB',it2:'无线耳机',it3:'山地自行车',it4:'运动手表',it5:'相机 + 镜头',it6:'笔记本电脑 16"',c1:'卡萨布兰卡',c2:'拉巴特',c3:'马拉喀什',c4:'丹吉尔',c5:'非斯',c6:'阿加迪尔',say:'说点什么...',send:'发送',camErr:'相机不可用 😕',you:'你',r1:'太棒了！ 🔥',r2:'哈哈 😂',r3:'哇 🤩',choose:'选择礼物 🎁',coins:'硬币',recharge:'充值',sent:'已送出',received:'已收到',notEnough:'硬币不够了！请充值 💳',payDemo:'演示支付 — 真实的 PayPal/Stripe 即将推出 🚀',paid:'支付成功 ✓ 已添加硬币：',followers:'粉丝',join:'加入粉丝',namePh:'你的名字',joined:'欢迎来到 NOVA ✓ 你已成为粉丝！',already:'你已注册过 ✓'}  
+};  
+  
+function esc(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;')}  
+  
+function applyLang(L){  
+if(!I18N[L])L='en';  
+cur=L;const t=I18N[L];  
+document.documentElement.lang=L;  
+document.documentElement.dir=t.dir;  
+document.title=t.title;  
+document.querySelectorAll('[data-i18n]').forEach(el=>{const k=el.dataset.i18n;if(t[k]!=null)el.textContent=t[k]});  
+document.querySelectorAll('[data-i18n-ph]').forEach(el=>{const k=el.dataset.i18nPh;if(t[k]!=null)el.placeholder=t[k]});  
+try{localStorage.setItem('novaLang',L)}catch(e){}  
+renderChips();renderMarket();renderFollowers();  
+if(document.getElementById('blablaPage').classList.contains('active'))renderReels();  
+}  
+function onLang(L){applyLang(L)}  
+  
+function preview(input,type){  
+const file=input.files[0];if(!file)return;  
+const r=new FileReader();  
+r.onload=e=>{  
+currentMedia=e.target.result;currentType=type;  
+const t=I18N[cur];  
+const rm='<button onclick="clearPreview()" style="margin-top:6px;padding:6px 12px;background:#e4e6eb;border:none;border-radius:6px">'+t.remove+'</button>';  
+if(type==='img')document.getElementById('preview').innerHTML='<img src="'+e.target.result+'" alt="" style="width:100%;border-radius:10px;max-height:320px;object-fit:cover;margin-top:10px">'+rm;  
+else document.getElementById('preview').innerHTML='<video src="'+e.target.result+'" controls playsinline style="width:100%;border-radius:10px;max-height:320px;margin-top:10px"></video>'+rm;  
+};  
+r.readAsDataURL(file);  
+}  
+function clearPreview(){document.getElementById('preview').innerHTML='';currentMedia=null;currentType=null;}  
+  
+function publishPost(){  
+const t=I18N[cur];  
+const txt=document.getElementById('postInput').value;  
+if(!txt&&!currentMedia)return alert(t.empty);  
+let mediaHtml='';  
+if(currentMedia){mediaHtml=currentType==='img'?'<img src="'+currentMedia+'" alt="" loading="lazy" style="width:100%;border-radius:10px;margin-top:10px">':'<video src="'+currentMedia+'" controls playsinline style="width:100%;border-radius:10px;margin-top:10px;max-height:360px"></video>';}  
+const d=document.createElement('div');d.className='card';postSeq++;POSTS[postSeq]={txt:txt,media:currentMedia,type:currentType};  
+d.innerHTML='<div class="post-head"><img src="https://i.pravatar.cc/100?img=12" alt="" width="40" height="40" loading="lazy"><div><b>Achraf Aza</b><div style="font-size:11px;color:#65676b">'+t.now+'</div></div></div><p style="margin-top:10px">'+esc(txt)+'</p>'+mediaHtml+'<button onclick="sharePost('+postSeq+')" style="margin-top:10px;padding:6px 14px;background:#e4e6eb;border:none;border-radius:20px;font-weight:700;font-size:13px">'+t.share+' ↗️</button>'  
++' <button onclick="giftOpen(\'p'+postSeq+'\')" style="margin-top:10px;padding:6px 14px;background:#ffe7f0;border:none;border-radius:20px;font-weight:700;font-size:13px">🎁 <span id="pgc'+postSeq+'">0</span></button>';  
+home.prepend(d);  
+document.getElementById('postInput').value='';clearPreview();  
+}  
+  
+const MUSIC='♫ NOVA Mix — From Morocco 🇲🇦';  
+const REEL_DEMO=[  
+{n:7,likes:384,av:33,img:'https://images.unsplash.com/photo-1506744038136-46273834b3fb?w=600&q=55&auto=format&fit=crop'},  
+{n:12,likes:512,av:47,img:'https://images.unsplash.com/photo-1470071459604-3b5ec3a7fe05?w=600&q=55&auto=format&fit=crop'},  
+{n:21,likes:977,av:60,img:'https://images.unsplash.com/photo-1501785888041-af3ef285b470?w=600&q=55&auto=format&fit=crop'},  
+{n:33,likes:1290,av:5,img:'https://images.unsplash.com/photo-1441974231531-c6227db76b6e?w=600&q=55&auto=format&fit=crop'},  
+{n:44,likes:845,av:16,img:'https://images.unsplash.com/photo-1472214103451-9374bd1c798e?w=600&q=55&auto=format&fit=crop'}  
+];  
+let userReels=[];try{userReels=JSON.parse(localStorage.getItem('novaReels')||'[]')}catch(e){}  
+let ALL_REELS=[],LIKED={};try{LIKED=JSON.parse(localStorage.getItem('novaLikes')||'{}')}catch(e){}  
+  
+function renderReels(){  
+const t=I18N[cur];  
+const rc=document.getElementById('reels');  
+const keepScroll=rc.scrollTop;  
+ALL_REELS=userReels.concat(REEL_DEMO);  
+let html='';  
+ALL_REELS.forEach((r,i)=>{  
+const key=r.you?('u'+r.id):('d'+r.n);  
+const liked=!!LIKED[key];  
+const author=r.you?t.you:t.explorer+' '+r.n;  
+const cap=r.you?t.introTxt:t.postTxt(r.n);  
+const av=r.you?12:r.av;  
+const likes=(r.you?0:r.likes)+(liked?1:0);  
+html+='<div class="reel"><img class="bgimg" src="'+r.img+'" alt="" loading="lazy" decoding="async"><div class="shade"></div>'  
++'<div class="rail"><button class="rb" onclick="likeReel('+i+',this)">'+(liked?'❤️':'🤍')+'<div class="cnt">'+likes.toLocaleString('en-US')+'</div></button>'  
++'<span class="rb">💬<div class="cnt">'+(r.you?0:Math.max(1,Math.round(r.likes/7)))+'</div></span>'  
++'<button class="rb" onclick="giftOpen(\''+key+'\')">🎁<div class="cnt">'+(GIFTS[key]||0)+'</div></button>'  
++'<button class="rb" onclick="shareReel('+i+')">↗️<div class="cnt">'+(r.you?0:Math.round(r.likes/3))+'</div></button></div>'  
++'<div class="caption"><img src="https://i.pravatar.cc/100?img='+av+'" width="32" height="32" alt="" style="border-radius:50%;vertical-align:-10px;margin-right:6px;border:2px solid #fff"><b>@'+esc(author)+'</b>'  
++'<div style="font-size:13px;margin-top:6px">'+cap+'</div>'  
++'<div style="font-size:12px;opacity:.95;margin-top:8px"><span class="disc">🎵</span> '+MUSIC+'</div></div></div>';  
+});  
+document.getElementById('reels').innerHTML=html;  
+rc.scrollTop=keepScroll;  
+}  
+function likeReel(i,btn){  
+const r=ALL_REELS[i];  
+const key=r.you?('u'+r.id):('d'+r.n);  
+LIKED[key]=!LIKED[key];  
+try{localStorage.setItem('novaLikes',JSON.stringify(LIKED))}catch(e){}  
+const liked=LIKED[key];  
+const likes=(r.you?0:r.likes)+(liked?1:0);  
+btn.innerHTML=(liked?'❤️':'🤍')+'<div class="cnt">'+likes.toLocaleString('en-US')+'</div>';  
+}  
+  
+function shareReel(i){
+const r=ALL_REELS[i];if(!r)return;
+const t=I18N[cur];
+if(!navigator.share){try{navigator.clipboard.writeText(r.img)}catch(e){}alert('Copied ✓');return;}
+if(r.you&&r.img&&r.img.indexOf('data:')===0){
+fetch(r.img).then(function(res){return res.blob()}).then(function(b){
+const f=new File([b],'nova.jpg',{type:b.type||'image/jpeg'});
+if(navigator.canShare&&navigator.canShare({files:[f]})){navigator.share({files:[f],title:'NOVA',text:'NOVA 🚀'}).catch(function(){})}
+else{navigator.share({title:'NOVA',text:'NOVA 🚀'}).catch(function(){})}
+}).catch(function(){});
+}else{
+navigator.share({title:'NOVA',text:t.postTxt(r.n),url:r.img}).catch(function(){});
+}
+}
+function sharePost(n){
+const p=POSTS[n];if(!p)return;
+if(!navigator.share){try{navigator.clipboard.writeText(p.txt||'NOVA')}catch(e){}alert('Copied ✓');return;}
+if(p.media&&p.media.indexOf('data:')===0){
+fetch(p.media).then(function(res){return res.blob()}).then(function(b){
+const isV=(p.type==='video');
+const f=new File([b],isV?'nova.mp4':'nova.jpg',{type:b.type||(isV?'video/mp4':'image/jpeg')});
+if(navigator.canShare&&navigator.canShare({files:[f]})){navigator.share({files:[f],title:'NOVA',text:p.txt||'NOVA 🚀'}).catch(function(){})}
+else{navigator.share({title:'NOVA',text:p.txt||'NOVA 🚀'}).catch(function(){})}
+}).catch(function(){});
+}else{
+navigator.share({title:'NOVA',text:p.txt||'NOVA 🚀'}).catch(function(){});
+}
+}
+let CHAT=[{a:'Explorer 7',t:'🔥🔥'},{a:'Explorer 12',t:'NOVA 🚀🚀'},{a:'Explorer 21',t:'🇲🇦 ❤️'}];  
+try{const sc=localStorage.getItem('novaChat');if(sc)CHAT=JSON.parse(sc)}catch(e){}  
+function renderChat(){  
+document.getElementById('chatmsgs').innerHTML=CHAT.slice(-6).map(m=>'<div class="msg"><b>'+esc(m.a)+':</b> '+esc(m.t)+'</div>').join('');  
+}  
+function pushChat(m){  
+CHAT.push(m);CHAT=CHAT.slice(-20);  
+try{localStorage.setItem('novaChat',JSON.stringify(CHAT))}catch(e){}  
+renderChat();  
+}  
+function sendChat(){  
+const inp=document.getElementById('chatInput');const v=inp.value.trim();if(!v)return;  
+const t=I18N[cur];  
+pushChat({a:t.you,t:v});inp.value='';  
+setTimeout(()=>{pushChat({a:t.explorer+' '+(7+Math.floor(Math.random()*40)),t:t['r'+(1+Math.floor(Math.random()*3))]})},1200+Math.random()*1300);  
+}  
+  
+let camStream=null,front=true;  
+async function openCam(){  
+document.getElementById('camModal').style.display='block';  
+stopStream();  
+try{  
+camStream=await navigator.mediaDevices.getUserMedia({video:{facingMode:front?'user':'environment'},audio:false});  
+document.getElementById('camView').srcObject=camStream;  
+}catch(err){closeCam();alert(I18N[cur].camErr)}  
+}  
+function switchCam(){front=!front;openCam()}  
+function stopStream(){if(camStream){camStream.getTracks().forEach(tr=>tr.stop());camStream=null}}  
+function closeCam(){stopStream();document.getElementById('camModal').style.display='none'}  
+function snap(){  
+const v=document.getElementById('camView');  
+const c=document.createElement('canvas');  
+c.width=v.videoWidth||720;c.height=v.videoHeight||1280;  
+c.getContext('2d').drawImage(v,0,0,c.width,c.height);  
+const img=c.toDataURL('image/jpeg',.75);  
+userReels.unshift({id:Date.now(),img:img,you:true});  
+try{localStorage.setItem('novaReels',JSON.stringify(userReels))}catch(e){}  
+closeCam();  
+renderReels();  
+document.getElementById('reels').scrollTop=0;  
+alert(I18N[cur].posted);  
+}  
+  
+const FALLBACK_IMG='https://images.unsplash.com/photo-1542291026-7eec264c27ff?w=400&q=55&auto=format&fit=crop';  
+const DEMO=[  
+{img:'https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?w=400&q=55&auto=format&fit=crop',price:4500,cat:'phones',time:'2h',it:'it1',c:'c1'},  
+{img:'https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=400&q=55&auto=format&fit=crop',price:350,cat:'electro',time:'5h',it:'it2',c:'c2'},  
+{img:'https://images.unsplash.com/photo-1485965120184-e220f721d03e?w=400&q=55&auto=format&fit=crop',price:1200,cat:'sport',time:'1d',it:'it3',c:'c3'},  
+{img:'https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=400&q=55&auto=format&fit=crop',price:900,cat:'fashion',time:'3d',it:'it4',c:'c4'},  
+{img:'https://images.unsplash.com/photo-1516035069371-29a1b244cc32?w=400&q=55&auto=format&fit=crop',price:2900,cat:'electro',time:'6h',it:'it5',c:'c5'},  
+{img:'https://images.unsplash.com/photo-1496181133206-80ce9b88a853?w=400&q=55&auto=format&fit=crop',price:6500,cat:'electro',time:'1w',it:'it6',c:'c6'}  
+];  
+let userItems=[];try{userItems=JSON.parse(localStorage.getItem('novaItems')||'[]')}catch(e){}  
+function getItems(){return userItems.concat(DEMO)}  
+function itemTitle(it){return it.it?I18N[cur][it.it]:it.name}  
+function itemCity(it){return it.c?I18N[cur][it.c]:it.city}  
+function itemTime(it){return I18N[cur][it.time]?I18N[cur][it.time]:it.time}  
+function fmtPrice(p){return p.toLocaleString('en-US')+' DH'}  
+  
+const CATS=[['all','catAll'],['phones','catPhones'],['electro','catElectro'],['sport','catSport'],['fashion','catFashion'],['home','catHome']];  
+function renderChips(){  
+const t=I18N[cur];  
+document.getElementById('mktChips').innerHTML=CATS.map(c=>'<button class="chip'+(curCat===c[0]?' on':'')+'" onclick="setCat(\''+c[0]+'\')">'+t[c[1]]+'</button>').join('');  
+}  
+function setCat(c){curCat=c;renderChips();renderMarket()}  
+  
+let RENDERED=[];  
+function renderMarket(){  
+const t=I18N[cur];  
+const q=document.getElementById('mktSearch').value.toLowerCase();  
+RENDERED=[];  
+let html='';  
+getItems().forEach(it=>{  
+const title=itemTitle(it);  
+if(curCat!=='all'&&it.cat!==curCat)return;  
+if(q&&title.toLowerCase().indexOf(q)<0&&itemCity(it).toLowerCase().indexOf(q)<0)return;  
+RENDERED.push(it);  
+html+='<div class="item" onclick="openDetail('+(RENDERED.length-1)+')"><img src="'+it.img+'" loading="lazy" decoding="async" alt=""><div class="pad"><div class="price">'+fmtPrice(it.price)+'</div><div class="iname">'+esc(title)+'</div><div class="iloc">'+esc(itemCity(it))+' · '+itemTime(it)+'</div></div></div>';  
+});  
+document.getElementById('mktGrid').innerHTML=html||'<div style="grid-column:1/-1;text-align:center;padding:30px;color:#65676b">'+t.noRes+'</div>';  
+}  
+  
+function openDetail(i){  
+const t=I18N[cur];const it=RENDERED[i];  
+document.getElementById('dImg').src=it.img;  
+document.getElementById('dPrice').textContent=fmtPrice(it.price);  
+document.getElementById('dName').textContent=itemTitle(it);  
+document.getElementById('dLoc').textContent=itemCity(it)+' · '+itemTime(it);  
+document.getElementById('dSeller').textContent=t.soldBy+' · NOVA';  
+document.getElementById('dMsg').textContent=t.msgSeller;  
+document.getElementById('detailModal').classList.add('open');  
+}  
+function closeDetail(){document.getElementById('detailModal').classList.remove('open')}  
+function openSell(){document.getElementById('sellModal').classList.add('open')}  
+function closeSell(){document.getElementById('sellModal').classList.remove('open')}  
+  
+function pickSellPhoto(input){  
+const f=input.files[0];if(!f)return;  
+const r=new FileReader();  
+r.onload=e=>{  
+const im=new Image();  
+im.onload=()=>{  
+let w=im.width,h=im.height;const max=800;  
+if(w>max){h=Math.round(h*max/w);w=max}  
+if(h>max){w=Math.round(w*max/h);h=max}  
+const c=document.createElement('canvas');c.width=w;c.height=h;  
+c.getContext('2d').drawImage(im,0,0,w,h);  
+sellImg=c.toDataURL('image/jpeg',.8);  
+document.getElementById('sellThumb').innerHTML='<img src="'+sellImg+'" alt="" style="width:64px;height:64px;object-fit:cover;border-radius:8px">';  
+};  
+im.src=e.target.result;  
+};  
+r.readAsDataURL(f);  
+}  
+  
+function publishItem(){  
+const t=I18N[cur];  
+const name=document.getElementById('sName').value.trim();  
+const price=parseInt(document.getElementById('sPrice').value,10);  
+const city=document.getElementById('sCity').value.trim();  
+if(!name||!price)return alert(t.fillAll);  
+userItems.unshift({name:name,price:price,city:city||t.city,cat:document.getElementById('sCat').value,time:'mnow',img:sellImg||FALLBACK_IMG});  
+try{localStorage.setItem('novaItems',JSON.stringify(userItems))}catch(e){}  
+document.getElementById('sName').value='';document.getElementById('sPrice').value='';document.getElementById('sCity').value='';document.getElementById('sellThumb').innerHTML='';sellImg=null;  
+closeSell();renderMarket();alert(t.posted);  
+}  
+  
+function toggleFollow(b){
+const t=I18N[cur];
+if(b.dataset.on==='1'){b.dataset.on='0';b.textContent=t.follow;b.style.background='#FB7299'}
+else{b.dataset.on='1';b.textContent='✓ '+t.follow;b.style.background='#00AEEC'}
+}
+function openDrawer(){document.getElementById('drawer').classList.add('open');document.getElementById('drawerOv').classList.add('open')}
+function closeDrawer(){document.getElementById('drawer').classList.remove('open');document.getElementById('drawerOv').classList.remove('open')}
+function shareNova(){
+const url='https://nova-achraf.github.io/nova/';
+const txt='Join me on NOVA 🚀 Social app from Morocco 🇲🇦 — Achraf Aza';
+if(navigator.share){navigator.share({title:'NOVA',text:txt,url:url}).catch(function(){})}
+else{try{navigator.clipboard.writeText(url)}catch(e){}alert('Link copied ✓')}
+}
+function setLangBtn(L){
+try{document.getElementById('langSel').value=L}catch(e){}
+applyLang(L);
+}
+function renderNovaChat(){
+var box=document.getElementById('novaChatBox');
+if(!box)return;
+var me=I18N[cur].you;
+var arr=CHAT.slice(-30).map(function(m){
+var mine=m.a===me;
+var bg=mine?'linear-gradient(135deg,#00AEEC,#FB7299)':'#e4e6eb';
+var col=mine?'#fff':'#050505';
+var al=mine?'flex-end':'flex-start';
+return '<div style="align-self:'+al+';max-width:80%;background:'+bg+';color:'+col+';padding:9px 13px;border-radius:16px;font-size:13.5px">'+esc(m.a)+': '+esc(m.t)+'</div>';
+});
+if(CHAT.length){box.innerHTML=arr.join('')}else{box.innerHTML='<div style="text-align:center;color:#65676b;padding:20px">—</div>'}
+box.scrollTop=box.scrollHeight;
+}
+function novaChatSend(){
+const inp=document.getElementById('novaChatInput');
+const v=inp.value.trim();if(!v)return;
+pushChat({a:I18N[cur].you,t:v});inp.value='';
+renderNovaChat();
+setTimeout(function(){pushChat({a:I18N[cur].explorer+' '+(7+Math.floor(Math.random()*40)),t:I18N[cur]['r'+(1+Math.floor(Math.random()*3))]});renderNovaChat()},1200+Math.random()*1300);
+}
+function openChatPage(e){
+e.preventDefault();
+document.getElementById('chatPage').classList.add('active');
+document.getElementById('profilePage').classList.remove('active');
+document.getElementById('blablaPage').classList.remove('active');
+document.getElementById('marketPage').classList.remove('active');
+document.getElementById('friendsPage').classList.remove('active');
+home.style.display='none';
+setActive('chatNav');
+renderNovaChat();
+}
+function openProfilePage(e){
+e.preventDefault();
+document.getElementById('profilePage').classList.add('active');
+document.getElementById('chatPage').classList.remove('active');
+document.getElementById('blablaPage').classList.remove('active');
+document.getElementById('marketPage').classList.remove('active');
+document.getElementById('friendsPage').classList.remove('active');
+home.style.display='none';
+setActive('profileNav');
+}
+let COINS=100;try{COINS=parseInt(localStorage.getItem('novaCoins'),10);if(isNaN(COINS))COINS=100}catch(e){}
+let GIFTS={};try{GIFTS=JSON.parse(localStorage.getItem('novaGifts')||'{}')}catch(e){}
+let GSENT=0,GRECV=0;try{var _gt=JSON.parse(localStorage.getItem('novaGT')||'{}');GSENT=_gt.s||0;GRECV=_gt.r||0}catch(e){}
+let giftTarget=null,FOLLOWERS=[];
+try{FOLLOWERS=JSON.parse(localStorage.getItem('novaFollowers')||'[]')}catch(e){}
+function saveG(){try{localStorage.setItem('novaCoins',String(COINS));localStorage.setItem('novaGifts',JSON.stringify(GIFTS));localStorage.setItem('novaGT',JSON.stringify({s:GSENT,r:GRECV}))}catch(e){}}
+function updateWallet(){document.getElementById('coinsTxt').textContent=COINS;document.getElementById('sentTxt').textContent=GSENT;document.getElementById('recvTxt').textContent=GRECV}
+function giftOpen(target){giftTarget=target;updateWallet();document.getElementById('giftModal').classList.add('open')}
+function closeModal(id){document.getElementById(id).classList.remove('open')}
+function openPay(){document.getElementById('payModal').classList.add('open')}
+function payNow(amount){const t=I18N[cur];COINS+=amount*5;saveG();updateWallet();closeModal('payModal');alert(t.paid+' +'+(amount*5)+' 💰')}
+function sendGift(emoji,cost){
+const t=I18N[cur];
+if(COINS<cost){alert(t.notEnough);openPay();return}
+COINS-=cost;GSENT++;GIFTS[giftTarget]=(GIFTS[giftTarget]||0)+1;saveG();updateWallet();
+pushChat({a:t.you,t:'🎁 '+emoji+' → NOVA'});
+if(giftTarget.indexOf('p')===0){var pc=document.getElementById('pgc'+giftTarget.slice(1));if(pc)pc.textContent=GIFTS[giftTarget]}
+else renderReels();
+alert(emoji+' ✓');
+if(Math.random()<.45){setTimeout(function(){GRECV++;saveG();updateWallet();pushChat({a:t.explorer+' '+(7+Math.floor(Math.random()*40)),t:'🎁 → '+t.you+' 💙'})},1600+Math.random()*2400)}
+}
+function renderFollowers(){
+document.getElementById('folCount').textContent='1,284 + '+FOLLOWERS.length;
+document.getElementById('folList').innerHTML=FOLLOWERS.length?FOLLOWERS.map(function(f){return '<div class="fol"><img src="https://i.pravatar.cc/100?img='+f.img+'" width="40" height="40" alt="" style="border-radius:50%"><div><b>'+esc(f.name)+'</b><div style="font-size:11px;color:#65676b">NOVA ✓</div></div></div>'}).join(''):'<div style="color:#65676b;font-size:13px">—</div>';
+}
+function registerFollower(){
+const t=I18N[cur];
+if(localStorage.getItem('novaJoined')==='1')return alert(t.already);
+const n=document.getElementById('folName').value.trim();
+if(!n)return alert(t.namePh);
+FOLLOWERS.unshift({name:n,img:1+Math.floor(Math.random()*70)});
+try{localStorage.setItem('novaFollowers',JSON.stringify(FOLLOWERS));localStorage.setItem('novaJoined','1')}catch(e){}
+document.getElementById('folName').value='';
+renderFollowers();alert(t.joined);
+}
+function openFriends(e){
+e.preventDefault();
+document.getElementById('friendsPage').classList.add('active');
+document.getElementById('blablaPage').classList.remove('active');
+document.getElementById('marketPage').classList.remove('active');
+document.getElementById('chatPage').classList.remove('active');
+document.getElementById('profilePage').classList.remove('active');
+home.style.display='none';
+setActive('friendsNav');
+renderFollowers();
+}
+let viewersN=1247;
+setInterval(function(){if(!document.getElementById('blablaPage').classList.contains('active'))return;viewersN=Math.max(900,viewersN+Math.floor(Math.random()*41)-18);var v=document.getElementById('viewers');if(v)v.textContent=viewersN.toLocaleString('en-US')},2500);
+function setActive(id){['homeNav','blablaNav','marketNav','friendsNav','chatNav','profileNav'].forEach(n=>document.getElementById(n).classList.toggle('active',n===id))}  
+function openBlabla(e){  
+e.preventDefault();  
+document.getElementById('blablaPage').classList.add('active');  
+document.getElementById('marketPage').classList.remove('active');  
+document.getElementById('friendsPage').classList.remove('active');  
+document.getElementById('chatPage').classList.remove('active');  
+document.getElementById('profilePage').classList.remove('active');  
+home.style.display='none';  
+setActive('blablaNav');  
+const bp=document.getElementById('blablaPage');  
+bp.style.paddingTop=document.querySelector('.header').offsetHeight+'px';  
+bp.style.paddingBottom=document.querySelector('.bottom').offsetHeight+'px';  
+if(!ALL_REELS.length)renderReels();  
+renderChat();  
+}  
+function openMarket(e){  
+e.preventDefault();  
+document.getElementById('marketPage').classList.add('active');  
+document.getElementById('blablaPage').classList.remove('active');  
+document.getElementById('friendsPage').classList.remove('active');  
+document.getElementById('chatPage').classList.remove('active');  
+document.getElementById('profilePage').classList.remove('active');  
+home.style.display='none';  
+setActive('marketNav');  
+renderChips();renderMarket();  
+}  
+function showHome(e){  
+if(e)e.preventDefault();  
+document.getElementById('blablaPage').classList.remove('active');  
+document.getElementById('marketPage').classList.remove('active');  
+document.getElementById('friendsPage').classList.remove('active');  
+document.getElementById('chatPage').classList.remove('active');  
+document.getElementById('profilePage').classList.remove('active');  
+home.style.display='block';  
+setActive('homeNav');  
+}  
+  
+let saved='en';try{saved=localStorage.getItem('novaLang')||'en'}catch(e){}  
+if(!I18N[saved])saved='en';  
+document.getElementById('langSel').value=saved;  
+applyLang(saved);  
+  
+if('serviceWorker' in navigator){window.addEventListener('load',function(){navigator.serviceWorker.register('sw.js').catch(function(){})})}  
+function openDrawer(){document.getElementById('drawer').classList.add('open');document.getElementById('drawerOver').classList.add('open')}
+function closeDrawer(){document.getElementById('drawer').classList.remove('open');document.getElementById('drawerOver').classList.remove('open')}
+</script>  </body>  
+</html>
+<!-- ===== NOVA · v7 : Sign-In page (Google GIS + Email/Password) ===== -->
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
+<script src="https://accounts.google.com/gsi/client" async defer></script>
+<script>
+(function () {
+  const cfg = {
+    apiKey: "AIzaSyAP1KiAtoMB5EkGWopUuKm0LQMNi1QkApM",
+    authDomain: "nova-cb212.firebaseapp.com",
+    projectId: "nova-cb212",
+    storageBucket: "nova-cb212.firebasestorage.app",
+    messagingSenderId: "660417453842",
+    appId: "1:660417453842:web:047ccaa48dc441d5f6ddcb",
+    measurementId: "G-78X5WCEJWW"
+  };
+  const app = firebase.initializeApp(cfg, 'nova-fix7');
+  const auth = firebase.auth(app);
+  const CLIENT_ID = '660417453842-ki52nv5fpa9idfm0sq4g864rf4ij3ubv.apps.googleusercontent.com';
+
+  /* floating button */
+  const btn = document.createElement('button');
+  btn.id = 'nova-signin-btn7';
+  btn.style.cssText = 'position:fixed;bottom:78px;right:12px;z-index:10002;background:linear-gradient(135deg,#00AEEC,#FB7299);color:#fff;border:none;border-radius:50%;width:52px;height:52px;font-size:22px;box-shadow:0 4px 12px rgba(0,0,0,.35);';
+  btn.innerHTML = '👤';
+  btn.title = 'Sign in to NOVA';
+  document.body.appendChild(btn);
+
+  function hideOthers() {
+    document.querySelectorAll('button').forEach(function (b) {
+      if (b.id !== 'nova-signin-btn7' && b.style.position === 'fixed' && b.style.backgroundColor === 'rgb(24, 119, 242)') {
+        b.style.display = 'none';
+      }
+    });
+    btn.style.display = 'block';
+  }
+  hideOthers();
+  setTimeout(hideOthers, 800);
+  setTimeout(hideOthers, 2500);
+
+  /* Facebook-style login window */
+  const ov = document.createElement('div');
+  ov.id = 'nova-login-ov7';
+  ov.style.cssText = 'position:fixed;top:0;left:0;right:0;bottom:0;z-index:11000;background:rgba(0,0,0,.55);display:none;align-items:center;justify-content:center;padding:16px;';
+  ov.innerHTML = '<div style="background:#fff;border-radius:14px;max-width:340px;width:100%;padding:20px 18px 18px;text-align:center;box-shadow:0 8px 30px rgba(0,0,0,.3);font-family:system-ui,Segoe UI,Roboto,sans-serif;position:relative;box-sizing:border-box;">'
+    + '<div id="nova-login-x7" style="position:absolute;top:6px;right:8px;font-size:20px;color:#65676b;cursor:pointer;padding:4px 10px;">✕</div>'
+    + '<div style="width:52px;height:52px;margin:0 auto 4px;background:linear-gradient(135deg,#00AEEC,#FB7299);color:#fff;border-radius:12px;display:grid;place-items:center;font-weight:900;font-size:26px;letter-spacing:1px;">N</div>'
+    + '<div style="font-size:17px;font-weight:700;color:#050505;margin-bottom:14px;">Log in to NOVA</div>'
+    + '<input id="nova-em7" type="email" placeholder="Email" style="width:100%;box-sizing:border-box;padding:11px 12px;border:1px solid #dddfe2;border-radius:8px;font-size:15px;margin-bottom:8px;outline:none;background:#f0f2f5;">'
+    + '<input id="nova-pw7" type="password" placeholder="Password" style="width:100%;box-sizing:border-box;padding:11px 12px;border:1px solid #dddfe2;border-radius:8px;font-size:15px;margin-bottom:10px;outline:none;background:#f0f2f5;">'
+    + '<button id="nova-login-btn7" style="width:100%;padding:11px;background:linear-gradient(135deg,#00AEEC,#FB7299);color:#fff;border:none;border-radius:8px;font-size:16px;font-weight:700;margin-bottom:8px;">Log in</button>'
+    + '<button id="nova-create-btn7" style="width:100%;padding:11px;background:#00AEEC;color:#fff;border:none;border-radius:8px;font-size:16px;font-weight:700;">Create account</button>'
+    + '<div style="display:flex;align-items:center;gap:10px;color:#8a8d91;font-size:12px;margin:14px 0 10px;"><div style="flex:1;height:1px;background:#dddfe2;"></div>OR<div style="flex:1;height:1px;background:#dddfe2;"></div></div>'
+    + '<div id="nova-gbtn7" style="display:flex;justify-content:center;min-height:44px;"></div>'
+    + '<div id="nova-err7" style="color:#d93025;font-size:12.5px;margin-top:8px;display:none;text-align:center;"></div>'
+    + '</div>';
+  document.body.appendChild(ov);
+
+  function openLogin() { errBox(''); ov.style.display = 'flex'; }
+  function closeLogin() { ov.style.display = 'none'; }
+  function errBox(msg) {
+    const e = document.getElementById('nova-err7');
+    if (!e) return;
+    e.textContent = msg;
+    e.style.display = msg ? 'block' : 'none';
+  }
+  ov.addEventListener('click', function (ev) { if (ev.target === ov) closeLogin(); });
+
+  function okLogin(user) {
+    closeLogin();
+    alert('NOVA ✅ مرحبا ' + ((user && (user.displayName || user.email)) || '') + '!');
+  }
+  function friendly(e) {
+    const c = e && e.code ? e.code : '';
+    if (c === 'auth/email-already-in-use') return 'This email already has an account. Press Log in.';
+    if (c === 'auth/invalid-email') return 'Invalid email address.';
+    if (c === 'auth/weak-password') return 'Password too short (min 6 characters).';
+    if (c === 'auth/wrong-password' || c === 'auth/invalid-credential' || c === 'auth/user-not-found') return 'Wrong email or password.';
+    if (c === 'auth/operation-not-allowed' || c === 'auth/admin-restricted-operation') return 'Email sign-in is not enabled yet in Firebase Console.';
+    if (c === 'auth/too-many-requests') return 'Too many tries. Wait a little.';
+    if (c === 'auth/network-request-failed') return 'Network problem. Check your connection.';
+    return 'Error: ' + (c || (e && e.message ? e.message : 'unknown'));
+  }
+  function getVals() {
+    const emEl = document.getElementById('nova-em7');
+    const pwEl = document.getElementById('nova-pw7');
+    return { em: emEl ? emEl.value : '', pw: pwEl ? pwEl.value : '' };
+  }
+
+  document.getElementById('nova-login-x7').addEventListener('click', closeLogin);
+  document.getElementById('nova-login-btn7').addEventListener('click', function () {
+    const v = getVals();
+    if (!v.em.trim() || !v.pw) { errBox('Write your email and password.'); return; }
+    errBox('');
+    auth.signInWithEmailAndPassword(v.em.trim(), v.pw).then(function (res) { okLogin(res.user); }).catch(function (e) { errBox(friendly(e)); });
+  });
+  document.getElementById('nova-create-btn7').addEventListener('click', function () {
+    const v = getVals();
+    if (!v.em.trim() || !v.pw) { errBox('Write your email and password.'); return; }
+    if (v.pw.length < 6) { errBox('Password too short (min 6 characters).'); return; }
+    errBox('');
+    auth.createUserWithEmailAndPassword(v.em.trim(), v.pw).then(function (res) {
+      const nm = v.em.trim().split('@')[0];
+      if (res.user && res.user.updateProfile) res.user.updateProfile({ displayName: nm }).catch(function () {});
+      okLogin(res.user);
+    }).catch(function (e) { errBox(friendly(e)); });
+  });
+
+  function renderGoogle(tries) {
+    const box = document.getElementById('nova-gbtn7');
+    if (!box) return;
+    if (window.google && google.accounts && google.accounts.id) {
+      google.accounts.id.initialize({
+        client_id: CLIENT_ID,
+        callback: function (resp) {
+          if (!resp || !resp.credential) { errBox('Google error. Try again.'); return; }
+          try {
+            const cred = firebase.auth.GoogleAuthProvider.credential(resp.credential);
+            auth.signInWithCredential(cred).then(function (res) { okLogin(res.user); }).catch(function (e) { errBox(friendly(e)); });
+          } catch (ex) { errBox('Google error. Try again.'); }
+        }
+      });
+      google.accounts.id.renderButton(box, { theme: 'outline', size: 'large', text: 'continue_with', shape: 'pill' });
+      return;
+    }
+    if (tries > 40) { box.innerHTML = '<span style="font-size:12px;color:#8a8d91;">Google button loading...</span>'; return; }
+    setTimeout(function () { renderGoogle(tries + 1); }, 500);
+  }
+  renderGoogle(0);
+
+  auth.onAuthStateChanged(function (user) {
+    if (user) {
+      const photo = user.photoURL || '';
+      btn.innerHTML = photo
+        ? '<img src="' + photo + '" alt="me" style="width:52px;height:52px;border-radius:50%;object-fit:cover;display:block;">'
+        : '👤';
+      btn.title = (user.displayName || user.email || 'NOVA') + ' - Sign out ?';
+      closeLogin();
+    } else {
+      btn.innerHTML = '👤';
+      btn.title = 'Sign in to NOVA';
+    }
+    var pn = document.getElementById('pfpName');
+    var pm = document.getElementById('pfpMail');
+    var pb = document.getElementById('pfpBtn');
+    var pi = document.getElementById('pfpImg');
+    if (pn) pn.textContent = (user && (user.displayName || user.email)) || 'Achraf Aza';
+    if (pm) pm.textContent = user ? ('✓ ' + (user.email || 'NOVA user')) : 'From Morocco 🇲🇦 · Connect to NOVA';
+    if (pb) pb.textContent = user ? 'Sign out ⎋' : 'Log in 🔑';
+    if (pi && user && user.photoURL) pi.src = user.photoURL;
+  });
+
+  btn.addEventListener('click', function () {
+    const user = auth.currentUser;
+    if (user) {
+      if (confirm((user.displayName || user.email) + ' - Sign out ?')) auth.signOut();
+      return;
+    }
+    openLogin();
+  });
+})();
+</script>
