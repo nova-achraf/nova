@@ -876,3 +876,11 @@ function closeDrawer(){document.getElementById('drawer').classList.remove('open'
   });
 })();
 </script>
+// NOVA auth gate
+(function(){
+  try{
+    var s = JSON.parse(localStorage.getItem('nova_session')||'null');
+    if(!s || !s.email){ window.location.href = 'login.html'; }
+  }catch(e){ window.location.href = 'login.html'; }
+})();
+function novaLogout(){ localStorage.removeItem('nova_session'); window.location.href = 'login.html'; }
