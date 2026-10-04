@@ -20,6 +20,7 @@ html,body{width:100%;height:100%;overflow:hidden;background:#120d09;font-family:
 .field input:focus{border-color:#e8862e;box-shadow:0 0 0 3px rgba(232,134,46,.15)}
 .btn{width:100%;background:linear-gradient(180deg,#f0962f,#c96a1a);border:none;color:#150c05;font-size:16px;font-weight:900;letter-spacing:.14em;padding:13px;border-radius:10px;cursor:pointer;margin-top:4px;box-shadow:0 6px 20px rgba(232,134,46,.35)}
 .btn:active{transform:scale(.97)}
+.btn:disabled{opacity:.6;cursor:wait}
 .gbtn{width:100%;background:#fff;border:1px solid #d8d0c8;color:#3a3a3c;font-size:15px;font-weight:700;padding:12px;border-radius:10px;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;margin-top:10px}
 .gbtn:active{transform:scale(.97)}
 .glogo{width:18px;height:18px;flex-shrink:0}
@@ -56,7 +57,7 @@ html,body{width:100%;height:100%;overflow:hidden;background:#120d09;font-family:
     <div class="err" id="err"></div>
     <button class="btn" id="mainBtn">LOG IN</button>
     <div class="divider"><span id="orTxt">OR</span></div>
-    <button class="gbtn">
+    <button class="gbtn" id="gBtn">
       <svg class="glogo" viewBox="0 0 48 48"><path fill="#EA4335" d="M24 9.5c3.54 0 6.7 1.22 9.16 3.6l6.84-6.84C36.06 1.6 30.5 0 24 0 14.6 0 6.4 5.4 2.6 13.2l7.96 6.2C12.6 13.2 17.9 9.5 24 9.5z"/><path fill="#4285F4" d="M46.4 24.6c0-1.6-.14-3.16-.4-4.6H24v8.7h12.8c-.55 3-2.22 5.5-4.74 7.2l7.4 5.74c4.4-4.06 6.94-10.04 6.94-17z"/><path fill="#FBBC05" d="M10.56 28.4c-.5-1.5-.78-3.06-.78-4.7s.28-3.2.78-4.7l-7.96-6.2C1.06 16.1 0 19.9 0 24s1.06 7.9 2.6 11.4l7.96-6.2z"/><path fill="#34A853" d="M24 48c6.5 0 12-2.14 16-5.8l-7.4-5.74c-2 1.36-4.6 2.16-8.6 2.16-6.1 0-11.4-3.7-13.4-8.9l-7.96 6.2C6.4 42.6 14.6 48 24 48z"/></svg>
       <span id="gTxt">Continue with Google</span>
     </button>
@@ -68,14 +69,35 @@ html,body{width:100%;height:100%;overflow:hidden;background:#120d09;font-family:
   </div>
   <div class="credit">AZAMILUX × NOVA — MADE IN MOROCCO 🇲🇦</div>
 </div>
-<script>
-var L = {
-  ar:{tag:"عالم جديد",login:"دخول",create:"تصاوب حساب",name:"الاسم",email:"البريد",pass:"كلمة المرور",btnLogin:"دخول",btnCreate:"صاوب حساب",or:"أو",google:"كمّل بـ Google",errEmail:"كتب البريد مزيان",errPass:"كلمة المرور قصيرة (6 فالقل)",errExists:"هاد البريد مسجل من قبل",errWrong:"البريد ولا كلمة المرور غالطين",errName:"كتب سميتك",errGoogle:"Google خاصو Firebase — قريب"},
-  fr:{tag:"UN NOUVEAU MONDE",login:"CONNEXION",create:"CRÉER",name:"NOM",email:"EMAIL",pass:"MOT DE PASSE",btnLogin:"SE CONNECTER",btnCreate:"CRÉER",or:"OU",google:"Continuer avec Google",errEmail:"Email invalide",errPass:"Mot de passe trop court (6 min)",errExists:"Email déjà utilisé",errWrong:"Email ou mot de passe incorrect",errName:"Entre ton nom",errGoogle:"Google nécessite Firebase — bientôt"},
-  en:{tag:"A NEW WORLD",login:"LOG IN",create:"CREATE",name:"NAME",email:"EMAIL",pass:"PASSWORD",btnLogin:"LOG IN",btnCreate:"CREATE ACCOUNT",or:"OR",google:"Continue with Google",errEmail:"Invalid email",errPass:"Password too short (6 min)",errExists:"Email already used",errWrong:"Wrong email or password",errName:"Enter your name",errGoogle:"Google needs Firebase — soon"}
+<script type="module">
+// ===== Firebase (Google) — حسابات حقيقية من أي تيليفون =====
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, updateProfile, onAuthStateChanged, signInWithRedirect, getRedirectResult, GoogleAuthProvider } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyAP1KiAtoMB5EkGWopUuKm0LQMNi1QkApM",
+  authDomain: "nova-cb212.firebaseapp.com",
+  projectId: "nova-cb212",
+  storageBucket: "nova-cb212.firebasestorage.app",
+  messagingSenderId: "660417453842",
+  appId: "1:660417453842:web:047ccaa48dc441d5f6ddcb",
+  measurementId: "G-78X5WCEJWW"
 };
+
+const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+
+// ===== اللغات =====
+var L = {
+  ar:{tag:"عالم جديد",login:"دخول",create:"تصاوب حساب",name:"الاسم",email:"البريد",pass:"كلمة المرور",btnLogin:"دخول",btnCreate:"صاوب حساب",or:"أو",google:"كمّل بـ Google",errEmail:"كتب البريد مزيان",errPass:"كلمة المرور قصيرة (6 فالقل)",errExists:"هاد البريد مسجل من قبل",errWrong:"البريد ولا كلمة المرور غالطين",errName:"كتب سميتك",errGoogle:"مشكل مع Google — عاود جرّب",errNet:"الإنترنت ضعيف — عاود جرّب",errDomain:"خاص يزد nova-achraf.github.io فـ Domaines autorisés ديال Firebase"},
+  fr:{tag:"UN NOUVEAU MONDE",login:"CONNEXION",create:"CRÉER",name:"NOM",email:"EMAIL",pass:"MOT DE PASSE",btnLogin:"SE CONNECTER",btnCreate:"CRÉER",or:"OU",google:"Continuer avec Google",errEmail:"Email invalide",errPass:"Mot de passe trop court (6 min)",errExists:"Email déjà utilisé",errWrong:"Email ou mot de passe incorrect",errName:"Entre ton nom",errGoogle:"Problème Google — réessaie",errNet:"Connexion faible — réessaie",errDomain:"Ajoute nova-achraf.github.io dans Domaines autorisés (Firebase)"},
+  en:{tag:"A NEW WORLD",login:"LOG IN",create:"CREATE",name:"NAME",email:"EMAIL",pass:"PASSWORD",btnLogin:"LOG IN",btnCreate:"CREATE ACCOUNT",or:"OR",google:"Continue with Google",errEmail:"Invalid email",errPass:"Password too short (6 min)",errExists:"Email already used",errWrong:"Wrong email or password",errName:"Enter your name",errGoogle:"Google problem — try again",errNet:"Weak internet — try again",errDomain:"Add nova-achraf.github.io in Firebase authorized domains"}
+};
+
 var lang = localStorage.getItem('nova_lang') || 'ar';
 var mode = 'login';
+var busy = false;
+
 function T(k){ return L[lang][k]; }
 function setLang(l){ lang=l; localStorage.setItem('nova_lang',l); render(); }
 function render(){
@@ -104,49 +126,77 @@ function setMode(m){
   document.getElementById('err').textContent='';
 }
 function showErr(k){ document.getElementById('err').textContent = T(k); }
-function getUsers(){ try{ return JSON.parse(localStorage.getItem('nova_users')||'[]'); }catch(e){ return []; } }
-function saveUsers(u){ localStorage.setItem('nova_users', JSON.stringify(u)); }
-function setSession(o){ localStorage.setItem('nova_session', JSON.stringify(o)); }
+function setBusy(b){
+  busy=b;
+  var btn=document.getElementById('mainBtn');
+  btn.disabled=b;
+  btn.textContent = b ? '...' : (mode==='login' ? T('btnLogin') : T('btnCreate'));
+}
+function mapErr(e){
+  var c = (e && e.code) ? e.code : '';
+  if(c==='auth/email-already-in-use'){ return 'errExists'; }
+  if(c==='auth/weak-password' || c==='auth/missing-password'){ return 'errPass'; }
+  if(c==='auth/invalid-email'){ return 'errEmail'; }
+  if(c==='auth/wrong-password' || c==='auth/user-not-found' || c==='auth/invalid-credential' || c==='auth/invalid-login-credentials'){ return 'errWrong'; }
+  if(c==='auth/network-request-failed'){ return 'errNet'; }
+  if(c==='auth/unauthorized-domain'){ return 'errDomain'; }
+  return 'errWrong';
+}
+function saveName(email, name){
+  try{
+    var n = name || (email ? email.split('@')[0] : '');
+    localStorage.setItem('nova_session', JSON.stringify({name:n, email:email, ts:Date.now()}));
+  }catch(e){}
+}
+function goNova(){ window.location.href = 'index.html'; }
+
 function submit(){
+  if(busy) return;
+  document.getElementById('err').textContent='';
   var email = document.getElementById('email').value.trim().toLowerCase();
   var pass = document.getElementById('pass').value;
   if(!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email)){ showErr('errEmail'); return; }
   if(pass.length < 6){ showErr('errPass'); return; }
+  var name = document.getElementById('name').value.trim();
+  if(mode==='create' && name.length < 2){ showErr('errName'); return; }
+  setBusy(true);
   if(mode==='create'){
-    var name = document.getElementById('name').value.trim();
-    if(name.length < 2){ showErr('errName'); return; }
-    var users = getUsers();
-    for(var i=0;i<users.length;i++){ if(users[i].email===email){ showErr('errExists'); return; } }
-    users.push({name:name, email:email, pass:pass, createdAt:Date.now()});
-    saveUsers(users);
-    setSession({name:name, email:email, ts:Date.now()});
-    goNova();
+    createUserWithEmailAndPassword(auth, email, pass)
+      .then(function(cred){
+        var n = name;
+        return updateProfile(cred.user, { displayName: n })
+          .then(function(){ saveName(cred.user.email, n); goNova(); });
+      })
+      .catch(function(e){ setBusy(false); showErr(mapErr(e)); });
   } else {
-    var users = getUsers();
-    var found = null;
-    for(var i=0;i<users.length;i++){ if(users[i].email===email && users[i].pass===pass){ found=users[i]; break; } }
-    if(!found){ showErr('errWrong'); return; }
-    setSession({name:found.name, email:found.email, ts:Date.now()});
-    goNova();
+    signInWithEmailAndPassword(auth, email, pass)
+      .then(function(cred){ saveName(cred.user.email, cred.user.displayName); goNova(); })
+      .catch(function(e){ setBusy(false); showErr(mapErr(e)); });
   }
 }
-function googleLogin(){ showErr('errGoogle'); }
-function goNova(){ window.location.href = 'index.html'; }
+function googleLogin(){
+  if(busy) return;
+  setBusy(true);
+  signInWithRedirect(auth, new GoogleAuthProvider())
+    .catch(function(e){ setBusy(false); showErr(mapErr(e)); });
+}
+
 document.getElementById('tabLogin').addEventListener('click', function(){ setMode('login'); });
 document.getElementById('tabCreate').addEventListener('click', function(){ setMode('create'); });
 document.getElementById('mainBtn').addEventListener('click', submit);
-document.querySelector('.gbtn').addEventListener('click', googleLogin);
+document.getElementById('gBtn').addEventListener('click', googleLogin);
 document.getElementById('lbAr').addEventListener('click', function(){ setLang('ar'); });
 document.getElementById('lbFr').addEventListener('click', function(){ setLang('fr'); });
 document.getElementById('lbEn').addEventListener('click', function(){ setLang('en'); });
 document.getElementById('email').addEventListener('keydown', function(e){ if(e.key==='Enter') document.getElementById('pass').focus(); });
 document.getElementById('pass').addEventListener('keydown', function(e){ if(e.key==='Enter') submit(); });
-(function(){
-  try{
-    var s = JSON.parse(localStorage.getItem('nova_session')||'null');
-    if(s && s.email){ goNova(); }
-  }catch(e){}
-})();
+
+// إلا كان مسجل من قبل → دخل NOVA مباشرة
+getRedirectResult(auth).catch(function(e){ setBusy(false); showErr(mapErr(e)); });
+onAuthStateChanged(auth, function(user){
+  if(user){ saveName(user.email, user.displayName); goNova(); }
+});
+
 render();
 </script>
 </body>
