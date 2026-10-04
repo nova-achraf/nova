@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+<html lang="ar">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
+<title>BLABLA — NOVA</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{width:100%;height:100%;overflow:hidden;background:#000;font-family:'Segoe UI',Tahoma,Arial,sans-serif;color:#fff}
+.page{position:fixed;inset:0;display:flex;flex-direction:column;background:#000}
+.top{display:flex;align-items:center;gap:8px;background:#111;padding:10px 12px;flex-shrink:0}
+.back{background:#262626;border:none;color:#fff;width:34px;height:34px;border-radius:50%;font-size:16px;cursor:pointer}
+.ttl{font-weight:900;font-size:16px;letter-spacing:.05em}
+.live{font-size:11px;font-weight:700;color:#fff;background:#f3425f;border-radius:6px;padding:3px 8px}
+.viewers{display:inline-block;font-size:12px;font-weight:700;background:rgba(255,255,255,.16);padding:4px 10px;border-radius:12px;margin-left:auto}
+.tabrow{display:flex;background:#0d0d0d;flex-shrink:0}
+.tabb{flex:1;padding:11px;border:none;background:none;color:#777;font-weight:800;font-size:14px;cursor:pointer;border-bottom:3px solid transparent}
+.tabb.on{color:#fff;border-bottom:3px solid #FB7299}
+.stage{flex:1;min-height:0;position:relative;background:#050505}
+.reels{position:absolute;inset:0;overflow-y:auto;scroll-snap-type:y mandatory;-webkit-overflow-scrolling:touch;scrollbar-width:none}
+.reels::-webkit-scrollbar{display:none}
+.reel{height:100%;scroll-snap-align:start;position:relative;overflow:hidden;background:#111}
+.bgimg{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;animation:kb 18s ease-in-out infinite alternate}
+@keyframes kb{from{transform:scale(1) translate(0,0)}to{transform:scale(1.14) translate(-2.5%,2.5%)}}
+.shade{position:absolute;left:0;right:0;bottom:0;height:46%;background:linear-gradient(transparent,rgba(0,0,0,.68))}
+.rail{position:absolute;right:10px;bottom:96px;display:flex;flex-direction:column;gap:16px;align-items:center;z-index:3}
+.rb{background:none;border:none;color:#fff;font-size:30px;cursor:pointer;display:flex;flex-direction:column;align-items:center;line-height:1;padding:0}
+.cnt{font-size:12px;font-weight:700;margin-top:5px}
+.caption{position:absolute;left:12px;right:70px;bottom:14px;color:#fff;pointer-events:none;z-index:3}
+.disc{display:inline-block;animation:spin 4s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+.chatmsgs{position:absolute;left:10px;right:70px;bottom:14px;display:flex;flex-direction:column;gap:6px;pointer-events:none;max-height:30vh;overflow:hidden;z-index:4}
+.msg{background:rgba(0,0,0,.55);color:#fff;padding:6px 11px;border-radius:16px;font-size:13px;width:fit-content;max-width:100%}
+.liveStage{position:absolute;inset:0;display:none}
+.liveStage.on{display:block}
+.stage video{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+.who{position:absolute;top:10px;left:10px;background:rgba(0,0,0,.55);padding:5px 12px;border-radius:14px;font-size:13px;font-weight:700;z-index:5;display:none}
+.mute{position:absolute;top:10px;right:10px;width:34px;height:34px;border-radius:50%;background:rgba(0,0,0,.55);border:none;color:#fff;font-size:16px;cursor:pointer;z-index:5;display:none}
+.start{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:18px;padding:20px;text-align:center}
+.bigbtn{border:none;border-radius:14px;padding:16px 26px;font-size:16px;font-weight:900;color:#fff;width:min(80vw,320px);cursor:pointer}
+.hostbtn{background:linear-gradient(135deg,#00AEEC,#FB7299)}
+.watchbtn{background:linear-gradient(135deg,#f3425f,#ff7a59)}
+.hint{font-size:12px;color:#999;max-width:320px;line-height:1.7}
+.ctrls{position:absolute;bottom:24px;left:0;right:0;display:none;justify-content:space-around;align-items:center;z-index:5}
+.camb{background:rgba(0,0,0,.55);color:#fff;border:none;width:46px;height:46px;border-radius:50%;font-size:20px;cursor:pointer}
+.snapbtn{width:64px;height:64px;border-radius:50%;background:#f3425f;border:4px solid #fff;cursor:pointer}
+.stopbtn{background:#f3425f}
+.closex{position:absolute;top:56px;right:10px;display:none;z-index:6}
+.giftbtn{position:absolute;bottom:76px;right:12px;z-index:5}
+.giftPanel{position:absolute;left:0;right:0;bottom:0;background:#1a1a1a;border-top-left-radius:18px;border-top-right-radius:18px;padding:14px;z-index:9;display:none;max-height:46%;overflow-y:auto}
+.giftPanel.on{display:block}
+.gpHead{display:flex;align-items:center;gap:10px;font-weight:800;font-size:15px;margin-bottom:12px}
+.gpWallet{margin-left:auto;font-size:13px;background:#262626;padding:6px 12px;border-radius:14px}
+.gpWallet button{background:#FB7299;border:none;color:#fff;border-radius:12px;padding:3px 8px;font-weight:800;cursor:pointer}
+.gpx{background:#262626;border:none;color:#fff;width:28px;height:28px;border-radius:50%;cursor:pointer}
+.gpGrid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}
+.gitem{background:#262626;border:none;border-radius:12px;padding:12px 4px;color:#fff;display:flex;flex-direction:column;align-items:center;gap:4px;cursor:pointer}
+.gitem:active{transform:scale(.95)}
+.gitem .ge{font-size:30px}
+.gitem .gc{font-size:11px;font-weight:700;color:#FB7299}
+.biggift{position:absolute;bottom:42%;left:50%;font-size:86px;z-index:8;pointer-events:none;animation:flyup 2.2s forwards}
+@keyframes flyup{0%{opacity:0;transform:translateX(-50%) scale(.3)}25%{opacity:1;transform:translateX(-50%) scale(1.25)}100%{opacity:0;transform:translateX(-50%) scale(1.5) translateY(-38vh)}}
+.chatbar{display:flex;gap:8px;padding:10px;background:#000;flex-shrink:0}
+.chatbar input{flex:1;min-width:0;border:none;background:#262626;color:#fff;border-radius:20px;padding:10px 14px;outline:none;font-size:14px}
+.sendbtn{border:none;background:linear-gradient(135deg,#00AEEC,#FB7299);color:#fff;border-radius:20px;padding:8px 16px;font-weight:700;font-size:13px;cursor:pointer}
+</style>
+</head>
+<body>
+<div class="page">
+  <div class="top">
+    <button class="back" onclick="location.href='index.html'">←</button>
+    <span class="ttl">BLABLA</span>
+    <span class="live">● LIVE</span>
+    <span class="viewers">👁️ <span id="viewers">1,247</span></span>
+  </div>
+  <div class="tabrow">
+    <button class="tabb on" id="tabReels" onclick="setView('reels')">🎬 ريلز</button>
+    <button class="tabb" id="tabLive" onclick="setView('live')">🔴 لايف</button>
+  </div>
+  <div class="stage">
+    <div class="reels" id="reels"></div>
+    <div class="chatmsgs" id="localChat"></div>
+    <div class="liveStage" id="liveStage">
+      <video id="liveVideo" autoplay playsinline></video>
+      <div class="who" id="who"></div>
+      <button class="mute" id="muteBtn" onclick="muteToggle(this)">🔊</button>
+      <div class="start" id="startUI">
+        <button class="bigbtn hostbtn" onclick="goLive()">📷 ابدأ اللايف ديالك</button>
+        <button class="bigbtn watchbtn" onclick="watchLive()">🔴 شوف اللايف دابا</button>
+        <div class="hint">📷 = كاميرتك تتحل وتبث لايف دابا<br>🔴 = تشوف اللايف اللي كيمشي دابا</div>
+      </div>
+      <div class="ctrls" id="hostCtrls">
+        <button class="camb" onclick="flipLive()">🔄</button>
+        <button class="snapbtn" onclick="snapLive()"></button>
+        <button class="camb stopbtn" onclick="stopLive()">⏹</button>
+      </div>
+      <button class="camb closex" id="closeBtn" onclick="endWatch()">✕</button>
+      <button class="camb giftbtn" id="giftBtn" onclick="openGiftPanel()">🎁</button>
+      <div class="giftPanel" id="giftPanel">
+        <div class="gpHead">🎁 أرسل هدية<span class="gpWallet">💰 <span id="gpCoins">100</span> <button onclick="recharge()">➕</button></span><button class="gpx" onclick="closeGiftPanel()">✕</button></div>
+        <div class="gpGrid" id="gpGrid"></div>
+      </div>
+      <div class="chatmsgs" id="liveChat"></div>
+    </div>
+  </div>
+  <div class="chatbar">
+    <input id="chatInput" placeholder="Say something..." onkeydown="if(event.key==='Enter')sendChat()">
+    <button class="sendbtn" onclick="sendChat()">Send</button>
+  </div>
+</div>
+<script>
+(function(){try{var s=JSON.parse(localStorage.getItem('nova_session')||'null');if(!s||!s.email){window.location.replace('login.html');}}catch(e){window.location.replace('login.html');}})();
+</script>
+<script src="https://cdn.jsdelivr.net/npm/peerjs@1.5.4/dist/peerjs.min.js"></script>
+<script>
+// ===== BLABLA — تطبيق مستقل (ريلز + لايف حقيقي + شات + هدايا) =====
+var LIVE_ID='nova-blabla-live-cb212';
+var livePeer=null,liveStream=null,liveMode=null;
+var liveConns=[],liveCall=null,liveData=null,liveTimer=null;
+var curView='reels';
+var MUSIC='♫ NOVA Mix — From Morocco 🇲🇦';
+var REEL_DEMO=[
+ {n:7,img:'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=800&q=80',likes:385,av:12},
+ {n:12,img:'https://images.unsplash.com/photo-1519681393784-d120267933ba?w=800&q=80',likes:254,av:33},
+ {n:15,img:'https://images.unsplash.com/photo-1470071459604-3b5ec3a7fe05?w=800&q=80',likes:198,av:52},
+ {n:21,img:'https://images.unsplash.com/photo-1441974231531-c6227db76b6e?w=800&q=80',likes:512,av:15},
+ {n:33,img:'https://images.unsplash.com/photo-1501594907352-04c20138560a?w=800&q=80',likes:167,av:8}
+];
+var REPLIES=['Haha 😂','Wow 🔥','NOVA 🚀','From Morocco 🇲🇦','Nice! 👏','😂😂😂','Cool 😎'];
+
+function esc(x){return String(x).replace(/[&<>"']/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];});}
+function myName(){try{var s=JSON.parse(localStorage.getItem('nova_session')||'null');if(s&&s.name)return s.name;}catch(e){}return 'Guest';}
+function getUserReels(){try{return JSON.parse(localStorage.getItem('novaReels')||'[]')}catch(e){return []}}
+function getLikes(){try{return JSON.parse(localStorage.getItem('novaLikes')||'{}')}catch(e){return {}}}
+function getGifts(){try{return JSON.parse(localStorage.getItem('novaGifts')||'{}')}catch(e){return {}}}
+function setView(v){
+  curView=v;
+  document.getElementById('tabReels').classList.toggle('on',v==='reels');
+  document.getElementById('tabLive').classList.toggle('on',v==='live');
+  document.getElementById('liveStage').classList.toggle('on',v==='live');
+  document.getElementById('localChat').style.display=(v==='reels')?'flex':'none';
+  if(v==='reels'){renderReels();}
+}
+// ---------- ريلز ----------
+function renderReels(){
+  var rc=document.getElementById('reels');
+  var keep=rc.scrollTop;
+  var userReels=getUserReels();
+  var LIKED=getLikes();
+  var GIFTS=getGifts();
+  var ALL=userReels.concat(REEL_DEMO);
+  var html='';
+  ALL.forEach(function(r,i){
+    var key=r.you?('u'+r.id):('d'+r.n);
+    var liked=!!LIKED[key];
+    var author=r.you?myName():('Explorer '+r.n);
+    var likes=(r.you?0:r.likes)+(liked?1:0);
+    var gifts=GIFTS[key]||0;
+    var av=r.you?12:r.av;
+    html+='<div class="reel"><img class="bgimg" src="'+r.img+'" alt="" loading="lazy">'
+    +'<div class="shade"></div>'
+    +'<div class="rail"><button class="rb" onclick="likeReel('+i+',this)">'+(liked?'❤️':'🤍')+'<div class="cnt">'+likes.toLocaleString('en-US')+'</div></button>'
+    +'<button class="rb" onclick="giftReel(\''+key+'\',this)">🎁<div class="cnt">'+gifts+'</div></button>'
+    +'<button class="rb" onclick="shareReel('+i+')">↗️<div class="cnt">'+(r.you?0:Math.round((r.likes||100)/3))+'</div></button></div>'
+    +'<div class="caption"><img src="https://i.pravatar.cc/100?img='+av+'" width="32" height="32" alt="" style="border-radius:50%;vertical-align:-10px;margin-right:6px;border:2px solid #fff"><b>@'+esc(author)+'</b>'
+    +'<div style="font-size:13px;margin-top:6px">'+(r.you?'مقطع ديالي · NOVA 🚀':'NOVA vibes · From Morocco 🇲🇦')+'</div>'
+    +'<div style="font-size:12px;opacity:.95;margin-top:8px"><span class="disc">🎵</span> '+MUSIC+'</div></div></div>';
+  });
+  rc.innerHTML=html;
+  rc.scrollTop=keep;
+}
+function likeReel(i,btn){
+  var userReels=getUserReels();
+  var ALL=userReels.concat(REEL_DEMO);
+  var r=ALL[i];if(!r)return;
+  var key=r.you?('u'+r.id):('d'+r.n);
+  var LIKED=getLikes();
+  LIKED[key]=!LIKED[key];
+  try{localStorage.setItem('novaLikes',JSON.stringify(LIKED))}catch(e){}
+  var liked=LIKED[key];
+  var likes=(r.you?0:r.likes)+(liked?1:0);
+  btn.innerHTML=(liked?'❤️':'🤍')+'<div class="cnt">'+likes.toLocaleString('en-US')+'</div>';
+}
+function giftReel(key,btn){
+  var GIFTS=getGifts();
+  GIFTS[key]=(GIFTS[key]||0)+1;
+  try{localStorage.setItem('novaGifts',JSON.stringify(GIFTS))}catch(e){}
+  btn.innerHTML='🎁<div class="cnt">'+GIFTS[key]+'</div>';
+}
+function shareReel(i){
+  var userReels=getUserReels();
+  var ALL=userReels.concat(REEL_DEMO);
+  var r=ALL[i];if(!r)return;
+  if(navigator.share){navigator.share({title:'BLABLA',text:'BLABLA 🚀 NOVA',url:(r.img&&r.img.indexOf('data:')!==0)?r.img:'https://nova-achraf.github.io/nova/'}).catch(function(){});}
+  else{try{navigator.clipboard.writeText('https://nova-achraf.github.io/nova/')}catch(e){}alert('Copied ✓');}
+}
+// ---------- شات محلي فالريلز ----------
+function chatAdd(boxId,name,text){
+  var box=document.getElementById(boxId);if(!box)return;
+  var d=document.createElement('div');d.className='msg';
+  d.innerHTML='<b>'+esc(name)+':</b> '+esc(text);
+  box.appendChild(d);
+  while(box.children.length>8){box.removeChild(box.firstChild);}
+}
+function localChat(txt){
+  chatAdd('localChat','You',txt);
+  setTimeout(function(){
+    var n=1+Math.floor(Math.random()*40);
+    chatAdd('localChat','Explorer '+n,REPLIES[Math.floor(Math.random()*REPLIES.length)]);
+  },1200);
+}
+// ---------- الهدايا (نظام TikTok: عملات → هدية → ماس) ----------
+var GIFT_LIST=[{e:'🌹',c:1},{e:'🍬',c:5},{e:'⭐',c:10},{e:'💎',c:25},{e:'🚀',c:50},{e:'🎁',c:100},{e:'🦁',c:500},{e:'🌌',c:1000}];
+function getCoins(){var c=parseInt(localStorage.getItem('novaCoins')||'100',10);return isNaN(c)?100:c;}
+function setCoins(n){try{localStorage.setItem('novaCoins',String(n))}catch(e){}}
+function getDiamonds(){var d=parseInt(localStorage.getItem('novaDiamonds')||'0',10);return isNaN(d)?0:d;}
+function setDiamonds(n){try{localStorage.setItem('novaDiamonds',String(n))}catch(e){}}
+function renderGifts(){
+  document.getElementById('gpCoins').textContent=getCoins();
+  var g='';GIFT_LIST.forEach(function(x,i){g+='<button class="gitem" onclick="sendGift('+i+')"><span class="ge">'+x.e+'</span><span class="gc">'+x.c+' 💰</span></button>';});
+  document.getElementById('gpGrid').innerHTML=g;
+}
+function openGiftPanel(){renderGifts();document.getElementById('giftPanel').classList.add('on');}
+function closeGiftPanel(){document.getElementById('giftPanel').classList.remove('on');}
+function recharge(){alert('الشحن بالبطاقة قريب 💳 — دابا العملات مجانية');}
+function showGift(name,emoji,cost){
+  chatAdd('liveChat',name,emoji+' → NOVA');
+  if(cost>=50){
+    var d=document.createElement('div');d.className='biggift';d.textContent=emoji;
+    document.getElementById('liveStage').appendChild(d);
+    setTimeout(function(){if(d.parentNode)d.parentNode.removeChild(d);},2300);
+  }
+}
+function sendGift(i){
+  var g=GIFT_LIST[i];
+  var coins=getCoins();
+  if(coins<g.c){alert('ماكافياش العملات 💰 — خاصك تشحن');return;}
+  setCoins(coins-g.c);
+  renderGifts();
+  showGift(myName(),g.e,g.c);
+  try{liveData.send({type:'gift',name:myName(),emoji:g.e,cost:g.c});}catch(e){}
+  closeGiftPanel();
+}
+function hostGotGift(d,fromConn){
+  showGift(d.name,d.emoji,d.cost);
+  setDiamonds(getDiamonds()+Math.floor(d.cost/2));
+  updateHostWho();
+  liveConns.forEach(function(c2){if(c2!==fromConn){try{c2.send(d);}catch(e){}}});
+}
+function updateHostWho(){
+  document.getElementById('who').textContent=myName()+' 🚀 · 💎 '+getDiamonds();
+}
+// ---------- اللايف الحقيقي ----------
+function setViewers(n){
+  var v=document.getElementById('viewers');if(v)v.textContent=n;
+  if(liveMode==='host'){liveConns.forEach(function(c){try{c.send({type:'viewers',n:n});}catch(e){}});}
+}
+function liveUIReset(){
+  document.getElementById('hostCtrls').style.display='none';
+  document.getElementById('closeBtn').style.display='none';
+  document.getElementById('startUI').style.display='flex';
+  document.getElementById('liveVideo').srcObject=null;
+  document.getElementById('liveChat').innerHTML='';
+  document.getElementById('who').style.display='none';
+  document.getElementById('who').textContent='';
+  document.getElementById('muteBtn').style.display='none';
+  document.getElementById('muteBtn').textContent='🔊';
+  document.getElementById('giftBtn').style.display='none';
+  closeGiftPanel();
+  document.getElementById('viewers').textContent='1,247';
+}
+function muteToggle(b){var v=document.getElementById('liveVideo');v.muted=!v.muted;b.textContent=v.muted?'🔇':'🔊';}
+function goLive(){
+  if(liveMode)return;
+  if(typeof Peer==='undefined'){alert('Live SDK ماخدمش');return;}
+  setView('live');
+  navigator.mediaDevices.getUserMedia({video:{facingMode:'user'},audio:true}).then(function(stream){
+    liveStream=stream;liveMode='host';
+    var v=document.getElementById('liveVideo');
+    v.srcObject=stream;v.muted=true;
+    document.getElementById('startUI').style.display='none';
+    document.getElementById('hostCtrls').style.display='flex';
+    document.getElementById('closeBtn').style.display='none';
+    document.getElementById('giftBtn').style.display='none';
+    closeGiftPanel();
+    document.getElementById('who').style.display='block';
+    updateHostWho();
+    document.getElementById('muteBtn').style.display='block';
+    document.getElementById('muteBtn').textContent='🔇';
+    chatAdd('liveChat','NOVA','LIVE 🚀');
+    livePeer=new Peer(LIVE_ID,{debug:0});
+    livePeer.on('open',function(){setViewers(0);});
+    livePeer.on('error',function(e){
+      if(e.type==='unavailable-id'){
+        alert('اللايف راه خدام فجلسة أخرى — استنى شي دقيقة وعاود');
+        stopLive();
+      }else{alert('مشكل فاللايف: '+e.type);}
+    });
+    livePeer.on('connection',function(conn){
+      liveConns.push(conn);setViewers(liveConns.length);
+      conn.on('open',function(){try{conn.send({type:'name',name:myName()});}catch(e){}});
+      conn.on('data',function(d){
+        if(d&&d.type==='chat'){
+          chatAdd('liveChat',d.name,d.text);
+          liveConns.forEach(function(c2){if(c2!==conn){try{c2.send({type:'chat',name:d.name,text:d.text});}catch(e2){}}});
+        }else if(d&&d.type==='gift'){hostGotGift(d,conn);}
+      });
+      conn.on('close',function(){liveConns=liveConns.filter(function(c){return c!==conn;});setViewers(liveConns.length);});
+    });
+    livePeer.on('call',function(call){call.answer(liveStream);});
+  }).catch(function(){alert('مقدرناش حلينا الكاميرا');});
+}
+function flipLive(){var v=document.getElementById('liveVideo');v.style.transform=(v.style.transform==='scaleX(-1)')?'':'scaleX(-1)';}
+function snapLive(){
+  if(liveMode!=='host')return;
+  var v=document.
