@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="ar">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
+<title>BLABLA LIVE — NOVA</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{width:100%;height:100%;overflow:hidden;background:#000;font-family:'Segoe UI',Tahoma,Arial,sans-serif;color:#fff}
+.page{position:fixed;inset:0;display:flex;flex-direction:column;background:#000}
+.top{display:flex;align-items:center;gap:8px;background:#111;padding:10px 12px;flex-shrink:0}
+.back{background:#262626;border:none;color:#fff;width:34px;height:34px;border-radius:50%;font-size:16px;cursor:pointer}
+.ttl{font-weight:900;font-size:16px;letter-spacing:.05em}
+.live{font-size:11px;font-weight:700;color:#fff;background:#f3425f;border-radius:6px;padding:3px 8px}
+.viewers{display:inline-block;font-size:12px;font-weight:700;background:rgba(255,255,255,.16);padding:4px 10px;border-radius:12px}
+.stage{flex:1;min-height:0;position:relative;background:#050505}
+.stage video{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+.who{position:absolute;top:10px;left:10px;background:rgba(0,0,0,.55);padding:5px 12px;border-radius:14px;font-size:13px;font-weight:700;z-index:5;display:none}
+.mute{position:absolute;top:10px;right:10px;width:34px;height:34px;border-radius:50%;background:rgba(0,0,0,.55);border:none;color:#fff;font-size:16px;cursor:pointer;z-index:5;display:none}
+.start{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:18px;padding:20px;text-align:center}
+.bigbtn{border:none;border-radius:14px;padding:16px 26px;font-size:16px;font-weight:900;color:#fff;width:min(80vw,320px);cursor:pointer}
+.hostbtn{background:linear-gradient(135deg,#00AEEC,#FB7299)}
+.watchbtn{background:linear-gradient(135deg,#f3425f,#ff7a59)}
+.hint{font-size:12px;color:#999;max-width:320px;line-height:1.7}
+.ctrls{position:absolute;bottom:24px;left:0;right:0;display:none;justify-content:space-around;align-items:center;z-index:5}
+.camb{background:rgba(0,0,0,.55);color:#fff;border:none;width:46px;height:46px;border-radius:50%;font-size:20px;cursor:pointer}
+.snapbtn{width:64px;height:64px;border-radius:50%;background:#f3425f;border:4px solid #fff;cursor:pointer}
+.stopbtn{background:#f3425f}
+.closex{position:absolute;bottom:24px;right:14px;display:none;z-index:6}
+.chatmsgs{position:absolute;left:10px;right:70px;bottom:14px;display:flex;flex-direction:column;gap:6px;pointer-events:none;max-height:30vh;overflow:hidden;z-index:4}
+.msg{background:rgba(0,0,0,.55);color:#fff;padding:6px 11px;border-radius:16px;font-size:13px;width:fit-content;max-width:100%}
+.chatbar{display:flex;gap:8px;padding:10px;background:#000;flex-shrink:0}
+.chatbar input{flex:1;min-width:0;border:none;background:#262626;color:#fff;border-radius:20px;padding:10px 14px;outline:none;font-size:14px}
+.sendbtn{border:none;background:linear-gradient(135deg,#00AEEC,#FB7299);color:#fff;border-radius:20px;padding:8px 16px;font-weight:700;font-size:13px;cursor:pointer}
+</style>
+</head>
+<body>
+<div class="page">
+  <div class="top">
+    <button class="back" onclick="location.href='index.html'">←</button>
+    <span class="ttl">BLABLA</span>
+    <span class="live">● LIVE</span>
+    <span class="viewers">👁️ <span id="viewers">0</span></span>
+  </div>
+  <div class="stage">
+    <video id="liveVideo" autoplay playsinline></video>
+    <div class="who" id="who"></div>
+    <button class="mute" id="muteBtn" onclick="muteToggle(this)">🔊</button>
+    <div class="start" id="startUI">
+      <button class="bigbtn hostbtn" onclick="goLive()">📷 ابدأ اللايف ديالك</button>
+      <button class="bigbtn watchbtn" onclick="watchLive()">🔴 شوف اللايف دابا</button>
+      <div class="hint">📷 = كاميرتك تتحل وتبث لايف دابا<br>🔴 = تشوف اللايف اللي كيمشي دابا</div>
+    </div>
+    <div class="ctrls" id="hostCtrls">
+      <button class="camb" onclick="flipLive()">🔄</button>
+      <button class="snapbtn" onclick="snapLive()"></button>
+      <button class="camb stopbtn" onclick="stopLive()">⏹</button>
+    </div>
+    <button class="camb closex" id="closeBtn" onclick="endWatch()">✕</button>
+    <div class="chatmsgs" id="liveChat"></div>
+  </div>
+  <div class="chatbar">
+    <input id="chatInput" placeholder="Say something..." onkeydown="if(event.key==='Enter')sendLiveChat()">
+    <button class="sendbtn" onclick="sendLiveChat()">Send</button>
+  </div>
+</div>
+<script>
+(function(){try{var s=JSON.parse(localStorage.getItem('nova_session')||'null');if(!s||!s.email){window.location.replace('login.html');}}catch(e){window.location.replace('login.html');}})();
+</script>
+<script src="https://cdn.jsdelivr.net/npm/peerjs@1.5.4/dist/peerjs.min.js"></script>
+<script>
+// ===== BLABLA LIVE — كاميرا حقيقية (WebRTC) =====
+var LIVE_ID='nova-blabla-live-cb212';
+var livePeer=null,liveStream=null,liveMode=null;
+var liveConns=[],liveCall=null,liveData=null,liveTimer=null;
+
+function esc(x){return String(x).replace(/[&<>"']/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];});}
+function myName(){try{var s=JSON.parse(localStorage.getItem('nova_session')||'null');if(s&&s.name)return s.name;}catch(e){}return 'Guest';}
+function getUserReels(){try{return JSON.parse(localStorage.getItem('novaReels')||'[]')}catch(e){return []}}
+function setViewers(n){
+  var v=document.getElementById('viewers');if(v)v.textContent=n;
+  if(liveMode==='host'){liveConns.forEach(function(c){try{c.send({type:'viewers',n:n});}catch(e){}});}
+}
+function liveChatAdd(name,text){
+  var box=document.getElementById('liveChat');if(!box)return;
+  var d=document.createElement('div');d.className='msg';
+  d.innerHTML='<b>'+esc(name)+':</b> '+esc(text);
+  box.appendChild(d);
+  while(box.children.length>8){box.removeChild(box.firstChild);}
+}
+function liveUIReset(){
+  document.getElementById('hostCtrls').style.display='none';
+  document.getElementById('closeBtn').style.display='none';
+  document.getElementById('startUI').style.display='flex';
+  document.getElementById('liveVideo').srcObject=null;
+  document.getElementById('liveChat').innerHTML='';
+  document.getElementById('who').style.display='none';
+  document.getElementById('who').textContent='';
+  document.getElementById('muteBtn').style.display='none';
+  document.getElementById('muteBtn').textContent='🔊';
+  setViewers(0);
+}
+function muteToggle(b){var v=document.getElementById('liveVideo');v.muted=!v.muted;b.textContent=v.muted?'🔇':'🔊';}
+
+// ---------- HOST ----------
+function goLive(){
+  if(liveMode)return;
+  if(typeof Peer==='undefined'){alert('Live SDK ماخدمش');return;}
+  navigator.mediaDevices.getUserMedia({video:{facingMode:'user'},audio:true}).then(function(stream){
+    liveStream=stream;liveMode='host';
+    var v=document.getElementById('liveVideo');
+    v.srcObject=stream;v.muted=true;
+    document.getElementById('startUI').style.display='none';
+    document.getElementById('hostCtrls').style.display='flex';
+    document.getElementById('closeBtn').style.display='none';
+    document.getElementById('who').style.display='block';
+    document.getElementById('who').textContent=myName()+' 🚀';
+    document.getElementById('muteBtn').style.display='block';
+    document.getElementById('muteBtn').textContent='🔇';
+    liveChatAdd('NOVA','LIVE 🚀');
+    livePeer=new Peer(LIVE_ID,{debug:0});
+    livePeer.on('open',function(){setViewers(0);});
+    livePeer.on('error',function(e){
+      if(e.type==='unavailable-id'){
+        alert('اللايف راه خدام فجلسة أخرى — استنى شي دقيقة وعاود');
+        stopLive();
+      }else{alert('مشكل فاللايف: '+e.type);}
+    });
+    livePeer.on('connection',function(conn){
+      liveConns.push(conn);setViewers(liveConns.length);
+      conn.on('open',function(){try{conn.send({type:'name',name:myName()});}catch(e){}});
+      conn.on('data',function(d){
+        if(d&&d.type==='chat'){
+          liveChatAdd(d.name,d.text);
+          liveConns.forEach(function(c2){if(c2!==conn){try{c2.send({type:'chat',name:d.name,text:d.text});}catch(e2){}}});
+        }
+      });
+      conn.on('close',function(){liveConns=liveConns.filter(function(c){return c!==conn;});setViewers(liveConns.length);});
+    });
+    livePeer.on('call',function(call){call.answer(liveStream);});
+  }).catch(function(){alert('مقدرناش حلينا الكاميرا');});
+}
+function flipLive(){var v=document.getElementById('liveVideo');v.style.transform=(v.style.transform==='scaleX(-1)')?'':'scaleX(-1)';}
+function snapLive(){
+  if(liveMode!=='host')return;
+  var v=document.getElementById('liveVideo');
+  var c=document.createElement('canvas');
+  c.width=v.videoWidth||720;c.height=v.videoHeight||1280;
+  var ctx=c.getContext('2d');
+  if(v.style.transform==='scaleX(-1)'){ctx.translate(c.width,0);ctx.scale(-1,1);}
+  ctx.drawImage(v,0,0,c.width,c.height);
+  var img=c.toDataURL('image/jpeg',.75);
+  var userReels=getUserReels();
+  userReels.unshift({id:Date.now(),img:img,you:true});
+  try{localStorage.setItem('novaReels',JSON.stringify(userReels))}catch(e){}
+  alert('تصويرت! غادي تبان فـ BLABLA 📸');
+}
+function stopLive(){
+  if(liveMode!=='host')return;
+  liveConns.forEach(function(c){try{c.send({type:'end'});}catch(e){}});
+  try{livePeer.destroy();}catch(e){}
+  livePeer=null;liveConns=[];
+  if(liveStream){liveStream.getTracks().forEach(function(t){t.stop();});liveStream=null;}
+  liveMode=null;liveUIReset();
+}
+function sendLiveChat(){
+  if(!liveMode)return;
+  var inp=document.getElementById('chatInput');
+  var txt=inp.value.trim();if(!txt)return;inp.value='';
+  if(liveMode==='host'){
+    liveChatAdd(myName(),txt);
+    liveConns.forEach(function(c){try{c.send({type:'chat',name:myName(),text:txt});}catch(e){}});
+  }else if(liveMode==='viewer'){
+    liveChatAdd('You',txt);
+    try{liveData.send({type:'chat',name:myName(),text:txt});}catch(e){}
+  }
+}
+
+// ---------- VIEWER ----------
+function watchLive(){
+  if(liveMode)return;
+  if(typeof Peer==='undefined'){alert('Live SDK ماخدمش');return;}
+  liveMode='viewer';
+  document.getElementById('startUI').style.display='none';
+  document.getElementById('hostCtrls').style.display='none';
+  document.getElementById('closeBtn').style.display='block';
+  document.getElementById('who').style.display='block';
+  document.getElementById('who').textContent='...connecting';
+  document.getElementById('muteBtn').style.display='block';
+  var silent=null;
+  try{silent=new AudioContext().createMediaStreamDestination().stream;}catch(e){}
+  livePeer=new Peer({debug:0});
+  var got=false;
+  livePeer.on('open',function(){
+    liveCall=livePeer.call(LIVE_ID,silent);
+    liveData=livePeer.connect(LIVE_ID);
+    liveData.on('data',function(d){
+      if(d&&d.type==='chat'){liveChatAdd(d.name,d.text);}
+      else if(d&&d.type==='viewers'){setViewers(d.n);}
+      else if(d&&d.type==='name'){document.getElementById('who').textContent=d.name+' 🚀';}
+      else if(d&&d.type==='end'){endWatch();alert('اللايف تسالا');}
+    });
+    liveData.on('close',function(){endWatch();});
+    if(liveCall){
+      liveCall.on('stream',function(remote){
+        got=true;clearTimeout(liveTimer);
+        var v=document.getElementById('liveVideo');v.srcObject=remote;
+      });
+      liveCall.on('close',function(){endWatch();});
+    }
+  });
+  livePeer.on('error',function(e){
+    if(e.type==='peer-unavailable'){endWatch();alert('ماكاين لايف دابا');}
+  });
+  liveTimer=setTimeout(function(){if(!got){endWatch();alert('ماكاين لايف دابا');}},10000);
+}
+function endWatch(){
+  if(liveMode!=='viewer')return;
+  clearTimeout(liveTimer);
+  try{if(liveCall)liveCall.close();}catch(e){}
+  try{if(liveData)liveData.close();}catch(e){}
+  try{livePeer.destroy();}catch(e){}
+  liveCall=null;liveData=null;livePeer=null;liveMode=null;
+  liveUIReset();
+}
+</script>
+</body>
+</html>
