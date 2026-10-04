@@ -1,1 +1,153 @@
-
+<!DOCTYPE html>
+<html lang="ar">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
+<title>NOVA — Log in</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{width:100%;height:100%;overflow:hidden;background:#120d09;font-family:'Segoe UI',Tahoma,Arial,sans-serif;color:#f0e2cc}
+.wrap{position:fixed;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;background:radial-gradient(ellipse at 50% 30%,#2a1c10 0%,#0d0906 75%);padding:20px;overflow-y:auto}
+.card{width:min(92vw,380px);background:rgba(20,14,8,.85);border:1px solid rgba(232,134,46,.35);border-radius:16px;padding:24px 22px;backdrop-filter:blur(4px);box-shadow:0 12px 40px rgba(0,0,0,.5)}
+.logo{font-size:min(11vw,40px);font-weight:900;letter-spacing:.28em;color:#e8862e;text-shadow:0 0 22px rgba(232,134,46,.5),0 2px 0 #4a2410;margin-left:.28em;text-align:center}
+.tag{text-align:center;font-size:11px;letter-spacing:.3em;color:#c9b394;margin:6px 0 18px;font-weight:600}
+.tabs{display:flex;background:#1c140d;border:1px solid #4a3222;border-radius:10px;padding:4px;margin-bottom:18px}
+.tab{flex:1;text-align:center;padding:9px;font-size:13px;font-weight:700;color:#8a7458;cursor:pointer;border-radius:7px;letter-spacing:.08em;transition:all .2s}
+.tab.on{background:#e8862e;color:#150c05}
+.field{margin-bottom:12px}
+.field label{display:block;font-size:10px;font-weight:800;color:#8a7458;letter-spacing:.16em;margin-bottom:5px}
+.field input{width:100%;background:#120d09;border:1px solid #4a3222;border-radius:8px;padding:11px 13px;color:#f0e2cc;font-size:15px;outline:none}
+.field input:focus{border-color:#e8862e;box-shadow:0 0 0 3px rgba(232,134,46,.15)}
+.btn{width:100%;background:linear-gradient(180deg,#f0962f,#c96a1a);border:none;color:#150c05;font-size:16px;font-weight:900;letter-spacing:.14em;padding:13px;border-radius:10px;cursor:pointer;margin-top:4px;box-shadow:0 6px 20px rgba(232,134,46,.35)}
+.btn:active{transform:scale(.97)}
+.gbtn{width:100%;background:#fff;border:1px solid #d8d0c8;color:#3a3a3c;font-size:15px;font-weight:700;padding:12px;border-radius:10px;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;margin-top:10px}
+.gbtn:active{transform:scale(.97)}
+.glogo{width:18px;height:18px;flex-shrink:0}
+.divider{display:flex;align-items:center;gap:10px;margin:16px 0 4px;color:#6e5b44;font-size:10px;letter-spacing:.2em;font-weight:700}
+.divider:before,.divider:after{content:'';flex:1;height:1px;background:#4a3222}
+.err{color:#ff6a4a;font-size:12px;min-height:16px;text-align:center;margin-bottom:6px;letter-spacing:.04em}
+.langRow{display:flex;gap:6px;margin-top:18px;justify-content:center}
+.langBtn{background:#241a12;border:1px solid #5a3d22;color:#d8c4a8;padding:6px 12px;font-size:12px;font-weight:700;border-radius:6px;cursor:pointer}
+.langBtn.on{background:#e8862e;color:#150c05;border-color:#e8862e}
+.credit{position:absolute;bottom:12px;font-size:10px;color:#6e5b44;letter-spacing:.12em}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="card">
+    <div class="logo">NOVA</div>
+    <div class="tag" id="tag">A NEW WORLD</div>
+    <div class="tabs">
+      <div class="tab on" id="tabLogin">Log in</div>
+      <div class="tab" id="tabCreate">Create account</div>
+    </div>
+    <div class="field" id="nameField" style="display:none">
+      <label id="lblName">NAME</label>
+      <input id="name" type="text" autocomplete="name">
+    </div>
+    <div class="field">
+      <label id="lblEmail">EMAIL</label>
+      <input id="email" type="email" autocomplete="email">
+    </div>
+    <div class="field">
+      <label id="lblPass">PASSWORD</label>
+      <input id="pass" type="password" autocomplete="current-password">
+    </div>
+    <div class="err" id="err"></div>
+    <button class="btn" id="mainBtn">LOG IN</button>
+    <div class="divider"><span id="orTxt">OR</span></div>
+    <button class="gbtn">
+      <svg class="glogo" viewBox="0 0 48 48"><path fill="#EA4335" d="M24 9.5c3.54 0 6.7 1.22 9.16 3.6l6.84-6.84C36.06 1.6 30.5 0 24 0 14.6 0 6.4 5.4 2.6 13.2l7.96 6.2C12.6 13.2 17.9 9.5 24 9.5z"/><path fill="#4285F4" d="M46.4 24.6c0-1.6-.14-3.16-.4-4.6H24v8.7h12.8c-.55 3-2.22 5.5-4.74 7.2l7.4 5.74c4.4-4.06 6.94-10.04 6.94-17z"/><path fill="#FBBC05" d="M10.56 28.4c-.5-1.5-.78-3.06-.78-4.7s.28-3.2.78-4.7l-7.96-6.2C1.06 16.1 0 19.9 0 24s1.06 7.9 2.6 11.4l7.96-6.2z"/><path fill="#34A853" d="M24 48c6.5 0 12-2.14 16-5.8l-7.4-5.74c-2 1.36-4.6 2.16-8.6 2.16-6.1 0-11.4-3.7-13.4-8.9l-7.96 6.2C6.4 42.6 14.6 48 24 48z"/></svg>
+      <span id="gTxt">Continue with Google</span>
+    </button>
+    <div class="langRow">
+      <button class="langBtn on" id="lbAr">العربية</button>
+      <button class="langBtn" id="lbFr">FR</button>
+      <button class="langBtn" id="lbEn">EN</button>
+    </div>
+  </div>
+  <div class="credit">AZAMILUX × NOVA — MADE IN MOROCCO 🇲🇦</div>
+</div>
+<script>
+var L = {
+  ar:{tag:"عالم جديد",login:"دخول",create:"تصاوب حساب",name:"الاسم",email:"البريد",pass:"كلمة المرور",btnLogin:"دخول",btnCreate:"صاوب حساب",or:"أو",google:"كمّل بـ Google",errEmail:"كتب البريد مزيان",errPass:"كلمة المرور قصيرة (6 فالقل)",errExists:"هاد البريد مسجل من قبل",errWrong:"البريد ولا كلمة المرور غالطين",errName:"كتب سميتك",errGoogle:"Google خاصو Firebase — قريب"},
+  fr:{tag:"UN NOUVEAU MONDE",login:"CONNEXION",create:"CRÉER",name:"NOM",email:"EMAIL",pass:"MOT DE PASSE",btnLogin:"SE CONNECTER",btnCreate:"CRÉER",or:"OU",google:"Continuer avec Google",errEmail:"Email invalide",errPass:"Mot de passe trop court (6 min)",errExists:"Email déjà utilisé",errWrong:"Email ou mot de passe incorrect",errName:"Entre ton nom",errGoogle:"Google nécessite Firebase — bientôt"},
+  en:{tag:"A NEW WORLD",login:"LOG IN",create:"CREATE",name:"NAME",email:"EMAIL",pass:"PASSWORD",btnLogin:"LOG IN",btnCreate:"CREATE ACCOUNT",or:"OR",google:"Continue with Google",errEmail:"Invalid email",errPass:"Password too short (6 min)",errExists:"Email already used",errWrong:"Wrong email or password",errName:"Enter your name",errGoogle:"Google needs Firebase — soon"}
+};
+var lang = localStorage.getItem('nova_lang') || 'ar';
+var mode = 'login';
+function T(k){ return L[lang][k]; }
+function setLang(l){ lang=l; localStorage.setItem('nova_lang',l); render(); }
+function render(){
+  document.getElementById('tag').textContent = T('tag');
+  document.getElementById('tabLogin').textContent = T('login');
+  document.getElementById('tabCreate').textContent = T('create');
+  document.getElementById('lblName').textContent = T('name');
+  document.getElementById('lblEmail').textContent = T('email');
+  document.getElementById('lblPass').textContent = T('pass');
+  document.getElementById('mainBtn').textContent = mode==='login' ? T('btnLogin') : T('btnCreate');
+  document.getElementById('gTxt').textContent = T('google');
+  document.getElementById('orTxt').textContent = T('or');
+  document.getElementById('nameField').style.display = mode==='create' ? 'block' : 'none';
+  document.querySelector('.wrap').style.direction = (lang==='ar') ? 'rtl' : 'ltr';
+  document.getElementById('lbAr').classList.toggle('on', lang==='ar');
+  document.getElementById('lbFr').classList.toggle('on', lang==='fr');
+  document.getElementById('lbEn').classList.toggle('on', lang==='en');
+}
+function setMode(m){
+  mode=m;
+  document.getElementById('tabLogin').classList.toggle('on', m==='login');
+  document.getElementById('tabCreate').classList.toggle('on', m==='create');
+  document.getElementById('nameField').style.display = m==='create' ? 'block' : 'none';
+  document.getElementById('mainBtn').textContent = m==='login' ? T('btnLogin') : T('btnCreate');
+  document.getElementById('pass').setAttribute('autocomplete', m==='login'?'current-password':'new-password');
+  document.getElementById('err').textContent='';
+}
+function showErr(k){ document.getElementById('err').textContent = T(k); }
+function getUsers(){ try{ return JSON.parse(localStorage.getItem('nova_users')||'[]'); }catch(e){ return []; } }
+function saveUsers(u){ localStorage.setItem('nova_users', JSON.stringify(u)); }
+function setSession(o){ localStorage.setItem('nova_session', JSON.stringify(o)); }
+function submit(){
+  var email = document.getElementById('email').value.trim().toLowerCase();
+  var pass = document.getElementById('pass').value;
+  if(!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email)){ showErr('errEmail'); return; }
+  if(pass.length < 6){ showErr('errPass'); return; }
+  if(mode==='create'){
+    var name = document.getElementById('name').value.trim();
+    if(name.length < 2){ showErr('errName'); return; }
+    var users = getUsers();
+    for(var i=0;i<users.length;i++){ if(users[i].email===email){ showErr('errExists'); return; } }
+    users.push({name:name, email:email, pass:pass, createdAt:Date.now()});
+    saveUsers(users);
+    setSession({name:name, email:email, ts:Date.now()});
+    goNova();
+  } else {
+    var users = getUsers();
+    var found = null;
+    for(var i=0;i<users.length;i++){ if(users[i].email===email && users[i].pass===pass){ found=users[i]; break; } }
+    if(!found){ showErr('errWrong'); return; }
+    setSession({name:found.name, email:found.email, ts:Date.now()});
+    goNova();
+  }
+}
+function googleLogin(){ showErr('errGoogle'); }
+function goNova(){ window.location.href = 'index.html'; }
+document.getElementById('tabLogin').addEventListener('click', function(){ setMode('login'); });
+document.getElementById('tabCreate').addEventListener('click', function(){ setMode('create'); });
+document.getElementById('mainBtn').addEventListener('click', submit);
+document.querySelector('.gbtn').addEventListener('click', googleLogin);
+document.getElementById('lbAr').addEventListener('click', function(){ setLang('ar'); });
+document.getElementById('lbFr').addEventListener('click', function(){ setLang('fr'); });
+document.getElementById('lbEn').addEventListener('click', function(){ setLang('en'); });
+document.getElementById('email').addEventListener('keydown', function(e){ if(e.key==='Enter') document.getElementById('pass').focus(); });
+document.getElementById('pass').addEventListener('keydown', function(e){ if(e.key==='Enter') submit(); });
+(function(){
+  try{
+    var s = JSON.parse(localStorage.getItem('nova_session')||'null');
+    if(s && s.email){ goNova(); }
+  }catch(e){}
+})();
+render();
+</script>
+</body>
+</html>
