@@ -876,11 +876,37 @@ function closeDrawer(){document.getElementById('drawer').classList.remove('open'
   });
 })();
 </script>
-// NOVA auth gate
+<script>
+// NOVA auth gate (Firebase)
 (function(){
+  var gone = false;
+  function leave(){
+    if(!gone){
+      gone = true;
+      try{ localStorage.removeItem('nova_session'); }catch(e){}
+      window.location.href = 'login.html';
+    }
+  }
   try{
     var s = JSON.parse(localStorage.getItem('nova_session')||'null');
-    if(!s || !s.email){ window.location.href = 'login.html'; }
-  }catch(e){ window.location.href = 'login.html'; }
+    if(!s || !s.email){ leave(); return; }
+  }catch(e){ leave(); return; }
+  try{
+    var auth = firebase.auth(firebase.app('nova-fix7'));
+    auth.onAuthStateChanged(function(user){
+      if(!user){ leave(); }
+      else{
+        try{
+          var n = user.displayName || (user.email ? user.email.split('@')[0] : '');
+          localStorage.setItem('nova_session', JSON.stringify({name:n, email:user.email, ts:Date.now()}));
+        }catch(e){}
+      }
+    });
+  }catch(e){}
 })();
-function novaLogout(){ localStorage.removeItem('nova_session'); window.location.href = 'login.html'; }
+function novaLogout(){
+  try{ firebase.auth(firebase.app('nova-fix7')).signOut(); }catch(e){}
+  try{ localStorage.removeItem('nova_session'); }catch(e){}
+  window.location.href = 'login.html';
+}
+</script>
