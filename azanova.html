@@ -12,6 +12,7 @@ canvas{display:block}
 .overlay{position:fixed;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;background:radial-gradient(ellipse at 50% 30%,#2a1c10 0%,#0d0906 75%);z-index:50;pointer-events:auto;overflow-y:auto;padding:16px 0}
 #logo{font-size:min(14vw,64px);font-weight:900;letter-spacing:.28em;color:#e8862e;text-shadow:0 0 24px rgba(232,134,46,.55),0 3px 0 #4a2410;margin-left:.28em}
 #tag{font-size:min(3.6vw,16px);letter-spacing:.3em;color:#c9b394;margin:10px 0 2px;font-weight:600}
+#presents{font-size:min(2.8vw,11px);letter-spacing:.5em;color:#C9A25A;font-weight:700;margin-bottom:8px;margin-left:.5em;text-shadow:0 0 12px rgba(201,162,90,.45)}
 #phase{font-size:min(3vw,12px);letter-spacing:.22em;color:#8a7458;margin-bottom:16px}
 .langRow{display:flex;gap:8px;margin-bottom:16px;flex-wrap:wrap;justify-content:center}
 .langBtn{pointer-events:auto;background:#241a12;border:1px solid #5a3d22;color:#d8c4a8;padding:8px 14px;font-size:13px;font-weight:700;border-radius:8px;cursor:pointer}
@@ -84,9 +85,10 @@ canvas{display:block}
 <div id="vignette"></div>
 
 <div id="startScreen" class="overlay">
+  <div id="presents">AZAMILUX PRESENTS</div>
   <div id="logo">AZANOVA</div>
   <div id="tag">A NEW WORLD. A NEW WAR.</div>
-  <div id="phase">PHASE 1 v2 — REAL CHARACTERS</div>
+  <div id="phase">PHASE 1 v3 — AZAMILUX EDITION</div>
   <div class="langRow">
     <button class="langBtn" data-l="ar">العربية</button>
     <button class="langBtn" data-l="fr">FRANÇAIS</button>
@@ -95,7 +97,7 @@ canvas{display:block}
   <div id="selectTitle">CHOOSE YOUR FIGHTER</div>
   <div id="charGrid"></div>
   <button id="startBtn" class="bigBtn">START</button>
-  <div id="credit">MADE IN MOROCCO 🇲🇦 — 100% ORIGINAL CHARACTERS</div>
+  <div id="credit">AZAMILUX × AZANOVA — MADE IN MOROCCO 🇲🇦</div>
 </div>
 
 <div id="deathScreen" class="overlay hidden">
@@ -109,7 +111,7 @@ canvas{display:block}
 <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
 <script>
 /* ================================================================
-   AZANOVA — PHASE 1 v2 (REAL CHARACTERS EDITION)
+   AZANOVA — PHASE 1 v3 (AZAMILUX SPONSORED EDITION)
    A NEW WORLD. A NEW WAR. — original post-FALL survival game
    MODULES: I18N | CHARS | AUDIO+VOICE | WORLD | HUMANS | PLAYER
             | ZOMBIE AI | COMBAT | WAVES | ZONES
@@ -125,13 +127,13 @@ var CFG = {
 
 // ---------------- I18N ----------------
 var I18N = {
-  ar: {tag:"عالم جديد. حرب جديدة.", phase:"المرحلة 1 v2 — شخصيات حقيقية", start:"ابدأ", select:"ختار المقاتل ديالك", wave:"الموجة", kills:"القتلى", health:"الصحة",
+  ar: {tag:"عالم جديد. حرب جديدة.", phase:"المرحلة 1 v3 — إصدار AZAMILUX", start:"ابدأ", select:"ختار المقاتل ديالك", wave:"الموجة", kills:"القتلى", health:"الصحة",
        cleared:"تم القضاء على الموجة!", next:"الموجة القادمة...", died:"لقد مُتّ", diedSub:"THE FALL أخذك أنت أيضاً",
        restart:"إعادة المحاولة", share:"مشاركة النتيجة", survive:"انجُ من السقوط", reload:"تعبئة", fire:"نار"},
-  fr: {tag:"UN NOUVEAU MONDE. UNE NOUVELLE GUERRE.", phase:"PHASE 1 v2 — PERSONNAGES RÉELS", start:"JOUER", select:"CHOISIS TON COMBATANT", wave:"VAGUE", kills:"TUÉS", health:"SANTE",
+  fr: {tag:"UN NOUVEAU MONDE. UNE NOUVELLE GUERRE.", phase:"PHASE 1 v3 — ÉDITION AZAMILUX", start:"JOUER", select:"CHOISIS TON COMBATANT", wave:"VAGUE", kills:"TUÉS", health:"SANTE",
        cleared:"VAGUE ÉLIMINÉE !", next:"VAGUE SUIVANTE...", died:"VOUS ÊTES MORT", diedSub:"THE FALL vous a pris, toi aussi",
        restart:"RECOMMENCER", share:"PARTAGER LE SCORE", survive:"SURVIVEZ À THE FALL", reload:"RECHAR.", fire:"FEU"},
-  en: {tag:"A NEW WORLD. A NEW WAR.", phase:"PHASE 1 v2 — REAL CHARACTERS", start:"START", select:"CHOOSE YOUR FIGHTER", wave:"WAVE", kills:"KILLS", health:"HEALTH",
+  en: {tag:"A NEW WORLD. A NEW WAR.", phase:"PHASE 1 v3 — AZAMILUX EDITION", start:"START", select:"CHOOSE YOUR FIGHTER", wave:"WAVE", kills:"KILLS", health:"HEALTH",
        cleared:"WAVE CLEARED!", next:"NEXT WAVE...", died:"YOU DIED", diedSub:"THE FALL CLAIMS ANOTHER SURVIVOR",
        restart:"RESTART", share:"SHARE SCORE", survive:"SURVIVE THE FALL", reload:"RELOAD", fire:"FIRE"}
 };
@@ -142,16 +144,16 @@ function T(k){ return I18N[lang][k]; }
 var CHARS = [
   { id:'azr',  name:'AZR',  role:'COMMANDO', hp:110, spd:1.0,  dmg:1.0,  rate:1.0,
     ui:{hp:80, spd:55, dmg:60}, voice:1.0, gun:1,
-    look:{skin:0xc9986a, hair:0x1c1410, style:'short', beard:true, shirt:0x44523e, pants:0x33393b, vest:0x2e2e30, boots:0x1c1a18, pack:0x3a3026} },
+    look:{skin:0xc9986a, hair:0x1c1410, style:'cap', beard:true, accent:0xc22e18, iris:0x5a4a2a, shirt:0x44523e, pants:0x33393b, vest:0x2e2e30, boots:0x1c1a18, pack:0x3a3026} },
   { id:'noor', name:'NOOR', role:'SNIPER',  hp:90,  spd:1.05, dmg:1.35, rate:1.3,
     ui:{hp:50, spd:62, dmg:100}, voice:1.45, gun:2,
-    look:{skin:0xd9b08c, hair:0x241a12, style:'pony', female:true, shirt:0x2e6e6a, pants:0x2b3038, vest:0x23282e, boots:0x30282e, pack:0x37424a} },
+    look:{skin:0xd9b08c, hair:0x241a12, style:'pony', female:true, accent:0xa04ac8, iris:0x2e6ea8, acc:'shades', shirt:0x2e6e6a, pants:0x2b3038, vest:0x23282e, boots:0x30282e, pack:0x37424a} },
   { id:'volt', name:'VOLT', role:'ENGINEER',hp:100, spd:1.12, dmg:0.95, rate:0.95,
     ui:{hp:65, spd:78, dmg:52}, voice:0.75, gun:1,
-    look:{skin:0x8a5a34, hair:0x141414, style:'buzz', hat:'hardhat', shirt:0xb05a20, pants:0x3a3228, vest:0x2e2e30, boots:0x2a2420, pack:0x44403a} },
+    look:{skin:0x8a5a34, hair:0x141414, style:'buzz', hat:'hardhat', accent:0xf0b020, iris:0x2a3a2a, shirt:0xb05a20, pants:0x3a3228, vest:0x2e2e30, boots:0x2a2420, pack:0x44403a} },
   { id:'rez',  name:'REZ',  role:'SCOUT',    hp:85,  spd:1.2,  dmg:0.9,  rate:0.85,
     ui:{hp:42, spd:100, dmg:48}, voice:1.2, gun:0,
-    look:{skin:0xb98a5f, hair:0x2c1c10, style:'bandana', band:0xa03020, shirt:0x8a7448, pants:0x4a4436, vest:0x35302a, boots:0x2c2a26, pack:0x3c3630} }
+    look:{skin:0xb98a5f, hair:0x2c1c10, style:'bandana', band:0xa03020, accent:0xa03020, iris:0x3a5a2a, acc:'scarf', shirt:0x8a7448, pants:0x4a4436, vest:0x35302a, boots:0x2c2a26, pack:0x3c3630} }
 ];
 
 // ---------------- STATE ----------------
@@ -168,6 +170,8 @@ function CHAR(){ for (var i=0;i<CHARS.length;i++) if (CHARS[i].id===state.charId
 var zombies = [];
 var obstacles = [], blockers = [], zHitParts = [];
 var lightbars = [];   // emergency vehicle lights
+var warFires = [], warSmokes = [];  // war-zone fires & smoke plumes
+var boomT = 30;                   // distant battle booms timer
 var keys = {};
 
 // ---------------- AUDIO (weapons + human voices + sirens) ----------------
@@ -207,6 +211,14 @@ function sSiren(kind){ if(!actx)return;
   tone('sine',base,base+240,0.7,0.05);
   tone('sine',base+240,base,0.7,0.05,0.7);
   tone('sine',base,base+240,0.7,0.05,1.4); }
+// distant battle boom (war-zone atmosphere)
+function sBoom(){ if(!actx)return;
+  tone('sine',70,26,0.9,0.22);
+  var t=actx.currentTime, n=actx.createBufferSource(), len=4096, buf=actx.createBuffer(1,len,actx.sampleRate), d=buf.getChannelData(0);
+  for(var i=0;i<len;i++) d[i]=(Math.random()*2-1)*(1-i/len);
+  n.buffer=buf; var f=actx.createBiquadFilter(); f.type='lowpass'; f.frequency.value=300;
+  var g=actx.createGain(); env(g,t,0.01,0.8,0.18);
+  n.connect(f); f.connect(g); g.connect(master); n.start(t); }
 // character voice lines via speech synthesis (fallback-safe)
 function say(txt){
   try{
@@ -301,7 +313,7 @@ function buildWorld(){
     var db = new THREE.Mesh(new THREE.PlaneGeometry(0.35,2.4), dashMat); db.rotation.x=-Math.PI/2; db.position.set(0,0.045,dpos); scene.add(db);
   }
   // ruined buildings (abandoned city + suburbs)
-  var bPal = [0x5a5148, 0x6b5d4c, 0x4c4a45, 0x746356, 0x574f41];
+  var bPal = [0x5a5148, 0x2e8a8a, 0xb8503a, 0x4c4a45, 0x8a3a5a, 0x574f41, 0x3a342c];
   var winDark = new THREE.MeshLambertMaterial({ color:0x141420 });
   var winLit  = new THREE.MeshLambertMaterial({ color:0xffa040, emissive:0x662800 });
   var spots = [];
@@ -309,11 +321,12 @@ function buildWorld(){
     if (Math.abs(gx)<12 || Math.abs(gz)<12) continue;
     if (Math.abs(gx)<22 && Math.abs(gz)<22) continue;
     if (gx < -35 && gz < -35) continue; // forest zone — no buildings
+    if (gx < -35 && gz > 35) continue;  // green resort — no buildings
     spots.push([gx + (Math.random()-0.5)*6, gz + (Math.random()-0.5)*6]);
   }
   for (var s=0; s<spots.length; s++){
     var bx = spots[s][0], bz = spots[s][1];
-    var w = 4+Math.random()*3, h = 5+Math.random()*11, dd = 4+Math.random()*3;
+    var w = 4+Math.random()*3, h = 4+Math.random()*6, dd = 4+Math.random()*3;
     var mat = new THREE.MeshLambertMaterial({ color: bPal[Math.floor(Math.random()*bPal.length)] });
     var b = new THREE.Mesh(new THREE.BoxGeometry(w,h,dd), mat);
     b.position.set(bx, h/2, bz); scene.add(b); blockers.push(b);
@@ -395,12 +408,131 @@ function buildWorld(){
   s1.position.set(-9, 3.1, -12); s1.rotation.y = 0.5; scene.add(s1); blockers.push(s1);
   var s2 = new THREE.Mesh(new THREE.PlaneGeometry(4.4,2.2), makeSign('AREA 7', '#c22e18'));
   s2.position.set(11, 2.9, 13); s2.rotation.y = -2.2; scene.add(s2); blockers.push(s2);
+  // ---- AZAMILUX billboards (sponsor advertising across the city) ----
+  var bbMat = makeBrandMat();
+  var bbSpots = [[-14,12,2.3],[16,-14,-0.85],[34,6,-1.74]];
+  for (var bb=0; bb<bbSpots.length; bb++){
+    var bpost = new THREE.Mesh(new THREE.CylinderGeometry(0.12,0.16,3.4,7), new THREE.MeshLambertMaterial({ color:0x2e2a24 }));
+    bpost.position.set(bbSpots[bb][0], 1.7, bbSpots[bb][1]); scene.add(bpost); blockers.push(bpost);
+    var bboard = new THREE.Mesh(new THREE.PlaneGeometry(3.2,3.2), bbMat);
+    bboard.position.set(bbSpots[bb][0], 4.7, bbSpots[bb][1]); bboard.rotation.y = bbSpots[bb][2];
+    scene.add(bboard); blockers.push(bboard);
+    var bback = new THREE.Mesh(new THREE.PlaneGeometry(3.2,3.2), bbMat);
+    bback.position.set(bbSpots[bb][0], 4.7, bbSpots[bb][1]); bback.rotation.y = bbSpots[bb][2] + Math.PI;
+    scene.add(bback);
+  }
+  // ---- BATTLEFIELD zone (NE) — sandbag walls + barbed wire ----
+  var sandMat = new THREE.MeshLambertMaterial({ color:0xb8a06a });
+  var sandSpots = [[35,49],[49,35],[49,63],[63,49],[77,49],[49,77],[35,63],[63,77],[70,35]];
+  for (var sb=0; sb<sandSpots.length; sb++){
+    var swx = sandSpots[sb][0], swz = sandSpots[sb][1];
+    var wallG = new THREE.Group(); wallG.position.set(swx,0,swz); wallG.rotation.y = Math.random()*Math.PI;
+    for (var sl=0; sl<3; sl++){
+      for (var sc=-1; sc<=1; sc++){
+        var bag = new THREE.Mesh(new THREE.SphereGeometry(0.34,7,5), sandMat);
+        bag.scale.set(1.6,0.5,0.9);
+        bag.position.set(sc*0.55 + (sl%2)*0.27, 0.17 + sl*0.3, (Math.random()-0.5)*0.08);
+        wallG.add(bag);
+      }
+    }
+    for (var bk=0; bk<wallG.children.length; bk++) blockers.push(wallG.children[bk]);
+    scene.add(wallG);
+    obstacles.push({ x1:swx-1.5, z1:swz-1.1, x2:swx+1.5, z2:swz+1.1 });
+  }
+  var wireMat = new THREE.MeshLambertMaterial({ color:0x4a4a42 });
+  for (var wp=0; wp<16; wp++){
+    var wpx = 36 + Math.random()*42, wpz = 36 + Math.random()*42;
+    var wp1 = new THREE.Mesh(new THREE.CylinderGeometry(0.05,0.05,1.15,5), wireMat);
+    wp1.position.set(wpx, 0.57, wpz); scene.add(wp1);
+    var wp2 = wp1.clone(); wp2.position.set(wpx+1.5, 0.57, wpz+0.7); scene.add(wp2);
+    var wln = new THREE.Mesh(new THREE.BoxGeometry(1.75,0.02,0.02), wireMat);
+    wln.position.set(wpx+0.75, 0.95, wpz+0.35); wln.rotation.y = -Math.atan2(0.7,1.5); scene.add(wln);
+    var wln2 = wln.clone(); wln2.position.y = 0.55; scene.add(wln2);
+  }
+  // ---- GREEN RESORT zone (SW) — oasis: grass, pool, palms, umbrellas ----
+  var grassMat2 = new THREE.MeshLambertMaterial({ color:0x3a6a2e });
+  for (var gp2=0; gp2<12; gp2++){
+    var gpch = new THREE.Mesh(new THREE.CircleGeometry(5+Math.random()*8, 9), grassMat2);
+    gpch.rotation.x = -Math.PI/2;
+    gpch.position.set(-40 - Math.random()*34, 0.025, 40 + Math.random()*34);
+    scene.add(gpch);
+  }
+  var poolMat = new THREE.MeshLambertMaterial({ color:0x2e8ab0, emissive:0x061828 });
+  var pool = new THREE.Mesh(new THREE.CircleGeometry(7, 22), poolMat);
+  pool.rotation.x = -Math.PI/2; pool.position.set(-52, 0.05, 56); scene.add(pool);
+  var rimMat = new THREE.MeshLambertMaterial({ color:0xd8d0b8 });
+  var poolRim = new THREE.Mesh(new THREE.RingGeometry(7, 8.4, 22), rimMat);
+  poolRim.rotation.x = -Math.PI/2; poolRim.position.set(-52, 0.045, 56); scene.add(poolRim);
+  var trunkM2 = new THREE.MeshLambertMaterial({ color:0x8a6a42 });
+  var frondM = new THREE.MeshLambertMaterial({ color:0x3a8a3a });
+  var palmSpots = [[-40,46],[-46,38],[-60,42],[-66,54],[-60,70],[-46,72],[-36,58],[-70,64],[-42,52]];
+  for (var pm=0; pm<palmSpots.length; pm++){
+    var pg2 = new THREE.Group(); pg2.position.set(palmSpots[pm][0], 0, palmSpots[pm][1]);
+    var ptrunk = new THREE.Mesh(new THREE.CylinderGeometry(0.13,0.2,3.0,6), trunkM2);
+    ptrunk.position.y = 1.5; ptrunk.rotation.z = (Math.random()-0.5)*0.16; pg2.add(ptrunk);
+    for (var pl=0; pl<6; pl++){
+      var fHead = new THREE.Group(); fHead.position.y = 3.0; fHead.rotation.y = pl/6*Math.PI*2; pg2.add(fHead);
+      var frondGeo = new THREE.BoxGeometry(1.9,0.05,0.42);
+      frondGeo.translate(0.95,0,0);
+      var frond = new THREE.Mesh(frondGeo, frondM);
+      frond.rotation.z = -0.5;
+      fHead.add(frond);
+    }
+    scene.add(pg2); blockers.push(ptrunk);
+  }
+  var umbM = new THREE.MeshLambertMaterial({ color:0xe8e0d0 });
+  var umbSpots = [[-44,64],[-60,48],[-36,50]];
+  for (var us=0; us<umbSpots.length; us++){
+    var upole = new THREE.Mesh(new THREE.CylinderGeometry(0.05,0.05,2.2,5), rimMat);
+    upole.position.set(umbSpots[us][0], 1.1, umbSpots[us][1]); scene.add(upole);
+    var utop = new THREE.Mesh(new THREE.ConeGeometry(1.3,0.5,8), umbM);
+    utop.position.set(umbSpots[us][0], 2.3, umbSpots[us][1]); scene.add(utop);
+    var loung = new THREE.Mesh(new THREE.BoxGeometry(0.55,0.22,1.3), umbM);
+    loung.position.set(umbSpots[us][0]+1.7, 0.13, umbSpots[us][1]+0.7); loung.rotation.y = (Math.random()-0.5)*0.5;
+    scene.add(loung);
+  }
   // sand berms (desert edge)
   var bermMat = new THREE.MeshLambertMaterial({ color:0xb28a55 });
   [[0,-100,200,4],[0,100,200,4],[-100,0,4,200],[100,0,4,200]].forEach(function(bd){
     var berm = new THREE.Mesh(new THREE.BoxGeometry(bd[2],3,bd[3]), bermMat);
     berm.position.set(bd[0], 1.5, bd[1]); scene.add(berm);
   });
+  // ---- WAR ZONE: craters, rubble, burning fires, smoke plumes ----
+  var craterMat = new THREE.MeshLambertMaterial({ color:0x2a2018 });
+  var rubbleMat = new THREE.MeshLambertMaterial({ color:0x4a4238 });
+  for (var cr=0; cr<8; cr++){
+    var crx = (Math.random()-0.5)*150, crz = (Math.random()-0.5)*150;
+    if (Math.abs(crx)<18 && Math.abs(crz)<18){ crx += 26; }
+    var crater = new THREE.Mesh(new THREE.CircleGeometry(2+Math.random()*2.5, 9), craterMat);
+    crater.rotation.x = -Math.PI/2; crater.position.set(crx, 0.04, crz); scene.add(crater);
+    for (var rb=0; rb<4; rb++){
+      var rub = new THREE.Mesh(new THREE.BoxGeometry(0.3+Math.random()*0.5,0.2+Math.random()*0.3,0.3+Math.random()*0.5), rubbleMat);
+      rub.position.set(crx+(Math.random()-0.5)*5, 0.15, crz+(Math.random()-0.5)*5);
+      rub.rotation.set(Math.random(),Math.random(),Math.random());
+      scene.add(rub); blockers.push(rub);
+    }
+  }
+  var fireCore = new THREE.MeshBasicMaterial({ color:0xff7a18 });
+  var fireTip  = new THREE.MeshBasicMaterial({ color:0xffd23c });
+  var glowMat  = new THREE.MeshBasicMaterial({ color:0xff6a10, transparent:true, opacity:0.3 });
+  var smokeMat = new THREE.MeshLambertMaterial({ color:0x2e2a26, transparent:true, opacity:0.5 });
+  var fireSpots = [[22,-18],[-30,26],[8,38],[-18,-38],[46,12],[-52,-14],[34,42],[-44,36]];
+  for (var fs=0; fs<fireSpots.length; fs++){
+    var fx = fireSpots[fs][0], fz = fireSpots[fs][1];
+    var glow = new THREE.Mesh(new THREE.CircleGeometry(1.7,10), glowMat.clone());
+    glow.rotation.x = -Math.PI/2; glow.position.set(fx,0.05,fz); scene.add(glow);
+    var f1 = new THREE.Mesh(new THREE.ConeGeometry(0.35,1.0,6), fireCore);
+    f1.position.set(fx,0.6,fz); scene.add(f1);
+    var f2 = new THREE.Mesh(new THREE.ConeGeometry(0.22,0.7,6), fireTip);
+    f2.position.set(fx,1.05,fz); scene.add(f2);
+    warFires.push({ m:f1, t:f2, g:glow, ph:Math.random()*10 });
+    for (var sm=0; sm<3; sm++){
+      var puff = new THREE.Mesh(new THREE.SphereGeometry(0.7+sm*0.25,8,8), smokeMat.clone());
+      puff.position.set(fx, 1.8+sm*1.1, fz);
+      scene.add(puff);
+      warSmokes.push({ m:puff, ph:Math.random()*3, y0:1.8+sm*1.1 });
+    }
+  }
   // dust particles
   var N = 380, pos = new Float32Array(N*3);
   for (var dp=0; dp<N; dp++){ pos[dp*3]=(Math.random()-0.5)*170; pos[dp*3+1]=Math.random()*14; pos[dp*3+2]=(Math.random()-0.5)*170; }
@@ -455,6 +587,13 @@ function addHair(head, L){
     cap.scale.set(1,0.6,1); head.add(cap);
     var knot = new THREE.Mesh(new THREE.BoxGeometry(0.05,0.07,0.05), new THREE.MeshLambertMaterial({ color:L.band }));
     knot.position.set(0,0.08,-0.15); head.add(knot);
+  } else if (st === 'cap'){
+    var domeC = new THREE.Mesh(new THREE.SphereGeometry(0.158,10,8,0,Math.PI*2,0,Math.PI/2.2), new THREE.MeshLambertMaterial({ color:0x2e322e }));
+    domeC.scale.set(1,0.6,1); head.add(domeC);
+    var brimC = new THREE.Mesh(new THREE.BoxGeometry(0.2,0.025,0.15), new THREE.MeshLambertMaterial({ color:0x2e322e }));
+    brimC.position.set(0,0.075,0.17); head.add(brimC);
+    var patchC = new THREE.Mesh(new THREE.BoxGeometry(0.11,0.045,0.02), new THREE.MeshLambertMaterial({ color:L.accent || 0xe8862e }));
+    patchC.position.set(0,0.1,0.145); head.add(patchC);
   } else { // short
     var h3 = new THREE.Mesh(new THREE.SphereGeometry(0.152,10,8,0,Math.PI*2,0,Math.PI/2.1), hairMat);
     h3.scale.set(1,0.8,1); head.add(h3);
@@ -472,6 +611,44 @@ function addHair(head, L){
     brim.position.y = 0.02; head.add(brim);
   }
 }
+// AZAMILUX brand texture — crown + golden mountains on black (sponsor identity)
+function makeBrandMat(){
+  var c = document.createElement('canvas'); c.width = 256; c.height = 256;
+  var x = c.getContext('2d');
+  x.fillStyle = '#0E1014'; x.fillRect(0,0,256,256);
+  x.strokeStyle = '#C9A25A'; x.lineWidth = 5; x.strokeRect(12,12,232,232);
+  x.fillStyle = '#C9A25A';
+  x.beginPath(); x.moveTo(40,118); x.lineTo(88,62); x.lineTo(126,104); x.lineTo(168,56); x.lineTo(216,118); x.closePath(); x.fill();
+  x.fillStyle = '#8a6a3a';
+  x.beginPath(); x.moveTo(66,118); x.lineTo(104,80); x.lineTo(126,104); x.closePath(); x.fill();
+  x.fillStyle = '#C9A25A';
+  x.beginPath();
+  x.moveTo(96,142); x.lineTo(96,168); x.lineTo(110,154); x.lineTo(128,176); x.lineTo(146,154); x.lineTo(160,168); x.lineTo(160,142); x.closePath(); x.fill();
+  x.fillStyle = '#C9A25A'; x.font = 'bold 34px Arial'; x.textAlign = 'center'; x.textBaseline = 'middle';
+  x.fillText('AZAMILUX', 128, 212);
+  x.fillStyle = '#8a7458'; x.font = 'bold 13px Arial';
+  x.fillText('LUXE SINCE THE FALL', 128, 236);
+  return new THREE.MeshLambertMaterial({ map: new THREE.CanvasTexture(c) });
+}
+function addAvatarFace(head, L){
+  var eyeW = new THREE.MeshLambertMaterial({ color:0xf0ece0 });
+  var irisM = new THREE.MeshLambertMaterial({ color:L.iris || 0x3a2a1a });
+  var eyeB = new THREE.MeshLambertMaterial({ color:0x14100c });
+  var brM  = new THREE.MeshLambertMaterial({ color:0x2a2018 });
+  var skinM = new THREE.MeshLambertMaterial({ color:L.skin });
+  var eL = new THREE.Mesh(new THREE.SphereGeometry(0.024,7,7), eyeW); eL.position.set(-0.052, 0.02, 0.112); head.add(eL);
+  var eR = eL.clone(); eR.position.x = 0.052; head.add(eR);
+  var iL = new THREE.Mesh(new THREE.SphereGeometry(0.013,7,7), irisM); iL.position.set(-0.052, 0.02, 0.126); head.add(iL);
+  var iR = iL.clone(); iR.position.x = 0.052; head.add(iR);
+  var pL = new THREE.Mesh(new THREE.SphereGeometry(0.006,6,6), eyeB); pL.position.set(-0.052, 0.02, 0.136); head.add(pL);
+  var pR = pL.clone(); pR.position.x = 0.052; head.add(pR);
+  var bL = new THREE.Mesh(new THREE.BoxGeometry(0.055,0.014,0.014), brM); bL.position.set(-0.052, 0.065, 0.122); head.add(bL);
+  var bR = bL.clone(); bR.position.x = 0.052; head.add(bR);
+  var mo = new THREE.Mesh(new THREE.BoxGeometry(0.055,0.014,0.012), brM); mo.position.set(0,-0.06,0.124); head.add(mo);
+  var nose = new THREE.Mesh(new THREE.BoxGeometry(0.032,0.05,0.038), skinM); nose.position.set(0,-0.015,0.135); head.add(nose);
+  var earL = new THREE.Mesh(new THREE.BoxGeometry(0.025,0.055,0.04), skinM); earL.position.set(-0.138,0,0); head.add(earL);
+  var earR = earL.clone(); earR.position.x = 0.138; head.add(earR);
+}
 function makeHuman(L, isHero, ownMats){
   var g = new THREE.Group();
   var skinMat  = new THREE.MeshLambertMaterial({ color:L.skin });
@@ -480,15 +657,22 @@ function makeHuman(L, isHero, ownMats){
   var vestMat  = new THREE.MeshLambertMaterial({ color:L.vest });
   var bootMat  = new THREE.MeshLambertMaterial({ color:L.boots });
   var darkMat  = new THREE.MeshLambertMaterial({ color:0x1c1a18 });
-  var shoulder = L.female ? 0.4 : 0.46;
+  var accMat   = new THREE.MeshLambertMaterial({ color:L.accent || 0xe8862e });
+  var shoulder = L.female ? 0.42 : 0.5;
   var refs = {};
   function leg(sx){
-    var hip = new THREE.Group(); hip.position.set(sx*0.115, 0.95, 0); g.add(hip);
+    var hip = new THREE.Group(); hip.position.set(sx*0.125, 0.95, 0); g.add(hip);
     if (isHero){
-      var thigh = new THREE.Mesh(new THREE.BoxGeometry(0.17,0.48,0.19), pantsMat); thigh.position.y = -0.24; hip.add(thigh);
+      var thigh = new THREE.Mesh(new THREE.BoxGeometry(0.2,0.48,0.22), pantsMat); thigh.position.y = -0.24; hip.add(thigh);
+      if (sx > 0){
+        var hols = new THREE.Mesh(new THREE.BoxGeometry(0.09,0.22,0.13), darkMat); hols.position.set(0.07,-0.3,0); hip.add(hols);
+        var pist = new THREE.Mesh(new THREE.BoxGeometry(0.05,0.07,0.15), new THREE.MeshLambertMaterial({ color:0x22262a })); pist.position.set(0.13,-0.24,0.03); hip.add(pist);
+      }
       var knee = new THREE.Group(); knee.position.y = -0.48; hip.add(knee);
-      var shin = new THREE.Mesh(new THREE.BoxGeometry(0.15,0.42,0.16), pantsMat); shin.position.y = -0.21; knee.add(shin);
-      var boot = new THREE.Mesh(new THREE.BoxGeometry(0.16,0.12,0.25), bootMat); boot.position.set(0,-0.42,0.04); knee.add(boot);
+      var shin = new THREE.Mesh(new THREE.BoxGeometry(0.17,0.42,0.19), pantsMat); shin.position.y = -0.21; knee.add(shin);
+      var kpad = new THREE.Mesh(new THREE.BoxGeometry(0.18,0.1,0.09), accMat); kpad.position.set(0,-0.1,0.11); knee.add(kpad);
+      var boot = new THREE.Mesh(new THREE.BoxGeometry(0.18,0.13,0.28), bootMat); boot.position.set(0,-0.42,0.05); knee.add(boot);
+      var sole = new THREE.Mesh(new THREE.BoxGeometry(0.19,0.045,0.29), darkMat); sole.position.set(0,-0.5,0.05); knee.add(sole);
       return { hip:hip, knee:knee };
     } else {
       var leg1 = new THREE.Mesh(new THREE.BoxGeometry(0.16,0.85,0.18), pantsMat); leg1.position.y = -0.43; hip.add(leg1);
@@ -498,27 +682,72 @@ function makeHuman(L, isHero, ownMats){
   }
   var legL = leg(-1), legR = leg(1);
   refs.hipL = legL.hip; refs.hipR = legR.hip; refs.kneeL = legL.knee; refs.kneeR = legR.knee;
-  var torso = new THREE.Mesh(new THREE.BoxGeometry(shoulder,0.56,0.24), shirtMat); torso.position.y = 1.32; g.add(torso);
-  var vest = new THREE.Mesh(new THREE.BoxGeometry(shoulder+0.07,0.38,0.3), vestMat); vest.position.y = 1.4; g.add(vest);
-  var belt = new THREE.Mesh(new THREE.BoxGeometry(shoulder+0.02,0.09,0.26), darkMat); belt.position.y = 1.05; g.add(belt);
+  var chest, torso;
   if (isHero){
-    var pack = new THREE.Mesh(new THREE.BoxGeometry(0.3,0.36,0.13), new THREE.MeshLambertMaterial({ color:L.pack }));
-    pack.position.set(0,1.36,-0.2); g.add(pack);
+    // AVATAR-STYLE layered body (inspired by top battle games, 100% original)
+    chest = new THREE.Mesh(new THREE.BoxGeometry(shoulder,0.36,0.3), shirtMat); chest.position.y = 1.46; g.add(chest);
+    var waist = new THREE.Mesh(new THREE.BoxGeometry(shoulder-0.14,0.22,0.26), pantsMat); waist.position.y = 1.16; g.add(waist);
+    var st1 = new THREE.Mesh(new THREE.BoxGeometry(0.08,0.66,0.03), darkMat); st1.position.set(0,1.46,0.165); st1.rotation.z = 0.55; g.add(st1);
+    var st2 = new THREE.Mesh(new THREE.BoxGeometry(0.08,0.66,0.03), darkMat); st2.position.set(0,1.46,0.165); st2.rotation.z = -0.55; g.add(st2);
+    var vest = new THREE.Mesh(new THREE.BoxGeometry(shoulder+0.05,0.32,0.34), vestMat); vest.position.y = 1.46; g.add(vest);
+    var pouch = new THREE.Mesh(new THREE.BoxGeometry(0.11,0.1,0.06), darkMat); pouch.position.set(-0.12,1.4,0.185); g.add(pouch);
+    var pouch2 = new THREE.Mesh(new THREE.BoxGeometry(0.11,0.1,0.06), darkMat); pouch2.position.set(0.12,1.4,0.185); g.add(pouch2);
+    var belt = new THREE.Mesh(new THREE.BoxGeometry(shoulder-0.08,0.09,0.27), darkMat); belt.position.y = 1.03; g.add(belt);
+    var buckle = new THREE.Mesh(new THREE.BoxGeometry(0.08,0.07,0.03), accMat); buckle.position.set(0,1.03,0.145); g.add(buckle);
+    var padL = new THREE.Mesh(new THREE.BoxGeometry(0.17,0.08,0.19), accMat); padL.position.set(-(shoulder/2+0.06),1.68,0); g.add(padL);
+    var padR = new THREE.Mesh(new THREE.BoxGeometry(0.17,0.08,0.19), accMat); padR.position.set(shoulder/2+0.06,1.68,0); g.add(padR);
+    var pack = new THREE.Mesh(new THREE.BoxGeometry(0.32,0.38,0.14), new THREE.MeshLambertMaterial({ color:L.pack }));
+    pack.position.set(0,1.42,-0.23); g.add(pack);
+    var roll = new THREE.Mesh(new THREE.CylinderGeometry(0.05,0.05,0.32,7), accMat);
+    roll.rotation.z = Math.PI/2; roll.position.set(0,1.64,-0.24); g.add(roll);
+    var brandMatH = makeBrandMat();
+    var brandF = new THREE.Mesh(new THREE.PlaneGeometry(0.19,0.19), brandMatH);
+    brandF.position.set(0,1.52,0.175); g.add(brandF);
+    var brandB = new THREE.Mesh(new THREE.PlaneGeometry(0.22,0.22), brandMatH);
+    brandB.position.set(0,1.42,-0.305); brandB.rotation.y = Math.PI; g.add(brandB);
+    var neck = new THREE.Mesh(new THREE.CylinderGeometry(0.06,0.07,0.1,7), skinMat); neck.position.y = 1.68; g.add(neck);
+    var headG = new THREE.Group(); headG.position.y = 1.8; g.add(headG);
+    var skull = new THREE.Mesh(new THREE.SphereGeometry(0.145,12,12), skinMat); skull.scale.set(0.95,1.1,0.98); headG.add(skull);
+    refs.head = headG;
+    addAvatarFace(headG, L);
+    addHair(headG, L);
+    if (L.acc === 'shades'){
+      var sh1 = new THREE.Mesh(new THREE.BoxGeometry(0.2,0.05,0.04), new THREE.MeshLambertMaterial({ color:0x101014 }));
+      sh1.position.set(0,0.03,0.12); headG.add(sh1);
+      var tmp1 = new THREE.Mesh(new THREE.BoxGeometry(0.05,0.02,0.03), new THREE.MeshLambertMaterial({ color:0x101014 }));
+      tmp1.position.set(-0.11,0.03,0.1); headG.add(tmp1);
+      var tmp2 = tmp1.clone(); tmp2.position.x = 0.11; headG.add(tmp2);
+    } else if (L.acc === 'scarf'){
+      var scf = new THREE.Mesh(new THREE.BoxGeometry(0.2,0.09,0.08), accMat);
+      scf.position.set(0,-0.065,0.09); headG.add(scf);
+    }
+  } else {
+    torso = new THREE.Mesh(new THREE.BoxGeometry(shoulder,0.56,0.24), shirtMat); torso.position.y = 1.32; g.add(torso);
+    var vestz = new THREE.Mesh(new THREE.BoxGeometry(shoulder+0.07,0.38,0.3), vestMat); vestz.position.y = 1.4; g.add(vestz);
+    var beltz = new THREE.Mesh(new THREE.BoxGeometry(shoulder+0.02,0.09,0.26), darkMat); beltz.position.y = 1.05; g.add(beltz);
+    var headG2 = new THREE.Group(); headG2.position.y = 1.73; g.add(headG2);
+    var skull2 = new THREE.Mesh(new THREE.SphereGeometry(0.145,10,10), skinMat); skull2.scale.set(0.95,1.12,0.98); headG2.add(skull2);
+    refs.head = headG2;
+    addZFace(headG2, ownMats.eye); if (Math.random()<0.5) addHair(headG2, {hair:0x1a140e, style:'buzz'});
   }
-  var headG = new THREE.Group(); headG.position.y = 1.73; g.add(headG);
-  var skull = new THREE.Mesh(new THREE.SphereGeometry(0.145,10,10), skinMat); skull.scale.set(0.95,1.12,0.98); headG.add(skull);
-  refs.head = headG;
-  if (isHero){ addFace(headG); addHair(headG, L); }
-  else { addZFace(headG, ownMats.eye); if (Math.random()<0.5) addHair(headG, {hair:0x1a140e, style:'buzz'}); }
   function arm(sx){
-    var sh = new THREE.Group(); sh.position.set(sx*(shoulder/2+0.06), 1.52, 0); g.add(sh);
-    var up = new THREE.Mesh(new THREE.BoxGeometry(0.11,0.42,0.13), shirtMat); up.position.y = -0.21; sh.add(up);
-    var hand = new THREE.Mesh(new THREE.BoxGeometry(0.09,0.11,0.1), skinMat); hand.position.y = -0.46; sh.add(hand);
-    return sh;
+    var shd = new THREE.Group(); shd.position.set(sx*(shoulder/2+0.07), 1.6, 0); g.add(shd);
+    if (isHero){
+      var up = new THREE.Mesh(new THREE.BoxGeometry(0.13,0.42,0.15), shirtMat); up.position.y = -0.21; shd.add(up);
+      var ep = new THREE.Mesh(new THREE.BoxGeometry(0.14,0.07,0.16), accMat); ep.position.y = -0.4; shd.add(ep);
+      var fo = new THREE.Mesh(new THREE.BoxGeometry(0.11,0.36,0.12), shirtMat); fo.position.y = -0.6; shd.add(fo);
+      var glove = new THREE.Mesh(new THREE.BoxGeometry(0.1,0.1,0.11), accMat); glove.position.y = -0.85; shd.add(glove);
+    } else {
+      var up2 = new THREE.Mesh(new THREE.BoxGeometry(0.11,0.42,0.13), shirtMat); up2.position.y = -0.21; shd.add(up2);
+      var hand2 = new THREE.Mesh(new THREE.BoxGeometry(0.09,0.11,0.1), skinMat); hand2.position.y = -0.46; shd.add(hand2);
+    }
+    return shd;
   }
   refs.armL = arm(-1); refs.armR = arm(1);
-  refs.torsoMesh = torso;
-  return { g:g, refs:refs, mats:[skinMat, shirtMat] };
+  refs.torsoMesh = isHero ? chest : torso;
+  refs.torsoBaseY = isHero ? 1.46 : 1.32;
+  var mats = isHero ? [skinMat, shirtMat] : [skinMat, shirtMat];
+  return { g:g, refs:refs, mats:mats };
 }
 
 // ---------------- PLAYER ----------------
@@ -719,6 +948,8 @@ function updateZone(){
   var x = player.g.position.x, z = player.g.position.z;
   var zn;
   if (x < -35 && z < -35) zn = 'OLD FOREST';
+  else if (x > 35 && z > 35) zn = 'BATTLEFIELD';
+  else if (x < -35 && z > 35) zn = 'GREEN RESORT';
   else if (Math.abs(x) > 68 || Math.abs(z) > 68) zn = 'SAND SEA';
   else if (Math.abs(x) < 40 && Math.abs(z) < 40) zn = 'DEAD CITY';
   else zn = 'THE RUINS';
@@ -889,7 +1120,7 @@ function resetGame(){
 }
 
 // ---------------- MAIN LOOP ----------------
-var lastGrowl = 0;
+var lastGrowl = 0, lobbyT = 0;
 function animate(){
   requestAnimationFrame(animate);
   var dt = Math.min(clock.getDelta(), 0.05);
@@ -924,7 +1155,7 @@ function animate(){
     player.refs.hipL.rotation.x = sw;
     player.refs.hipR.rotation.x = -sw;
     if (player.refs.kneeL){ player.refs.kneeL.rotation.x = Math.max(0, -sw*1.1); player.refs.kneeR.rotation.x = Math.max(0, sw*1.1); }
-    player.refs.torsoMesh.position.y = 1.32 + Math.abs(Math.sin(state.walkT))*0.02;
+    player.refs.torsoMesh.position.y = (player.refs.torsoBaseY || 1.32) + Math.abs(Math.sin(state.walkT))*0.02;
     if (player.refs.gun) player.refs.gun.rotation.x = state.reloading ? 0.55 : 0.06;
     var wantFov = (mag > 0.92 && mag <= 1) ? 76 : 70;
     camera.fov += (wantFov - camera.fov) * Math.min(1, dt*5);
@@ -947,6 +1178,8 @@ function animate(){
         state.sirenT = 22 + Math.random()*26;
         sSiren(Math.random() < 0.5 ? 'amb' : 'pol');
       }
+      boomT -= dt;
+      if (boomT <= 0){ boomT = 18 + Math.random()*22; sBoom(); }
     }
     // zombies
     var px = player.g.position.x, pz = player.g.position.z;
@@ -1026,9 +1259,19 @@ function animate(){
   }
   // camera
   var cp = player.g.position;
-  var camDist = 6.4, camH = 3.0 + state.pitch * 2.6;
-  camera.position.set(cp.x + Math.sin(state.yaw) * camDist, camH, cp.z + Math.cos(state.yaw) * camDist);
-  camera.lookAt(cp.x, 1.55, cp.z);
+  if (!state.started){
+    // LOBBY SHOWCASE — character rotates like a real game lobby
+    lobbyT += dt;
+    var lr = 4.4;
+    camera.position.set(cp.x + Math.sin(lobbyT*0.45)*lr, 2.05, cp.z + Math.cos(lobbyT*0.45)*lr);
+    camera.lookAt(cp.x, 1.2, cp.z);
+    player.g.rotation.y = Math.atan2(camera.position.x - cp.x, camera.position.z - cp.z);
+    if (player.refs.torsoMesh) player.refs.torsoMesh.position.y = (player.refs.torsoBaseY || 1.46) + Math.sin(lobbyT*2.2)*0.012;
+  } else {
+    var camDist = 6.4, camH = 3.0 + state.pitch * 2.6;
+    camera.position.set(cp.x + Math.sin(state.yaw) * camDist, camH, cp.z + Math.cos(state.yaw) * camDist);
+    camera.lookAt(cp.x, 1.55, cp.z);
+  }
   // dust
   var pa = dustGeo.attributes.position, arr = pa.array;
   for (var di=0; di<arr.length; di+=3){
@@ -1078,4 +1321,4 @@ document.addEventListener('touchmove', function(e){ e.preventDefault(); }, { pas
 animate();
 </script>
 </body>
-</html
+</html>
