@@ -13,6 +13,7 @@ html,body{width:100%;height:100%;overflow:hidden;background:#000;font-family:'Se
 .ttl{font-weight:900;font-size:16px;letter-spacing:.05em}
 .live{font-size:11px;font-weight:700;color:#fff;background:#f3425f;border-radius:6px;padding:3px 8px}
 .viewers{display:inline-block;font-size:12px;font-weight:700;background:rgba(255,255,255,.16);padding:4px 10px;border-radius:12px;margin-left:auto}
+.addb{background:linear-gradient(135deg,#00AEEC,#FB7299);border:none;color:#fff;width:34px;height:34px;border-radius:12px;font-size:18px;cursor:pointer;font-weight:900}
 .tabrow{display:flex;background:#0d0d0d;flex-shrink:0}
 .tabb{flex:1;padding:11px;border:none;background:none;color:#777;font-weight:800;font-size:14px;cursor:pointer;border-bottom:3px solid transparent}
 .tabb.on{color:#fff;border-bottom:3px solid #FB7299}
@@ -21,12 +22,14 @@ html,body{width:100%;height:100%;overflow:hidden;background:#000;font-family:'Se
 .reels::-webkit-scrollbar{display:none}
 .reel{height:100%;scroll-snap-align:start;position:relative;overflow:hidden;background:#111}
 .bgimg{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;animation:kb 18s ease-in-out infinite alternate}
+.bgvid{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
 @keyframes kb{from{transform:scale(1) translate(0,0)}to{transform:scale(1.14) translate(-2.5%,2.5%)}}
 .shade{position:absolute;left:0;right:0;bottom:0;height:46%;background:linear-gradient(transparent,rgba(0,0,0,.68))}
 .rail{position:absolute;right:10px;bottom:96px;display:flex;flex-direction:column;gap:16px;align-items:center;z-index:3}
 .rb{background:none;border:none;color:#fff;font-size:30px;cursor:pointer;display:flex;flex-direction:column;align-items:center;line-height:1;padding:0}
 .cnt{font-size:12px;font-weight:700;margin-top:5px}
 .caption{position:absolute;left:12px;right:70px;bottom:14px;color:#fff;pointer-events:none;z-index:3}
+.tag{color:#00AEEC;font-weight:800;pointer-events:auto}
 .disc{display:inline-block;animation:spin 4s linear infinite}
 @keyframes spin{to{transform:rotate(360deg)}}
 .wm{position:absolute;top:12px;left:12px;z-index:3;font-size:11px;font-weight:800;color:rgba(255,255,255,.8);background:rgba(0,0,0,.35);padding:4px 10px;border-radius:10px}
@@ -68,6 +71,20 @@ html,body{width:100%;height:100%;overflow:hidden;background:#000;font-family:'Se
 .srow{display:flex;align-items:center;gap:12px;background:#262626;border-radius:12px;padding:10px 12px;margin-bottom:10px;border:1px solid transparent}
 .srow.on{border-color:#FB7299}
 .splay{width:40px;height:40px;border-radius:50%;border:none;background:linear-gradient(135deg,#00AEEC,#FB7299);color:#fff;font-size:16px;cursor:pointer;flex-shrink:0}
+.tagPanel{position:absolute;left:0;right:0;bottom:0;background:#1a1a1a;border-top-left-radius:18px;border-top-right-radius:18px;padding:14px;z-index:9;display:none;max-height:52%;overflow-y:auto}
+.tagPanel.on{display:block}
+.createUI{position:fixed;inset:0;background:#000;z-index:50;display:none;flex-direction:column}
+.createUI.on{display:flex}
+.createUI video{flex:1;min-height:0;width:100%;object-fit:cover}
+.recTop{position:absolute;top:10px;left:10px;right:10px;display:flex;justify-content:space-between;align-items:center;z-index:2}
+.rectime{background:rgba(0,0,0,.6);padding:6px 12px;border-radius:12px;font-weight:800;font-size:14px;display:none}
+.recFlip{position:absolute;bottom:170px;right:12px;z-index:2}
+.recBottom{position:absolute;bottom:24px;left:0;right:0;display:flex;flex-direction:column;align-items:center;gap:10px;z-index:2}
+.recHint{font-size:12px;color:#eee;background:rgba(0,0,0,.5);padding:6px 12px;border-radius:12px;text-align:center}
+.recording{animation:pulse 1s infinite}
+@keyframes pulse{50%{transform:scale(1.12)}}
+.recSave{position:absolute;bottom:24px;left:0;right:0;display:none;flex-direction:column;gap:10px;padding:0 14px;z-index:2}
+.recSave input{border:none;background:rgba(255,255,255,.14);color:#fff;border-radius:12px;padding:12px 14px;outline:none;font-size:14px;width:100%}
 .chatbar{display:flex;gap:8px;padding:10px;background:#000;flex-shrink:0}
 .chatbar input{flex:1;min-width:0;border:none;background:#262626;color:#fff;border-radius:20px;padding:10px 14px;outline:none;font-size:14px}
 .sendbtn{border:none;background:linear-gradient(135deg,#00AEEC,#FB7299);color:#fff;border-radius:20px;padding:8px 16px;font-weight:700;font-size:13px;cursor:pointer}
@@ -80,6 +97,7 @@ html,body{width:100%;height:100%;overflow:hidden;background:#000;font-family:'Se
     <span class="logoChip"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/></svg>BLABLA</span>
     <span class="live">● LIVE</span>
     <span class="viewers">👁️ <span id="viewers">1,247</span></span>
+    <button class="addb" onclick="openCreate()">＋</button>
   </div>
   <div class="tabrow">
     <button class="tabb on" id="tabReels" onclick="setView('reels')">🎬 ريلز</button>
@@ -116,10 +134,30 @@ html,body{width:100%;height:100%;overflow:hidden;background:#000;font-family:'Se
       <div id="songList"></div>
       <div style="font-size:11px;color:#777;text-align:center;padding-top:2px">كل الأغاني مولّدة فالتطبيق — بلا حقوق، آمنة 100% · © NOVA</div>
     </div>
+    <div class="tagPanel" id="tagPanel">
+      <div class="gpHead"><span id="tagTitle"># الهاشتاغ</span><button class="gpx" style="margin-left:auto" onclick="closeTags()">✕</button></div>
+      <div id="tagBody"></div>
+    </div>
   </div>
   <div class="chatbar">
     <input id="chatInput" placeholder="Say something..." onkeydown="if(event.key==='Enter')sendChat()">
     <button class="sendbtn" onclick="sendChat()">Send</button>
+  </div>
+</div>
+<div class="createUI" id="createUI">
+  <video id="recVideo" autoplay playsinline muted></video>
+  <div class="recTop"><span class="rectime" id="recTime">0:00</span><button class="camb" onclick="closeCreate()">✕</button></div>
+  <button class="camb recFlip" onclick="recFlip()">🔄</button>
+  <div class="recBottom" id="recBottom">
+    <div class="recHint" id="recHint">دوس على الزر الاحمر باش تسجل فيديو (15 ثانية)</div>
+    <button class="snapbtn" id="recBtn" onclick="recToggle()"></button>
+  </div>
+  <div class="recSave" id="recSave">
+    <input id="recCap" placeholder="الوصف + #هاشتاغ مثلا: #maroc #nova">
+    <div style="display:flex;gap:10px">
+      <button class="camb" style="flex:0 0 64px" onclick="resetRec()">↩</button>
+      <button class="sendbtn" style="flex:1;padding:14px;font-size:15px" onclick="saveReel()">💾 حفظ الريل</button>
+    </div>
   </div>
 </div>
 <script>
@@ -127,17 +165,17 @@ html,body{width:100%;height:100%;overflow:hidden;background:#000;font-family:'Se
 </script>
 <script src="https://cdn.jsdelivr.net/npm/peerjs@1.5.4/dist/peerjs.min.js"></script>
 <script>
-// ===== BLABLA — تطبيق مستقل (ريلز + لايف حقيقي + شات + هدايا + موسيقى) =====
+// ===== BLABLA — تطبيق مستقل (ريلز + لايف حقيقي + شات + هدايا + موسيقى + فيديو + هاشتاغ) =====
 var LIVE_ID='nova-blabla-live-cb212';
 var livePeer=null,liveStream=null,liveMode=null;
 var liveConns=[],liveCall=null,liveData=null,liveTimer=null;
 var curView='reels';
 var REEL_DEMO=[
- {n:7,img:'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=800&q=80',likes:385,av:12,s:0},
- {n:12,img:'https://images.unsplash.com/photo-1519681393784-d120267933ba?w=800&q=80',likes:254,av:33,s:1},
- {n:15,img:'https://images.unsplash.com/photo-1470071459604-3b5ec3a7fe05?w=800&q=80',likes:198,av:52,s:2},
- {n:21,img:'https://images.unsplash.com/photo-1441974231531-c6227db76b6e?w=800&q=80',likes:512,av:15,s:3},
- {n:33,img:'https://images.unsplash.com/photo-1501594907352-04c20138560a?w=800&q=80',likes:167,av:8,s:4}
+ {n:7,img:'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=800&q=80',likes:385,av:12,s:0,cap:'طلع الجبل 🏔️ #maroc #nature'},
+ {n:12,img:'https://images.unsplash.com/photo-1519681393784-d120267933ba?w=800&q=80',likes:254,av:33,s:1,cap:'الليل فالصحراء ✨ #sahara #maroc'},
+ {n:15,img:'https://images.unsplash.com/photo-1470071459604-3b5ec3a7fe05?w=800&q=80',likes:198,av:52,s:2,cap:'هدوء الغابة 🌲 #nature #green'},
+ {n:21,img:'https://images.unsplash.com/photo-1441974231531-c6227db76b6e?w=800&q=80',likes:512,av:15,s:3,cap:'شجرة عمرها مية عام 🌳 #green #nature'},
+ {n:33,img:'https://images.unsplash.com/photo-1501594907352-04c20138560a?w=800&q=80',likes:167,av:8,s:4,cap:'السفر عالم 🌍 #travel #maroc'}
 ];
 var REPLIES=['Haha 😂','Wow 🔥','NOVA 🚀','From Morocco 🇲🇦','Nice! 👏','😂😂😂','Cool 😎'];
 
@@ -154,6 +192,37 @@ function setView(v){
   document.getElementById('localChat').style.display=(v==='reels')?'flex':'none';
   if(v==='reels'){renderReels();}
 }
+// ---------- الهاشتاغ ----------
+function allReels(){return getUserReels().concat(REEL_DEMO);}
+function tagify(x){var s=esc(x);return s.replace(/#([\u0600-\u06FFa-zA-Z0-9_]+)/g,'<span class="tag" onclick="openTag(\'$1\')">#$1</span>');}
+function getTagMap(){var m={};allReels().forEach(function(r){String(r.cap||'').replace(/#([\u0600-\u06FFa-zA-Z0-9_]+)/g,function(w,t){m[t]=(m[t]||0)+1;});});return m;}
+function openTags(){
+  var m=getTagMap();
+  var arr=Object.keys(m).sort(function(a,b){return m[b]-m[a];});
+  var h='';
+  arr.forEach(function(t){h+='<div class="srow" style="cursor:pointer" onclick="openTag(\''+t+'\')"><span style="font-size:24px;font-weight:900;color:#00AEEC">#</span><div style="flex:1;min-width:0"><div style="font-weight:800;font-size:14px">#'+esc(t)+'</div><div style="font-size:12px;color:#aaa">'+m[t]+' فيديو</div></div><span style="color:#666">→</span></div>';});
+  if(!arr.length)h='<div style="color:#888;text-align:center;padding:20px">مازال ماكاينش هاشتاغ</div>';
+  document.getElementById('tagTitle').textContent='# الهاشتاغ';
+  document.getElementById('tagBody').innerHTML=h;
+  document.getElementById('tagPanel').classList.add('on');
+}
+function openTag(t){
+  var h='';
+  allReels().forEach(function(r,i){
+    var tags=String(r.cap||'').match(/#([\u0600-\u06FFa-zA-Z0-9_]+)/g)||[];
+    var hit=tags.some(function(x){return x==='#'+t;});
+    if(hit){
+      var author=r.you?myName():('Explorer '+r.n);
+      var th=r.vid?'🎥':'<img src="'+r.img+'" width="54" height="54" style="object-fit:cover;border-radius:8px">';
+      h+='<div class="srow" style="cursor:pointer" onclick="scrollReel('+i+')"><span style="width:54px;height:54px;display:flex;align-items:center;justify-content:center;font-size:26px;background:#111;border-radius:8px">'+th+'</span><div style="flex:1;min-width:0"><div style="font-weight:800;font-size:13px">@'+esc(author)+'</div><div style="font-size:12px;color:#aaa;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">'+esc(r.cap||'')+'</div></div><span style="color:#666">→</span></div>';
+    }
+  });
+  document.getElementById('tagTitle').textContent='#'+t;
+  document.getElementById('tagBody').innerHTML=h||'<div style="color:#888;text-align:center;padding:20px">ماكاينش فيديو بهاد الهاشتاغ</div>';
+  document.getElementById('tagPanel').classList.add('on');
+}
+function scrollReel(i){closeTags();var el=document.getElementById('reels').children[i];if(el)el.scrollIntoView({behavior:'smooth'});}
+function closeTags(){document.getElementById('tagPanel').classList.remove('on');}
 // ---------- ريلز ----------
 function renderReels(){
   var rc=document.getElementById('reels');
@@ -162,6 +231,7 @@ function renderReels(){
   var LIKED=getLikes();
   var GIFTS=getGifts();
   var ALL=userReels.concat(REEL_DEMO);
+  var tags=Object.keys(getTagMap()).length;
   var html='';
   ALL.forEach(function(r,i){
     var key=r.you?('u'+r.id):('d'+r.n);
@@ -172,23 +242,26 @@ function renderReels(){
     var av=r.you?12:r.av;
     var si=(typeof r.s==='number'&&SONGS[r.s])?r.s:0;
     var sg=SONGS[si];
-    html+='<div class="reel"><img class="bgimg" src="'+r.img+'" alt="" loading="lazy">'
+    var media=r.vid
+      ?'<video class="bgvid" src="'+r.vid+'" autoplay muted loop playsinline onclick="this.muted=!this.muted"></video>'
+      :'<img class="bgimg" src="'+r.img+'" alt="" loading="lazy">';
+    html+='<div class="reel">'+media
     +'<div class="wm">🎵 BLABLA</div>'
     +'<div class="shade"></div>'
     +'<div class="rail"><button class="rb" onclick="likeReel('+i+',this)">'+(liked?'❤️':'🤍')+'<div class="cnt">'+likes.toLocaleString('en-US')+'</div></button>'
     +'<button class="rb" onclick="giftReel(\''+key+'\',this)">🎁<div class="cnt">'+gifts+'</div></button>'
     +'<button class="rb" onclick="shareReel('+i+')">↗️<div class="cnt">'+(r.you?0:Math.round((r.likes||100)/3))+'</div></button>'
-    +'<button class="rb" onclick="openMusic()">🎵<div class="cnt">♫</div></button></div>'
+    +'<button class="rb" onclick="openMusic()">🎵<div class="cnt">♫</div></button>'
+    +'<button class="rb" onclick="openTags()">#<div class="cnt">'+tags+'</div></button></div>'
     +'<div class="caption"><img src="https://i.pravatar.cc/100?img='+av+'" width="32" height="32" alt="" style="border-radius:50%;vertical-align:-10px;margin-right:6px;border:2px solid #fff"><b>@'+esc(author)+'</b>'
-    +'<div style="font-size:13px;margin-top:6px">'+(r.you?'مقطع ديالي · NOVA 🚀':'NOVA vibes · From Morocco 🇲🇦')+'</div>'
+    +'<div style="font-size:13px;margin-top:6px">'+(r.cap?tagify(r.cap):(r.you?'مقطع ديالي · NOVA 🚀':'NOVA vibes · From Morocco 🇲🇦'))+'</div>'
     +'<div style="font-size:12px;opacity:.95;margin-top:8px"><span class="disc">🎵</span> '+esc(sg.t)+' — '+esc(sg.a)+' · '+sg.p+' plays</div></div></div>';
   });
   rc.innerHTML=html;
   rc.scrollTop=keep;
 }
 function likeReel(i,btn){
-  var userReels=getUserReels();
-  var ALL=userReels.concat(REEL_DEMO);
+  var ALL=allReels();
   var r=ALL[i];if(!r)return;
   var key=r.you?('u'+r.id):('d'+r.n);
   var LIKED=getLikes();
@@ -205,8 +278,7 @@ function giftReel(key,btn){
   btn.innerHTML='🎁<div class="cnt">'+GIFTS[key]+'</div>';
 }
 function shareReel(i){
-  var userReels=getUserReels();
-  var ALL=userReels.concat(REEL_DEMO);
+  var ALL=allReels();
   var r=ALL[i];if(!r)return;
   if(navigator.share){navigator.share({title:'BLABLA',text:'BLABLA 🚀 NOVA',url:(r.img&&r.img.indexOf('data:')!==0)?r.img:'https://nova-achraf.github.io/nova/'}).catch(function(){});}
   else{try{navigator.clipboard.writeText('https://nova-achraf.github.io/nova/')}catch(e){}alert('Copied ✓');}
@@ -340,6 +412,101 @@ function renderSongs(){
 }
 function openMusic(){renderSongs();document.getElementById('musicPanel').classList.add('on');}
 function closeMusic(){document.getElementById('musicPanel').classList.remove('on');}
+// ---------- تسجيل الفيديو 🎥 ----------
+var recStream=null,recRec=null,recChunks=[],recBlob=null,recFacing='user',recTimerI=null,recSecs=0,recClosing=false;
+function openCreate(){
+  document.getElementById('createUI').classList.add('on');
+  document.getElementById('recCap').value='';
+  recResetUI();
+  navigator.mediaDevices.getUserMedia({video:{facingMode:recFacing},audio:true}).then(function(st){recStream=st;document.getElementById('recVideo').srcObject=st;}).catch(function(){alert('مقدرناش حلينا الكاميرا');closeCreate();});
+}
+function recResetUI(){
+  recBlob=null;
+  document.getElementById('recBottom').style.display='flex';
+  document.getElementById('recSave').style.display='none';
+  document.getElementById('recTime').style.display='none';
+  document.getElementById('recHint').textContent='دوس على الزر الاحمر باش تسجل فيديو (15 ثانية)';
+  document.getElementById('recBtn').classList.remove('recording');
+}
+function recFlip(){
+  recFacing=(recFacing==='user')?'environment':'user';
+  if(recStream){recStream.getTracks().forEach(function(t){t.stop();});}
+  navigator.mediaDevices.getUserMedia({video:{facingMode:recFacing},audio:true}).then(function(st){recStream=st;document.getElementById('recVideo').srcObject=st;}).catch(function(){alert('مشكل فالكاميرا');});
+}
+function recToggle(){if(recRec&&recRec.state==='recording'){recStop();}else{recStart();}}
+function recStart(){
+  if(!recStream)return;
+  if(!window.MediaRecorder){alert('التسجيل مامقيونش فهاد التيليفون');return;}
+  var opts={videoBitsPerSecond:800000};
+  try{
+    if(MediaRecorder.isTypeSupported&&MediaRecorder.isTypeSupported('video/webm;codecs=vp8'))opts.mimeType='video/webm;codecs=vp8';
+    else if(MediaRecorder.isTypeSupported&&MediaRecorder.isTypeSupported('video/webm'))opts.mimeType='video/webm';
+    recRec=new MediaRecorder(recStream,opts);
+  }catch(e){alert('التسجيل مامقيونش فهاد التيليفون');return;}
+  recChunks=[];
+  recRec.ondataavailable=function(ev){if(ev.data&&ev.data.size)recChunks.push(ev.data);};
+  recRec.onstop=function(){
+    if(recClosing||!document.getElementById('createUI').classList.contains('on'))return;
+    recBlob=new Blob(recChunks,{type:(recRec&&recRec.mimeType)||'video/webm'});
+    var v=document.getElementById('recVideo');
+    v.srcObject=null;v.src=URL.createObjectURL(recBlob);v.muted=false;v.loop=true;v.play();
+    document.getElementById('recBottom').style.display='none';
+    document.getElementById('recSave').style.display='flex';
+  };
+  recRec.start();
+  document.getElementById('recBtn').classList.add('recording');
+  document.getElementById('recTime').style.display='block';
+  document.getElementById('recHint').textContent='كيسجل 🔴 ... دوس مرة أخرى باش تسالي';
+  recSecs=0;document.getElementById('recTime').textContent='0:00';
+  recTimerI=setInterval(function(){
+    recSecs++;
+    document.getElementById('recTime').textContent='0:'+String(recSecs).padStart(2,'0');
+    if(recSecs>=15)recStop();
+  },1000);
+}
+function recStop(){
+  if(recTimerI){clearInterval(recTimerI);recTimerI=null;}
+  document.getElementById('recBtn').classList.remove('recording');
+  if(recRec&&recRec.state==='recording'){try{recRec.stop();}catch(e){}}
+}
+function resetRec(){
+  var v=document.getElementById('recVideo');
+  v.srcObject=recStream;v.removeAttribute('src');v.muted=true;
+  if(recStream)v.play();
+  recResetUI();
+}
+function saveReel(){
+  if(!recBlob){alert('سجل فيديو الأول 🎥');return;}
+  var rd=new FileReader();
+  rd.onload=function(){
+    var cap=document.getElementById('recCap').value.trim();
+    var reels=getUserReels();
+    reels.unshift({id:Date.now(),vid:rd.result,you:true,s:(MA.song>=0?MA.song:0),cap:(cap||'مقطع ديالي 🎥 #nova')});
+    var ok=false;
+    while(!ok){
+      try{localStorage.setItem('novaReels',JSON.stringify(reels));ok=true;}
+      catch(e){
+        var idx=-1;
+        for(var j=reels.length-1;j>=0;j--){if(reels[j]&&reels[j].vid){idx=j;break;}}
+        if(idx<0)break;
+        reels.splice(idx,1);
+      }
+    }
+    if(ok){alert('تسجل! غادي يبان فالريلز 🎥');closeCreate();}
+    else{alert('الميموار عامرة — حيد شي فيديو قديم وعاود');}
+  };
+  rd.readAsDataURL(recBlob);
+}
+function closeCreate(){
+  recClosing=true;
+  recStop();
+  recClosing=false;
+  if(recTimerI){clearInterval(recTimerI);recTimerI=null;}
+  if(recStream){recStream.getTracks().forEach(function(t){t.stop();});recStream=null;}
+  var v=document.getElementById('recVideo');v.srcObject=null;v.removeAttribute('src');v.load();
+  document.getElementById('createUI').classList.remove('on');
+  renderReels();
+}
 // ---------- اللايف الحقيقي ----------
 function setViewers(n){
   var v=document.getElementById('viewers');if(v)v.textContent=n;
