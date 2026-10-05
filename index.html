@@ -741,6 +741,26 @@ function closeDrawer(){document.getElementById('drawer').classList.remove('open'
   };
   const app = firebase.initializeApp(cfg, 'nova-fix7');
   const auth = firebase.auth(app);
+  try { window.novaDB = firebase.firestore(app); } catch(e) { window.novaDB = null; }
+  if (window.novaDB) {
+    try {
+      window.novaDB.collection('chat').orderBy('ts','desc').limit(40).onSnapshot(function(snap){
+        var remote=[];
+        snap.forEach(function(d){ var m=d.data(); remote.push({a:m.a,t:m.t,ts:m.ts}); });
+        remote.reverse();
+        CHAT=remote;
+        try{localStorage.setItem('novaChat',JSON.stringify(CHAT))}catch(e){}
+        renderChat();
+        try{if(document.getElementById('chatPage').classList.contains('active'))renderNovaChat();}catch(e){}
+      });
+    } catch(e) {}
+  }
+  var oldPush=window.pushChat;
+  window.pushChat=function(m){
+    m.ts=m.ts||Date.now();
+    if(window.novaDB){try{window.novaDB.collection('chat').add({a:m.a,t:m.t,ts:m.ts})}catch(e){}}
+    oldPush(m);
+  };
   const CLIENT_ID = '660417453842-ki52nv5fpa9idfm0sq4g864rf4ij3ubv.apps.googleusercontent.com';
 
   /* floating button */
