@@ -1322,3 +1322,41 @@ animate();
 </script>
 </body>
 </html>
+<style>
+.charTop .mg{width:48px;height:48px;border-radius:9px;object-fit:cover;flex-shrink:0;border:2px solid #4a3222;background:#241a12}
+.charCard.on .mg{border-color:#e8862e;box-shadow:0 0 10px rgba(232,134,46,.4)}
+</style>
+<script>
+(function(){
+  var MG = {
+    azr:'https://macaron-sandbox-workspace.oss-accelerate.aliyuncs.com/prod/01a05aef-8feb-7672-8f87-0870fdcb06d3/workspace/hero-azr.webp',
+    noor:'https://macaron-sandbox-workspace.oss-accelerate.aliyuncs.com/prod/01a05aef-8feb-7672-8f87-0870fdcb06d3/workspace/hero-noor.webp',
+    volt:'https://macaron-sandbox-workspace.oss-accelerate.aliyuncs.com/prod/01a05aef-8feb-7672-8f87-0870fdcb06d3/workspace/hero-volt.webp',
+    rez:'https://macaron-sandbox-workspace.oss-accelerate.aliyuncs.com/prod/01a05aef-8feb-7672-8f87-0870fdcb06d3/workspace/hero-rez.webp'
+  };
+  function mgPatch(){
+    var cards = document.querySelectorAll('.charCard');
+    for (var i=0;i<cards.length;i++){
+      var c = cards[i], id = c.getAttribute('data-id');
+      if (!MG[id] || c.getAttribute('data-mg')) continue;
+      c.setAttribute('data-mg','1');
+      var top = c.querySelector('.charTop'); if (!top) continue;
+      var img = document.createElement('img');
+      img.className = 'mg'; img.alt = id;
+      img.onerror = function(){
+        this.style.display = 'none';
+        var ch = this.parentNode && this.parentNode.querySelector('.charChip');
+        if (ch) ch.style.display = '';
+      };
+      img.src = MG[id];
+      top.insertBefore(img, top.firstChild);
+      var chip = c.querySelector('.charChip');
+      if (chip) chip.style.display = 'none';
+    }
+  }
+  var ob = window.buildCharSelect;
+  if (ob) window.buildCharSelect = function(){ ob(); mgPatch(); };
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', mgPatch);
+  else mgPatch();
+})();
+</script>
