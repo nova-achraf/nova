@@ -716,3 +716,11 @@ renderReels();
   }catch(e){}
 })();
 </script>
+<script>
+window.shareReel=function(i){
+  var u='https://nova-achraf.github.io/blabla/';
+  var t='BLABLA 🚀 ريلز من المغرب 🇲🇦 شوفهم دابا!';
+  if(navigator.share){navigator.share({title:'BLABLA',text:t,url:u}).catch(function(){});}
+  else{try{navigator.clipboard.writeText(u)}catch(e){}alert('Copied ✓');}
+};
+</script>
