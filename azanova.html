@@ -1365,3 +1365,47 @@ animate();
 .charTop .mg{position:absolute;top:0;left:0;width:100%;height:64px;object-fit:cover;border:none;border-radius:0}
 .charCard .charTop{margin-top:58px}
 </style>
+<style>
+#startScreen{justify-content:safe center}
+#mgPreview{display:flex;flex-direction:column;align-items:center;margin:6px 0 10px;pointer-events:none}
+#mgPreview img{width:120px;height:120px;border-radius:14px;object-fit:cover;border:3px solid #e8862e;box-shadow:0 4px 22px rgba(232,134,46,.45)}
+#mgPreview .nm{font-size:16px;font-weight:900;color:#f3c04a;letter-spacing:.14em;margin-top:5px}
+#mgPreview .rl{font-size:9px;font-weight:700;color:#8a7458;letter-spacing:.2em;margin-top:1px}
+#mgHudFace{width:26px;height:26px;border-radius:7px;object-fit:cover;border:1px solid #f3c04a;margin:4px auto 0;display:block}
+</style>
+<script>
+(function(){
+  var MG2 = {
+    azr:{u:'https://macaron-sandbox-workspace.oss-accelerate.aliyuncs.com/prod/01a05aef-8feb-7672-8f87-0870fdcb06d3/workspace/hero-azr.webp',n:'AZR',r:'COMMANDO'},
+    noor:{u:'https://macaron-sandbox-workspace.oss-accelerate.aliyuncs.com/prod/01a05aef-8feb-7672-8f87-0870fdcb06d3/workspace/hero-noor.webp',n:'NOOR',r:'SNIPER'},
+    volt:{u:'https://macaron-sandbox-workspace.oss-accelerate.aliyuncs.com/prod/01a05aef-8feb-7672-8f87-0870fdcb06d3/workspace/hero-volt.webp',n:'VOLT',r:'ENGINEER'},
+    rez:{u:'https://macaron-sandbox-workspace.oss-accelerate.aliyuncs.com/prod/01a05aef-8feb-7672-8f87-0870fdcb06d3/workspace/hero-rez.webp',n:'REZ',r:'SCOUT'}
+  };
+  var grid = document.getElementById('charGrid');
+  var pv = document.createElement('div');
+  pv.id = 'mgPreview';
+  pv.innerHTML = '<img alt=""><div class="nm"></div><div class="rl"></div>';
+  grid.parentNode.insertBefore(pv, grid);
+  var mid = document.getElementById('midPanel');
+  var hf = document.createElement('img');
+  hf.id = 'mgHudFace'; hf.alt = '';
+  mid.insertBefore(hf, document.getElementById('charNameHud'));
+  function mgUpd(){
+    var h = MG2[state.charId]; if (!h) return;
+    var pi = pv.querySelector('img');
+    pi.onerror = function(){ pv.style.display = 'none'; };
+    pi.src = h.u;
+    pv.querySelector('.nm').textContent = h.n;
+    pv.querySelector('.rl').textContent = h.r;
+    hf.onerror = function(){ hf.style.display = 'none'; };
+    hf.src = h.u;
+  }
+  function mgHook(){
+    var cards = document.querySelectorAll('.charCard');
+    for (var i=0;i<cards.length;i++){
+      cards[i].addEventListener('click', function(){ setTimeout(mgUpd, 20); });
+    }
+  }
+  mgUpd(); mgHook();
+})();
+</script>
