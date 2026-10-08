@@ -919,3 +919,23 @@ function novaLogout(){
   window.location.href = 'login.html';
 }
 </script>
+<script>
+(function(){
+  var fp=document.getElementById('friendsPage');
+  if(fp&&fp.children.length>1){
+    var c=document.createElement('div');
+    c.className='card';
+    c.style.cssText='text-align:center;background:linear-gradient(135deg,#1a1a2e,#16213e);color:#fff';
+    c.innerHTML='<div style="font-size:13px;opacity:.8">👥 المنخرطين فNOVA</div><div style="font-size:36px;font-weight:900;margin:6px 0" id="memberCount">...</div><div style="font-size:11px;opacity:.6">كل واحد كيسجل كيزيد العداد</div>';
+    fp.insertBefore(c,fp.children[1]);
+  }
+  function getCount(){
+    try{fetch('https://abacus.jasoncameron.dev/get/nova-achraf-azami/nova-members').then(function(r){if(r&&r.ok)return r.json();return null}).then(function(d){var el=document.getElementById('memberCount');if(el&&d&&typeof d.value==='number')el.textContent=d.value.toLocaleString('en');}).catch(function(){});}catch(e){}
+  }
+  getCount();
+  var _orig=window.registerFollower;
+  if(_orig){
+    window.registerFollower=function(){_orig.apply(this,arguments);try{fetch('https://abacus.jasoncameron.dev/hit/nova-achraf-azami/nova-members').then(function(r){if(r&&r.ok)return r.json();return null}).then(function(d){var el=document.getElementById('memberCount');if(el&&d&&typeof d.value==='number')el.textContent=d.value.toLocaleString('en');}).catch(function(){});}catch(e){}};
+  }
+})();
+</script>
