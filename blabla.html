@@ -782,3 +782,49 @@ window.shareReel=function(i){
   };
 })();
 </script>
+<script>
+(function(){
+  var css='.cmtPanel{position:absolute;left:0;right:0;bottom:0;background:#1a1a1a;border-top-left-radius:18px;border-top-right-radius:18px;padding:14px;z-index:9;display:none;max-height:54%;overflow-y:auto}.cmtPanel.on{display:block}.cmtHead{display:flex;align-items:center;gap:10px;font-weight:800;font-size:15px;margin-bottom:12px}.cmtList{max-height:38vh;overflow-y:auto;margin-bottom:10px}.cmtItem{display:flex;gap:8px;align-items:flex-start;padding:8px 0;border-bottom:1px solid #333}.cmtItem:last-child{border-bottom:none}.cmtAvatar{width:32px;height:32px;border-radius:50%;flex-shrink:0}.cmtBody{flex:1;min-width:0}.cmtName{font-weight:800;font-size:13px;color:#00AEEC}.cmtText{font-size:13px;color:#fff;margin-top:2px;word-wrap:break-word}.cmtBar{display:flex;gap:8px}.cmtBar input{flex:1;min-width:0;border:none;background:#262626;color:#fff;border-radius:20px;padding:10px 14px;outline:none;font-size:14px}.cmtBar button{border:none;background:linear-gradient(135deg,#00AEEC,#FB7299);color:#fff;border-radius:20px;padding:8px 16px;font-weight:700;font-size:13px;cursor:pointer}';
+  var s=document.createElement('style');s.textContent=css;document.head.appendChild(s);
+  var DEMO_CMT=[
+    {n:'Explorer 12',av:12,t:'Fire 🔥'},
+    {n:'Explorer 33',av:33,t:'NOVA vibes 🚀'},
+    {n:'Explorer 7',av:7,t:'From Morocco 🇲🇦'}
+  ];
+  function getCmts(key){try{return JSON.parse(localStorage.getItem('novaComments')||'{}')[key]||[]}catch(e){return []}}
+  function addCmt(key,name,text){var all={};try{all=JSON.parse(localStorage.getItem('novaComments')||'{}')}catch(e){}if(!all[key])all[key]=[];all[key].unshift({n:name,t:text,av:Math.floor(Math.random()*70)+1,ts:Date.now()});try{localStorage.setItem('novaComments',JSON.stringify(all))}catch(e){}}
+  var curKey=null;
+  function openCmts(key){
+    curKey=key;
+    var list=getCmts(key).concat(DEMO_CMT);
+    var h='<div class="cmtList">';
+    list.forEach(function(c){h+='<div class="cmtItem"><img class="cmtAvatar" src="https://i.pravatar.cc/100?img='+c.av+'" alt=""><div class="cmtBody"><div class="cmtName">'+esc(c.n)+'</div><div class="cmtText">'+esc(c.t)+'</div></div></div>';});
+    h+='</div>';
+    h+='<div class="cmtBar"><input id="cmtInput" placeholder="كتب تعليق..." onkeydown="if(event.key===\'Enter\')sendCmt()"><button onclick="sendCmt()">إرسال</button></div>';
+    document.getElementById('cmtBody').innerHTML=h;
+    document.getElementById('cmtPanel').classList.add('on');
+  }
+  window.openCmts=openCmts;
+  window.closeCmtPanel=function(){document.getElementById('cmtPanel').classList.remove('on');};
+  window.sendCmt=function(){var inp=document.getElementById('cmtInput');var txt=inp.value.trim();if(!txt)return;inp.value='';addCmt(curKey,myName(),txt);openCmts(curKey);};
+  var st=document.querySelector('.stage');
+  if(st){var cp=document.createElement('div');cp.className='cmtPanel';cp.id='cmtPanel';cp.innerHTML='<div class="cmtHead">💬 التعليقات<button class="gpx" style="margin-left:auto" onclick="closeCmtPanel()">✕</button></div><div id="cmtBody"></div>';st.appendChild(cp);}
+  var origRender=window.renderReels;
+  if(origRender){
+    window.renderReels=function(){
+      origRender();
+      var rc=document.getElementById('reels');
+      var ALL=allReels();
+      ALL.forEach(function(r,i){
+        var reel=rc.children[i];if(!reel)return;
+        var rail=reel.querySelector('.rail');if(!rail)return;
+        var key=r.you?('u'+r.id):('d'+r.n);
+        var cmts=getCmts(key).length+3;
+        if(rail.querySelector('.cmtBtn'))return;
+        var btn=document.createElement('button');btn.className='rb cmtBtn';btn.innerHTML='💬<div class="cnt">'+cmts+'</div>';btn.onclick=function(){openCmts(key);};rail.insertBefore(btn,rail.firstChild);
+      });
+    };
+    renderReels();
+  }
+})();
+</script>
