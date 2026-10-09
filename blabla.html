@@ -859,3 +859,34 @@ window.shareReel=function(i){
   }
 })();
 </script>
+<script>
+(function(){
+  function getFollows(){try{return JSON.parse(localStorage.getItem('novaFollows')||'[]')}catch(e){return []}}
+  function setFollows(arr){try{localStorage.setItem('novaFollows',JSON.stringify(arr))}catch(e){}}
+  function isFollowing(key){return getFollows().indexOf(key)>=0}
+  function toggleFollow(key){var arr=getFollows();var i=arr.indexOf(key);if(i>=0){arr.splice(i,1);}else{arr.push(key);}setFollows(arr);}
+  var origRender=window.renderReels;
+  if(origRender){
+    window.renderReels=function(){
+      origRender();
+      var rc=document.getElementById('reels');
+      var ALL=allReels();
+      ALL.forEach(function(r,i){
+        var reel=rc.children[i];if(!reel)return;
+        var rail=reel.querySelector('.rail');if(!rail)return;
+        var key=r.you?('u'+r.id):('d'+r.n);
+        if(rail.querySelector('.flwBtn'))return;
+        if(r.you)return;
+        var flw=isFollowing(key);
+        var cnt=((key.charCodeAt(0)+key.length)*7)%500;
+        var btn=document.createElement('button');
+        btn.className='rb flwBtn';
+        btn.innerHTML=(flw?'✓':'➕')+'<div class="cnt">'+cnt+'</div>';
+        btn.onclick=function(){toggleFollow(key);var f=isFollowing(key);btn.innerHTML=(f?'✓':'➕')+'<div class="cnt">'+cnt+'</div>';};
+        rail.appendChild(btn);
+      });
+    };
+    renderReels();
+  }
+})();
+</script>
