@@ -324,6 +324,29 @@ body{font-family:-apple-system,system-ui,'Segoe UI',Roboto,Tahoma,sans-serif;bac
 let currentMedia=null,currentType=null,cur='en',curCat='all',sellImg=null,postSeq=0,POSTS={};
 const home=document.getElementById('homePosts');
 
+var postDB=null;
+function openPostDB(cb){
+  if(postDB){cb(postDB);return}
+  try{
+    var req=indexedDB.open('novaDB',1);
+    req.onupgradeneeded=function(e){var db=e.target.result;if(!db.objectStoreNames.contains('posts'))db.createObjectStore('posts',{keyPath:'id'})};
+    req.onsuccess=function(e){postDB=e.target.result;cb(postDB)};
+    req.onerror=function(){cb(null)};
+  }catch(e){cb(null)}
+}
+function dbPutPost(post,cb){
+  openPostDB(function(db){
+    if(!db){cb&&cb(false);return}
+    try{var tx=db.transaction('posts','readwrite');tx.objectStore('posts').put(post);tx.oncomplete=function(){cb&&cb(true)};tx.onerror=function(){cb&&cb(false)}}catch(e){cb&&cb(false)}
+  });
+}
+function dbGetAllPosts(cb){
+  openPostDB(function(db){
+    if(!db){cb([]);return}
+    try{var tx=db.transaction('posts','readonly');var rq=tx.objectStore('posts').getAll();rq.onsuccess=function(e){cb(e.target.result||[])};rq.onerror=function(){cb([])}}catch(e){cb([])}
+  });
+}
+
 const I18N={
 en:{dir:'ltr',title:'NOVA - Achraf Aza | From Morocco',tagline:'From Morocco · Connecting the world',friends:'1,284 friends',follow:'Follow',message:'Message',intro:'Intro',introTxt:'Sharing from Morocco 🌍 Building NOVA 🚀',composer:"What's on your mind, Achraf?",photo:'Photo',video:'Video',feeling:'Feeling',post:'Post',home:'Home',myfriends:'Friends',chat:'Chat',profile:'Profile',blablaTitle:'BLABLA',scroll:'↓',loading:'Loading...',now:'Now · 🌍',empty:'Write something or add photo/video',remove:'❌ Remove',share:'↗️ Share',explorer:'Explorer',ago:n=>n+'m ago',postTxt:n=>'BLABLA #'+n+' from Morocco 🚀',market:'Market',mktTitle:'Marketplace',mktSub:'Buy & sell near you · NOVA',search:'Search items...',sell:'Sell',catAll:'All',catPhones:'Phones',catElectro:'Electronics',catSport:'Sport',catFashion:'Fashion',catHome:'Home',sellTitle:'Sell an item',itemName:'Item name',priceLbl:'Price (DH)',city:'City',cancel:'Cancel',soldBy:'Sold by',msgSeller:'Message seller',msgSoon:'Chat coming soon 🚀',posted:'Your item is live! ✓',fillAll:'Fill the name and the price',noRes:'No results 😕',mnow:'Just now',it1:'iPhone 13 · 128GB',it2:'Wireless headphones',it3:'Mountain bike',it4:'Sports watch',it5:'Camera + lens',it6:'Laptop 16"',c1:'Casablanca',c2:'Rabat',c3:'Marrakech',c4:'Tanger',c5:'Fès',c6:'Agadir',say:'Say something...',send:'Send',camErr:'Camera not available 😕',you:'You',r1:'Cool! 🔥',r2:'Haha 😂',r3:'Wow 🤩',choose:'Choose a gift',coins:'Coins',recharge:'Recharge',sent:'Sent',received:'Received',notEnough:'Not enough coins! Recharge 💳',payDemo:'Demo payment — real PayPal/Stripe coming soon 🚀',paid:'Payment OK ✓ Coins added:',followers:'Followers',join:'Join as follower',namePh:'Your name',joined:'Welcome to NOVA ✓ You are a follower now!',already:'You are already registered ✓'},
 ar:{dir:'rtl',title:'NOVA - أشرف أزا | من المغرب',tagline:'من المغرب · ربط العالم',friends:'1,284 صديق',follow:'متابعة',message:'رسالة',intro:'نبذة',introTxt:'أشارك من المغرب 🌍 نبني NOVA 🚀',composer:'شنو فبالك يا أشرف؟',photo:'صورة',video:'فيديو',feeling:'شعور',post:'نشر',home:'الرئيسية',myfriends:'الأصدقاء',chat:'دردشة',profile:'الملف',blablaTitle:'BLABLA',scroll:'↓',loading:'جاري التحميل...',now:'الآن · 🌍',empty:'اكتب شي حاجة ولا زيد صورة/فيديو',remove:'❌ حذف',share:'↗️ مشاركة',explorer:'مستكشف',ago:n=>'منذ '+n+' د',postTxt:n=>'BLABLA رقم '+n+' من المغرب 🚀',market:'السوق',mktTitle:'سوق NOVA',mktSub:'بيع وشري قريب منك',search:'بحث عن منتج...',sell:'بيع',catAll:'الكل',catPhones:'هواتف',catElectro:'إلكترونيك',catSport:'رياضة',catFashion:'موضة',catHome:'بيت',sellTitle:'بيع شي حاجة',itemName:'سمية المنتج',priceLbl:'الثمن (درهم)',city:'المدينة',cancel:'إلغاء',soldBy:'البائع',msgSeller:'راسل البائع',msgSoon:'الدردشة جاية قريبا 🚀',posted:'المنتج ديالك تنشر! ✓',fillAll:'عمّر الاسم والثمن',noRes:'ما كاين حتى نتيجة 😕',mnow:'الآن',it1:'آيفون 13 · 128GB',it2:'سماعات بلوتوث',it3:'بيسكليت جبلي',it4:'ساعة رياضية',it5:'كاميرا مع عدسة',it6:'لابتوب 16"',c1:'الدار البيضاء',c2:'الرباط',c3:'مراكش',c4:'طنجة',c5:'فاس',c6:'أكادير',say:'قول شي حاجة...',send:'إرسال',camErr:'الكاميرا ما متوفرةش 😕',you:'نتا',r1:'زوينة! 🔥',r2:'هههه 😂',r3:'وااو 🤩',choose:'ختار هدية 🎁',coins:'العملات',recharge:'شحن',sent:'أرسلت',received:'توصلت',notEnough:'العملات ما كافياش! دير شحن 💳',payDemo:'دفع تجريبي — PayPal/Stripe الحقيقي جاي قريبا 🚀',paid:'الدفع تم ✓ زدنا ليك العملات:',followers:'المتابعين',join:'سجل كمتابع',namePh:'سميتك',joined:'مرحبا بيك فNOVA ✓ ولايتي متابع دابا!',already:'نتا مسجل من قبل ✓'},
@@ -352,15 +375,30 @@ function onLang(L){applyLang(L)}
 
 function preview(input,type){
 const file=input.files[0];if(!file)return;
-const r=new FileReader();
-r.onload=e=>{
-currentMedia=e.target.result;currentType=type;
 const t=I18N[cur];
 const rm='<button onclick="clearPreview()" style="margin-top:6px;padding:6px 12px;background:#e4e6eb;border:none;border-radius:6px">'+t.remove+'</button>';
-if(type==='img')document.getElementById('preview').innerHTML='<img src="'+e.target.result+'" alt="" style="width:100%;border-radius:10px;max-height:320px;object-fit:cover;margin-top:10px">'+rm;
-else document.getElementById('preview').innerHTML='<video src="'+e.target.result+'" controls playsinline style="width:100%;border-radius:10px;max-height:320px;margin-top:10px"></video>'+rm;
+const showPrev=function(url){document.getElementById('preview').innerHTML=(type==='img'?'<img src="'+url+'" alt="" style="width:100%;border-radius:10px;max-height:320px;object-fit:cover;margin-top:10px">':'<video src="'+url+'" controls playsinline style="width:100%;border-radius:10px;max-height:320px;margin-top:10px"></video>')+rm;};
+if(type==='img'){
+const r=new FileReader();
+r.onload=e=>{
+const im=new Image();
+im.onload=()=>{
+var maxW=900,w=im.width,h=im.height;
+if(w>maxW){h=Math.round(h*maxW/w);w=maxW}
+var c=document.createElement('canvas');c.width=w;c.height=h;
+c.getContext('2d').drawImage(im,0,0,w,h);
+currentMedia=c.toDataURL('image/jpeg',0.72);currentType='img';
+showPrev(currentMedia);
+};
+im.src=e.target.result;
 };
 r.readAsDataURL(file);
+}else{
+if(file.size>3.5*1024*1024)alert('⚠️ Video '+Math.round(file.size/1048576)+'MB — too big to save after refresh (max ~3MB). It will show now only.');
+const r=new FileReader();
+r.onload=e=>{currentMedia=e.target.result;currentType='video';showPrev(currentMedia);};
+r.readAsDataURL(file);
+}
 }
 function clearPreview(){document.getElementById('preview').innerHTML='';currentMedia=null;currentType=null;}
 
@@ -373,7 +411,7 @@ if(currentMedia){mediaHtml=currentType==='img'?'<img src="'+currentMedia+'" alt=
 const d=document.createElement('div');d.className='card';postSeq++;POSTS[postSeq]={txt:txt,media:currentMedia,type:currentType};
 d.innerHTML='<div class="post-head"><img src="https://i.pravatar.cc/100?img=12" alt="" width="40" height="40" loading="lazy"><div><b>Achraf Aza</b><div style="font-size:11px;color:#65676b">'+t.now+'</div></div></div><p style="margin-top:10px">'+esc(txt)+'</p>'+mediaHtml+'<button onclick="sharePost('+postSeq+')" style="margin-top:10px;padding:6px 14px;background:#e4e6eb;border:none;border-radius:20px;font-weight:700;font-size:13px">'+t.share+' ↗️</button>'
 +' <button onclick="giftOpen(\'p'+postSeq+'\')" style="margin-top:10px;padding:6px 14px;background:#ffe7f0;border:none;border-radius:20px;font-weight:700;font-size:13px">🎁 <span id="pgc'+postSeq+'">0</span></button>';
-home.prepend(d);
+home.prepend(d);dbPutPost({id:postSeq,txt:txt,media:currentMedia,type:currentType},function(ok){if(!ok)alert('⚠️ Could not save post to device storage. Try a smaller photo/shorter video.')});
 document.getElementById('postInput').value='';clearPreview();
 }
 
@@ -439,14 +477,19 @@ navigator.share({title:'NOVA',text:t.postTxt(r.n),url:r.img}).catch(function(){}
 }
 function sharePost(n){
 const p=POSTS[n];if(!p)return;
-if(!navigator.share){try{navigator.clipboard.writeText(p.txt||'NOVA')}catch(e){}alert('Copied ✓');return;}
+function dl(url,name){var a=document.createElement('a');a.href=url;a.download=name;document.body.appendChild(a);a.click();a.remove()}
+if(!navigator.share){
+if(p.media&&p.media.indexOf('data:')===0)dl(p.media,p.type==='video'?'nova.mp4':'nova.jpg');
+try{navigator.clipboard.writeText(p.txt||'NOVA')}catch(e){}
+alert('✓ Saved to device');return;
+}
 if(p.media&&p.media.indexOf('data:')===0){
 fetch(p.media).then(function(res){return res.blob()}).then(function(b){
 const isV=(p.type==='video');
 const f=new File([b],isV?'nova.mp4':'nova.jpg',{type:b.type||(isV?'video/mp4':'image/jpeg')});
-if(navigator.canShare&&navigator.canShare({files:[f]})){navigator.share({files:[f],title:'NOVA',text:p.txt||'NOVA 🚀'}).catch(function(){})}
-else{navigator.share({title:'NOVA',text:p.txt||'NOVA 🚀'}).catch(function(){})}
-}).catch(function(){});
+if(navigator.canShare&&navigator.canShare({files:[f]})){navigator.share({files:[f],title:'NOVA',text:p.txt||'NOVA 🚀'}).catch(function(){dl(p.media,isV?'nova.mp4':'nova.jpg')})}
+else{dl(p.media,isV?'nova.mp4':'nova.jpg');navigator.share({title:'NOVA',text:p.txt||'NOVA 🚀'}).catch(function(){})}
+}).catch(function(){dl(p.media,p.type==='video'?'nova.mp4':'nova.jpg')});
 }else{
 navigator.share({title:'NOVA',text:p.txt||'NOVA 🚀'}).catch(function(){});
 }
@@ -716,8 +759,9 @@ let saved='en';try{saved=localStorage.getItem('novaLang')||'en'}catch(e){}
 if(!I18N[saved])saved='en';
 document.getElementById('langSel').value=saved;
 applyLang(saved);
+loadSavedPosts();
 
-if('serviceWorker' in navigator){window.addEventListener('load',function(){navigator.serviceWorker.register('sw.js').catch(function(){})})}
+// service worker removed to fix caching
 function openDrawer(){document.getElementById('drawer').classList.add('open');document.getElementById('drawerOver').classList.add('open')}
 function closeDrawer(){document.getElementById('drawer').classList.remove('open');document.getElementById('drawerOver').classList.remove('open')}
 </script>
@@ -942,17 +986,17 @@ function novaLogout(){
 <link rel="stylesheet" href="data:text/css;charset=utf-8,%23darkToggle%7Bposition%3Afixed%3Bbottom%3A140px%3Bright%3A12px%3Bz-index%3A10001%3Bwidth%3A44px%3Bheight%3A44px%3Bborder-radius%3A50%25%3Bborder%3Anone%3Bbackground%3A%231a1a2e%3Bcolor%3A%23ffd700%3Bfont-size%3A20px%3Bcursor%3Apointer%3Bbox-shadow%3A0%204px%2012px%20rgba(0%2C0%2C0%2C.35)%7D%23darkToggle%3Aactive%7Btransform%3Ascale(.9)%7Dbody.night%7Bbackground%3A%23000000%21important%7Dbody.night%20.header%7Bbackground%3A%23111111%21important%7Dbody.night%20.card%7Bbackground%3A%231a1a2e%21important%3Bcolor%3A%23fff%21important%7Dbody.night%20.profile%7Bbackground%3A%231a1a2e%21important%3Bcolor%3A%23fff%21important%7Dbody.night%20.composer%20input%7Bbackground%3A%23262626%21important%3Bcolor%3A%23fff%21important%7Dbody.night%20.bottom%7Bbackground%3A%23111111%21important%7Dbody.night%20.nav%7Bcolor%3A%23888%21important%7Dbody.night%20.nav.active%7Bcolor%3A%23FB7299%21important%7Dbody.night%20drawer%7Bbackground%3A%231a1a2e%21important%7Dbody.night%20.drawer%7Bbackground%3A%231a1a2e%21important%7Dbody.night%20.drawerItem%7Bcolor%3A%23fff%21important%7Dbody.night%20.f%7Bbackground%3A%231a1a2e%21important%3Bcolor%3A%23fff%21important%3Bborder-color%3A%23333%21important%7Dbody.night%20.chip%7Bbackground%3A%23262626%21important%3Bcolor%3A%23ddd%21important%7Dbody.night%20.chip.on%7Bbackground%3Alinear-gradient(135deg%2C%2300AEEC%2C%23FB7299)%21important%3Bcolor%3A%23fff%21important%7Dbody.night%20.iname%2Cbody.night%20.price%7Bcolor%3A%23fff%21important%7Dbody.night%20.iloc%7Bcolor%3A%23999%21important%7Dbody.night%20.item%7Bbackground%3A%231a1a2e%21important%7Dbody.night%20.setRow%7Bcolor%3A%23fff%21important%3Bborder-color%3A%23262626%21important%7D"><button id="darkToggle">🌙</button><script>(function(){var b=document.getElementById('darkToggle');var saved='off';try{saved=localStorage.getItem('novaDark')||'off'}catch(e){}if(saved==='on'){document.body.classList.add('night');b.textContent='☀️';}b.addEventListener('click',function(){var on=document.body.classList.toggle('night');b.textContent=on?'☀️':'🌙';try{localStorage.setItem('novaDark',on?'on':'off')}catch(e){}});})();</script>
 <script>
 (function(){
-  var origOpenItem=window.openItem;
-  if(origOpenItem){
-    window.openItem=function(item){
-      origOpenItem(item);
-      window.currentItem=item;
+  var origOpenDetail=window.openDetail;
+  if(origOpenDetail){
+    window.openDetail=function(i){
+      origOpenDetail(i);
+      var it=RENDERED[i];window.currentItem=it;
       var btn=document.getElementById('dMsg');
       if(btn){
         btn.onclick=function(){
           document.getElementById('detailModal').classList.remove('open');
           document.getElementById('chatPage').classList.add('active');
-          startSellerChat(item);
+          startSellerChat(it);
         };
       }
     };
@@ -974,5 +1018,28 @@ function novaLogout(){
       box.scrollTop=box.scrollHeight;
     };
   }
+
+function loadSavedPosts(){
+  function renderPost(p){
+    if(!p||(!p.txt&&!p.media))return;
+    var k=p.id;
+    var mh='';
+    if(p.media){
+      mh=p.type==='img'
+        ?'<img src="'+p.media+'" alt="" loading="lazy" style="width:100%;border-radius:10px;margin-top:10px">'
+        :'<video src="'+p.media+'" controls playsinline style="width:100%;border-radius:10px;margin-top:10px;max-height:360px"></video>';
+    }
+    var d=document.createElement('div');d.className='card';
+    postSeq=Math.max(postSeq,parseInt(k)||0);POSTS[k]=p;
+    var btnShare=I18N[cur].share||'Share';
+    d.innerHTML='<div class="post-head"><img src="https://i.pravatar.cc/100?img=12" alt="" width="40" height="40" loading="lazy"><div><b>Achraf Aza</b><div style="font-size:11px;color:#65676b">'+I18N[cur].now+'</div></div></div><p style="margin-top:10px">'+esc(p.txt||'')+'</p>'+mh+'<button onclick="sharePost('+k+')" style="margin-top:10px;padding:6px 14px;background:#e4e6eb;border:none;border-radius:20px;font-weight:700;font-size:13px">'+btnShare+' \u2197\ufe0f</button> <button onclick="giftOpen(\'p'+k+'\')" style="margin-top:10px;padding:6px 14px;background:#ffe7f0;border:none;border-radius:20px;font-weight:700;font-size:13px">\ud83c\udf81 <span id="pgc'+k+'">0</span></button>';
+    home.appendChild(d);
+  }
+  dbGetAllPosts(function(arr){
+    if(arr&&arr.length){arr.sort(function(a,b){return (a.id||0)-(b.id||0)});arr.forEach(renderPost);return}
+    try{var sp=localStorage.getItem('novaPosts');if(!sp)return;var sp2=JSON.parse(sp);Object.keys(sp2).sort(function(a,b){return parseInt(a)-parseInt(b)}).forEach(function(k){var o=sp2[k];o.id=k;renderPost(o)})}catch(e){}
+  });
+}
+
 })();
 </script>
