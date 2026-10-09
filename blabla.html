@@ -922,3 +922,27 @@ window.shareReel=function(i){
   updateBadge();
 })();
 </script>
+<script>
+(function(){
+  var css='.searchPanel{position:absolute;left:0;right:0;bottom:0;background:#1a1a1a;border-top-left-radius:18px;border-top-right-radius:18px;padding:14px;z-index:9;display:none;max-height:60%;overflow-y:auto}.searchPanel.on{display:block}.searchHead{display:flex;align-items:center;gap:10px;margin-bottom:12px}.searchInput{flex:1;min-width:0;border:none;background:#262626;color:#fff;border-radius:20px;padding:10px 14px;outline:none;font-size:14px}.searchResult{display:flex;gap:10px;align-items:center;padding:10px 0;border-bottom:1px solid #333;cursor:pointer}.searchResult:last-child{border-bottom:none}.searchThumb{width:54px;height:54px;border-radius:8px;object-fit:cover;flex-shrink:0}.searchName{font-weight:800;font-size:14px;color:#fff}.searchCap{font-size:12px;color:#aaa;margin-top:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}';
+  var s=document.createElement('style');s.textContent=css;document.head.appendChild(s);
+  function openSearch(){document.getElementById('searchPanel').classList.add('on');var inp=document.getElementById('searchInput2');if(inp)inp.focus();renderResults('');}
+  function closeSearch(){document.getElementById('searchPanel').classList.remove('on');}
+  function renderResults(q){
+    var all=allReels();
+    var results=all.filter(function(r){if(!q)return false;var cap=String(r.cap||'').toLowerCase();var author=r.you?myName().toLowerCase():('explorer '+r.n);return cap.indexOf(q.toLowerCase())>=0||author.indexOf(q.toLowerCase())>=0;});
+    var h='';
+    if(q&&!results.length){h='<div style="color:#888;text-align:center;padding:20px">ماكاينش نتائج</div>';}
+    if(!q){h='<div style="color:#888;text-align:center;padding:20px">كتب شي حاجة باش تقلب 🔍<br>مثلا: #maroc, #sahara, Explorer</div>';}
+    results.forEach(function(r){var author=r.you?myName():('Explorer '+r.n);var th=r.vid?'🎥':'<img class="searchThumb" src="'+r.img+'" alt="">';h+='<div class="searchResult" onclick="closeSearch();scrollReel('+all.indexOf(r)+')">'+th+'<div style="flex:1;min-width:0"><div class="searchName">@'+esc(author)+'</div><div class="searchCap">'+esc(r.cap||'')+'</div></div></div>';});
+    document.getElementById('searchBody').innerHTML=h;
+  }
+  window.openSearch=openSearch;
+  window.closeSearch=closeSearch;
+  window.doSearch=function(){var q=document.getElementById('searchInput2').value;renderResults(q);};
+  var top=document.querySelector('.top');
+  if(top){var btn=document.createElement('button');btn.className='back';btn.innerHTML='🔍';btn.onclick=function(){openSearch();};top.appendChild(btn);}
+  var st=document.querySelector('.stage');
+  if(st){var cp=document.createElement('div');cp.className='searchPanel';cp.id='searchPanel';cp.innerHTML='<div class="searchHead"><input id="searchInput2" class="searchInput" placeholder="قلب على #هاشتاغ ولا سمية..." oninput="doSearch()"><button class="gpx" onclick="closeSearch()">✕</button></div><div id="searchBody"></div>';st.appendChild(cp);}
+})();
+</script>
