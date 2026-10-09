@@ -890,3 +890,35 @@ window.shareReel=function(i){
   }
 })();
 </script>
+<script>
+(function(){
+  var css='.notifPanel{position:absolute;left:0;right:0;bottom:0;background:#1a1a1a;border-top-left-radius:18px;border-top-right-radius:18px;padding:14px;z-index:9;display:none;max-height:54%;overflow-y:auto}.notifPanel.on{display:block}.notifHead{display:flex;align-items:center;gap:10px;font-weight:800;font-size:15px;margin-bottom:12px}.notifItem{display:flex;gap:10px;align-items:flex-start;padding:10px 0;border-bottom:1px solid #333}.notifItem:last-child{border-bottom:none}.notifAvatar{width:36px;height:36px;border-radius:50%;flex-shrink:0}.notifBody{flex:1;min-width:0}.notifText{font-size:13px;color:#fff}.notifTime{font-size:11px;color:#888;margin-top:2px}.notifBadge{position:absolute;top:-4px;right:-4px;background:#f3425f;color:#fff;font-size:10px;font-weight:800;border-radius:50%;width:18px;height:18px;display:flex;align-items:center;justify-content:center}';
+  var s=document.createElement('style');s.textContent=css;document.head.appendChild(s);
+  var DEMO_NOTIFS=[
+    {n:'Explorer 12',av:12,t:'تبعك',ts:Date.now()-3600000},
+    {n:'Explorer 33',av:33,t:'عجبو الريلز ديالك 🔥',ts:Date.now()-7200000},
+    {n:'Explorer 7',av:7,t:'علق على ريلز ديالك: NOVA vibes 🚀',ts:Date.now()-86400000}
+  ];
+  function getNotifs(){try{return JSON.parse(localStorage.getItem('novaNotifs')||'[]')}catch(e){return []}}
+  function getSeen(){return parseInt(localStorage.getItem('novaNotifSeen')||'0',10)}
+  function setSeen(n){try{localStorage.setItem('novaNotifSeen',String(n))}catch(e){}}
+  function updateBadge(){var unseen=getNotifs().length-getSeen();var b=document.getElementById('notifBadge');if(b){b.textContent=unseen;b.style.display=unseen>0?'flex':'none';}}
+  function openNotifs(){
+    var list=getNotifs().concat(DEMO_NOTIFS);
+    var h='<div>';
+    list.forEach(function(c){var t=c.ts>Date.now()-3600000?'الساعة':c.ts>Date.now()-86400000?'اليوم':'الأمس';h+='<div class="notifItem"><img class="notifAvatar" src="https://i.pravatar.cc/100?img='+c.av+'" alt=""><div class="notifBody"><div class="notifText"><b>'+esc(c.n)+'</b> '+esc(c.t)+'</div><div class="notifTime">'+t+'</div></div></div>';});
+    h+='</div>';
+    document.getElementById('notifBody').innerHTML=h;
+    document.getElementById('notifPanel').classList.add('on');
+    setSeen(getNotifs().length);
+    updateBadge();
+  }
+  window.openNotifs=openNotifs;
+  window.closeNotifPanel=function(){document.getElementById('notifPanel').classList.remove('on');};
+  var top=document.querySelector('.top');
+  if(top){var btn=document.createElement('button');btn.className='back';btn.style.position='relative';btn.innerHTML='🔔';btn.onclick=function(){openNotifs();};var nb=document.createElement('div');nb.className='notifBadge';nb.id='notifBadge';nb.style.display='none';btn.appendChild(nb);top.appendChild(btn);}
+  var st=document.querySelector('.stage');
+  if(st){var cp=document.createElement('div');cp.className='notifPanel';cp.id='notifPanel';cp.innerHTML='<div class="notifHead">🔔 الإشعارات<button class="gpx" style="margin-left:auto" onclick="closeNotifPanel()">✕</button></div><div id="notifBody"></div>';st.appendChild(cp);}
+  updateBadge();
+})();
+</script>
