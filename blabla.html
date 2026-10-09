@@ -975,3 +975,32 @@ window.shareReel=function(i){
   }
 })();
 </script>
+<script>
+(function(){
+  function getSaved(){try{return JSON.parse(localStorage.getItem('novaSaved')||'[]')}catch(e){return []}}
+  function setSaved(arr){try{localStorage.setItem('novaSaved',JSON.stringify(arr))}catch(e){}}
+  function isSaved(key){return getSaved().indexOf(key)>=0}
+  function toggleSaved(key){var arr=getSaved();var i=arr.indexOf(key);if(i>=0){arr.splice(i,1);}else{arr.push(key);}setSaved(arr);}
+  var origRender=window.renderReels;
+  if(origRender){
+    window.renderReels=function(){
+      origRender();
+      var rc=document.getElementById('reels');
+      var ALL=allReels();
+      ALL.forEach(function(r,i){
+        var reel=rc.children[i];if(!reel)return;
+        var rail=reel.querySelector('.rail');if(!rail)return;
+        var key=r.you?('u'+r.id):('d'+r.n);
+        if(rail.querySelector('.saveBtn'))return;
+        var sv=isSaved(key);
+        var btn=document.createElement('button');
+        btn.className='rb saveBtn';
+        btn.innerHTML=(sv?'🔖':'📑')+'<div class="cnt">حفظ</div>';
+        btn.onclick=function(){toggleSaved(key);var f=isSaved(key);btn.innerHTML=(f?'🔖':'📑')+'<div class="cnt">حفظ</div>';};
+        rail.appendChild(btn);
+      });
+    };
+    renderReels();
+  }
+})();
+</script>
