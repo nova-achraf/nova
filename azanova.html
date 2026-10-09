@@ -1510,3 +1510,24 @@ mp();for(var j=0;j<cards.length;j++)cards[j].addEventListener('click',function()
 rebuildPlayer();
 })();
 </script>
+<script>
+/* === AZANOVA MANGA v3 — portrait + gun === */
+(function(){
+var MP={azr:'https://oss-macaron-ai.macaron.im/image/text_to_image/6ac8d10ab62d5a6a134ff945.webp',noor:'https://oss-macaron-ai.macaron.im/image/text_to_image/6ac8d10a6daed1666017fc8d.webp',volt:'https://oss-macaron-ai.macaron.im/image/text_to_image/6ac8d10a7e0eb24aa9cf59d4.webp',rez:'https://oss-macaron-ai.macaron.im/image/text_to_image/6ac8d10a6daed1666017fc8b.webp'};
+var MN={azr:'KENZO',noor:'SAKURA',volt:'RYU',rez:'HARU'};
+var MR={azr:'RONIN',noor:'KUNOICHI',volt:'ONI',rez:'MAGE'};
+var pt=document.createElement('div');
+pt.style.cssText='position:fixed;top:8px;right:8px;z-index:25;display:none';
+pt.innerHTML='<img id="mgBP" style="width:76px;height:76px;border-radius:14px;border:3px solid #e8862e;object-fit:cover;box-shadow:0 4px 18px rgba(0,0,0,.7)"><div style="text-align:center;font-size:12px;font-weight:900;color:#f3c04a;letter-spacing:.1em;margin-top:2px;text-shadow:0 1px 3px #000"></div><div style="text-align:center;font-size:8px;font-weight:700;color:#c9b394;letter-spacing:.15em"></div>';
+document.body.appendChild(pt);
+var ptImg=pt.querySelector('img'),ptNm=pt.querySelector('div:nth-child(2)'),ptRl=pt.querySelector('div:nth-child(3)');
+function ptUpd(){var id=state.charId;if(!MP[id])return;ptImg.onerror=function(){pt.style.display='none'};ptImg.src=MP[id];ptNm.textContent=MN[id];ptRl.textContent=MR[id];}
+if(!startGame.__mg3){var oS=startGame;startGame=function(){oS();ptUpd();pt.style.display='block';};startGame.__mg3=true;}
+if(!rebuildPlayer.__mg3){var oR=rebuildPlayer;var mgR=function(){oR();if(player.refs.head)player.refs.head.scale.set(1.5,1.5,1.5);if(player.refs.torsoMesh)player.refs.torsoMesh.scale.x=0.78;
+if(player.refs.gun){var g=player.refs.gun;while(g.children.length>0)g.remove(g.children[0]);var gm=new THREE.MeshLambertMaterial({color:0x1a1e24}),gd=new THREE.MeshLambertMaterial({color:0x2a2a30}),ga=new THREE.MeshLambertMaterial({color:0xc22e18});var b=new THREE.Mesh(new THREE.BoxGeometry(0.07,0.13,0.48),gm);b.position.z=0.24;g.add(b);var br=new THREE.Mesh(new THREE.CylinderGeometry(0.022,0.022,0.32,8),gm);br.rotation.x=Math.PI/2;br.position.z=0.52;g.add(br);var mz=new THREE.Mesh(new THREE.CylinderGeometry(0.028,0.028,0.04,8),gd);mz.rotation.x=Math.PI/2;mz.position.z=0.7;g.add(mz);var fs=new THREE.Mesh(new THREE.BoxGeometry(0.02,0.05,0.02),gd);fs.position.set(0,0.07,0.48);g.add(fs);var rs=new THREE.Mesh(new THREE.BoxGeometry(0.05,0.03,0.02),gd);rs.position.set(0,0.08,0.08);g.add(rs);var mg=new THREE.Mesh(new THREE.BoxGeometry(0.05,0.18,0.09),gm);mg.position.set(0,-0.13,0.18);g.add(mg);var gp=new THREE.Mesh(new THREE.BoxGeometry(0.05,0.15,0.07),gd);gp.position.set(0,-0.11,0.04);gp.rotation.x=0.35;g.add(gp);var tg=new THREE.Mesh(new THREE.TorusGeometry(0.035,0.009,6,8,Math.PI),gm);tg.position.set(0,-0.07,0.1);tg.rotation.x=Math.PI/2;g.add(tg);var st=new THREE.Mesh(new THREE.BoxGeometry(0.05,0.11,0.2),gd);st.position.set(0,-0.02,-0.12);g.add(st);var rl=new THREE.Mesh(new THREE.BoxGeometry(0.03,0.02,0.28),ga);rl.position.set(0,0.06,0.22);g.add(rl);if(CHAR().gun===2){var lb=new THREE.Mesh(new THREE.CylinderGeometry(0.02,0.02,0.5,8),gm);lb.rotation.x=Math.PI/2;lb.position.z=0.95;g.add(lb);}}
+};mgR.__mg3=true;rebuildPlayer=mgR;}
+var cards=document.querySelectorAll('.charCard');
+for(var i=0;i<cards.length;i++)cards[i].addEventListener('click',function(){setTimeout(ptUpd,40)});
+rebuildPlayer();
+})();
+</script>
