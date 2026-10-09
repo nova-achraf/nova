@@ -759,7 +759,7 @@ let saved='en';try{saved=localStorage.getItem('novaLang')||'en'}catch(e){}
 if(!I18N[saved])saved='en';
 document.getElementById('langSel').value=saved;
 applyLang(saved);
-loadSavedPosts();
+// loadSavedPosts() is defined inside the init IIFE below (called there to avoid ReferenceError)
 
 // service worker removed to fix caching
 function openDrawer(){document.getElementById('drawer').classList.add('open');document.getElementById('drawerOver').classList.add('open')}
@@ -1040,6 +1040,9 @@ function loadSavedPosts(){
     try{var sp=localStorage.getItem('novaPosts');if(!sp)return;var sp2=JSON.parse(sp);Object.keys(sp2).sort(function(a,b){return parseInt(a)-parseInt(b)}).forEach(function(k){var o=sp2[k];o.id=k;renderPost(o)})}catch(e){}
   });
 }
+
+loadSavedPosts();
+window.loadSavedPosts=loadSavedPosts;
 
 })();
 </script>
