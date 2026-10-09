@@ -1476,3 +1476,15 @@ animate();
   rebuildPlayer();
 })();
 </script>
+<script>
+/* === AZANOVA MANGA v2 — big anime head === */
+(function(){
+  var orig=rebuildPlayer;
+  rebuildPlayer=function(){
+    orig();
+    if(player.refs.head){player.refs.head.scale.set(1.4,1.4,1.4);}
+    if(player.refs.torsoMesh){player.refs.torsoMesh.scale.x=0.8;}
+  };
+  rebuildPlayer();
+})();
+</script>
