@@ -123,7 +123,8 @@
 <footer>
   <div class="inp">
     <textarea id="in" rows="1" placeholder="كتب رسالتك لـ AZAMI AI..." onkeydown="if(event.key==='Enter'&&!event.shiftKey){event.preventDefault();send()}"></textarea>
-    <button class="send" id="mic" onclick="toggleMic()" style="background:linear-gradient(135deg,#2A2A38,#3A3A48);font-size:18px" title="تحديث">🎤</button>
+    <button class="send" id="imgBtn" onclick="toggleImg()" style="background:linear-gradient(135deg,#2A2A38,#3A3A48);font-size:18px" title="وضع التصاور">🎨</button>
+    <button class="send" id="mic" onclick="toggleMic()" style="background:linear-gradient(135deg,#2A2A38,#3A3A48);font-size:18px" title="ميكروفون">🎤</button>
     <button class="send" id="send" onclick="send()">➤</button>
   </div>
 </footer>
@@ -188,7 +189,7 @@ async function send(){
   if(!APIKEY){openKey();return}
   ta.value='';ta.style.height='auto';
   addMe(txt);
-  if(/(ارسم|صوّر|أنشئ صورة|ولّد صورة|صمم صورة|generate image|create image|draw |paint )/i.test(txt)){await genImage(txt);return}
+  if(imgMode||/(ارسم|رسم|صوّر|صور|صورة|أنشئ|ولّد|صمم|generate image|create image|draw |paint )/i.test(txt)){await genImage(txt);return}
   const typing=addTyping();
   document.getElementById('send').disabled=true;
   try{
@@ -291,6 +292,15 @@ function clearChat(){
 // auto-resize textarea
 const ta=document.getElementById('in');
 ta.addEventListener('input',function(){this.style.height='auto';this.style.height=Math.min(this.scrollHeight,120)+'px'});
+
+// image mode toggle
+let imgMode=false;
+function toggleImg(){
+  imgMode=!imgMode;
+  const b=document.getElementById('imgBtn');
+  if(imgMode){b.style.background='linear-gradient(135deg,#D4AF37,#E8C66B)';b.textContent='🎨✓';ta.placeholder='اكتب وصف التصويرة... (وضع التصاور فعال)'}
+  else{b.style.background='linear-gradient(135deg,#2A2A38,#3A3A48)';b.textContent='🎨';ta.placeholder='كتب رسالتك لـ AZAMI AI...'}
+}
 
 // microphone
 let rec,listening=false;
