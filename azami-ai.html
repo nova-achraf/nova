@@ -102,18 +102,20 @@
     <small>Moroccan Roots · Global Intelligence</small>
   </div>
   <div class="dot" title="online"></div>
+  <button class="key-btn" onclick="clearChat()" title="مسح">🗑️</button>
   <button class="key-btn" onclick="openKey()">🔑 المفتاح</button>
 </header>
 
 <main id="chat">
   <div class="welcome">
     <h2>أهلاً بك في AZAMI AI 🇲🇦</h2>
-    <p>مساعدك الذكي من المغرب إلى العالم.<br>سؤلني بأي لغة — أكثر من 100 لغة مدعومة 🌍</p>
+    <p>مساعدك الذكي من المغرب إلى العالم.<br>سؤلني بأي لغة — أكثر من 100 لغة مدعومة 🌍<br>اكتب "ارسم" + وصف ونعطيك تصويرة 🎨</p>
     <div style="margin-top:12px">
       <div class="chip" onclick="quick('شنو هو AZAMI AI؟')">شنو هو AZAMI AI؟</div>
       <div class="chip" onclick="quick('كتب ليا بوستر للمنتج ديالي')">كتب ليا بوستر</div>
       <div class="chip" onclick="quick('Translate: مرحبا بالعالم')">ترجم ليا</div>
       <div class="chip" onclick="quick('عطاني فكرة مشروع صغير فالمغرب')">فكرة مشروع</div>
+      <div class="chip" onclick="quick('ارسم قط أزرق كيلعب بالكرة')">🎨 ارسم تصويرة</div>
     </div>
   </div>
 </main>
@@ -185,16 +187,17 @@ async function send(){
   if(!APIKEY){openKey();return}
   ta.value='';ta.style.height='auto';
   addMe(txt);
+  if(/\b(ارسم|رسم|صوّر|صور|draw|paint|generate image|image of|create image|صورة|أنشئ صورة|ولّد صورة)\b/i.test(txt)){await genImage(txt);return}
   const typing=addTyping();
   document.getElementById('send').disabled=true;
   try{
-    const res=await fetch('https://generativelanguage.googleapis.com/v1beta/models/gemini-3.8-flash:streamGenerateContent?alt=sse&key='+encodeURIComponent(APIKEY),{
+    const res=await fetch('https://generativelanguage.googleapis.com/v1beta/models/gemini-3.5-flash-lite:streamGenerateContent?alt=sse&key='+encodeURIComponent(APIKEY),{
       method:'POST',
       headers:{'Content-Type':'application/json'},
       body:JSON.stringify({
         systemInstruction:{parts:[{text:'You are AZAMI AI, a multilingual assistant from Morocco. Answer in the user language. Be concise.'}]},
         contents:[{role:'user',parts:[{text:txt}]}],
-        generationConfig:{maxOutputTokens:500,temperature:0.7}
+        generationConfig:{maxOutputTokens:600}
       })
     });
     if(!res.ok){
@@ -240,6 +243,48 @@ async function send(){
   }
   document.getElementById('send').disabled=false;
   scrollDown();
+}
+
+async function genImage(prompt){
+  const typing=addTyping();
+  document.getElementById('send').disabled=true;
+  try{
+    const res=await fetch('https://generativelanguage.googleapis.com/v1beta/models/gemini-3.1-flash-lite-image:generateContent?key='+encodeURIComponent(APIKEY),{
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({
+        contents:[{parts:[{text:prompt}]}],
+        generationConfig:{responseModalities:["TEXT","IMAGE"]}
+      })
+    });
+    const data=await res.json();
+    typing.remove();
+    if(data.candidates&&data.candidates[0]&&data.candidates[0].content){
+      const parts=data.candidates[0].content.parts;
+      let imgHtml='',txtParts='';
+      for(const p of parts){
+        if(p.inlineData){
+          imgHtml+='<img src="data:'+p.inlineData.mimeType+';base64,'+p.inlineData.data+'" style="max-width:100%;border-radius:12px;margin-top:6px" alt="generated">';
+        }else if(p.text){txtParts+=p.text;}
+      }
+      const d=document.createElement('div');d.className='msg ai';
+      d.innerHTML='<div class="who">AZAMI AI</div>'+(txtParts?esc(txtParts)+'<br>':'')+imgHtml;
+      chat.appendChild(d);scrollDown();
+    }else{
+      let m='وقع مشكل.';
+      if(data.error&&data.error.message)m='خطأ: '+data.error.message;
+      addAi('⚠️ '+m);
+    }
+  }catch(e){
+    typing.remove();
+    addAi('⚠️ ما قدرتش نولّد التصويرة. تأكد من الإنترنت.');
+  }
+  document.getElementById('send').disabled=false;
+  scrollDown();
+}
+
+function clearChat(){
+  chat.innerHTML='<div class="welcome"><h2>أهلاً بك في AZAMI AI 🇲🇦</h2><p>مساعدك الذكي من المغرب إلى العالم.<br>سؤلني بأي لغة — أكثر من 100 لغة مدعومة 🌍<br>اكتب "ارسم" + وصف ونعطيك تصويرة 🎨</p></div>';
 }
 
 // auto-resize textarea
