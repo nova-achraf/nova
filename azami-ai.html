@@ -76,7 +76,16 @@
   .msg-name{font-size:12px;font-weight:700;margin-bottom:2px}
   .msg-name.ai{color:var(--gold2)}
   .msg-name.me{color:var(--muted)}
-  .msg-text{font-size:15px;line-height:1.7;white-space:pre-wrap;word-wrap:break-word;color:var(--txt)}
+  .msg-text{font-size:15px;line-height:1.7;word-wrap:break-word;color:var(--txt)}
+  .msg-text pre{background:var(--bg);border:1px solid var(--line);border-radius:8px;padding:10px;overflow-x:auto;margin:8px 0;direction:ltr;text-align:left}
+  .msg-text code{background:var(--bg2);padding:2px 5px;border-radius:4px;font-family:monospace;font-size:13px;color:var(--gold2)}
+  .msg-text pre code{background:none;padding:0;color:var(--txt)}
+  .msg-text ul,.msg-text ol{margin:6px 0;padding-right:20px}
+  .msg-text li{margin:3px 0}
+  .msg-text h3{font-size:16px;color:var(--gold2);margin:10px 0 4px}
+  .msg-text strong{color:var(--gold2)}
+  .msg-text a{color:var(--gold2);text-decoration:underline}
+  .msg-text blockquote{border-right:3px solid var(--gold);padding-right:10px;margin:6px 0;color:var(--muted)}
   .msg-bar{display:flex;gap:6px;margin-top:6px}
   .msg-bar button{background:none;border:none;color:var(--muted);font-size:13px;cursor:pointer;padding:3px 6px;border-radius:6px}
   .msg-bar button:active{background:var(--card);color:var(--gold2)}
@@ -108,6 +117,7 @@
   .inp-btn.active{background:linear-gradient(135deg,var(--gold),var(--gold2));color:var(--bg)}
   .inp-btn.send{background:linear-gradient(135deg,var(--gold),var(--gold2));color:var(--bg)}
   .inp-btn.send:disabled{opacity:.4}
+  .inp-btn.stop{background:var(--red);color:#fff}
   /* MODAL */
   .overlay{position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:30;display:none}
   .overlay.show{display:block}
@@ -173,7 +183,7 @@
 <script>
 const KEY='azami_ai_gemini_key';
 let APIKEY='';try{APIKEY=localStorage.getItem(KEY)||''}catch(e){}
-const SYS='You are AZAMI AI, a multilingual assistant from Morocco. Answer in the exact language and dialect the user writes in. Support all Arabic dialects (Moroccan Darija, Egyptian, Gulf, Levantine, Algerian, Tunisian, Iraqi, Sudanese, Yemeni) and all world languages. Be concise, friendly and helpful.';
+const SYS='You are AZAMI AI, a multilingual assistant from Morocco. Answer in the exact language and dialect the user writes in. Support all Arabic dialects (Moroccan Darija, Egyptian, Gulf, Levantine, Algerian, Tunisian, Iraqi, Sudanese, Yemeni) and all world languages. Be concise, friendly and helpful. Use markdown formatting (**bold**, lists, `code blocks`, # headings) when helpful.';
 const chat=document.getElementById('chat');
 /* === CONVERSATIONS === */
 let convs={};
@@ -218,11 +228,12 @@ function renderMsg(m){
   const name=document.createElement('div');name.className='msg-name '+(m.r==='ai'?'ai':'me');name.textContent=m.r==='ai'?'AZAMI AI':'أنا';
   body.appendChild(name);
   if(m.img){const im=document.createElement('img');im.className='msg-img';im.src=m.img;body.appendChild(im)}
-  if(m.t){const tx=document.createElement('div');tx.className='msg-text';tx.innerHTML=esc(m.t);body.appendChild(tx)}
+  if(m.t){const tx=document.createElement('div');tx.className='msg-text';tx.innerHTML=md(m.t);body.appendChild(tx)}
   if(m.r==='ai'&&m.t&&!m.t.startsWith('⚠️')){
     const bar=document.createElement('div');bar.className='msg-bar';
     bar.appendChild(mkBtn('🔊',function(){speak(m.t)}));
     bar.appendChild(mkBtn('📋',function(){navigator.clipboard&&navigator.clipboard.writeText(m.t);this.textContent='✅';var b=this;setTimeout(function(){b.textContent='📋'},1500)}));
+    bar.appendChild(mkBtn('🔄',function(){regen()}));
     if(m.dl){const a=document.createElement('a');a.href=m.dl;a.download='azami-ai.jpg';a.className='dl-link';a.textContent='⬇️ تحميل';a.style.cssText='font-size:13px;text-decoration:none;padding:3px 6px';bar.appendChild(a)}
     body.appendChild(bar);
   }
@@ -242,6 +253,26 @@ function addAi(t){
 }
 function scrollDown(){chat.scrollTop=chat.scrollHeight}
 function esc(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')}
+function md(s){
+  s=esc(s);
+  s=s.replace(/```(\w*)\n?([\s\S]*?)```/g,function(_,l,c){return'\n<pre><code>'+c.trim()+'</code></pre>\n'});
+  s=s.replace(/`([^`]+)`/g,'<code>$1</code>');
+  s=s.replace(/\*\*([^*]+)\*\*/g,'<strong>$1</strong>');
+  s=s.replace(/(^|[^*])\*([^*\n]+)\*/g,'$1<em>$2</em>');
+  s=s.replace(/^###\s+(.+)$/gm,'<h3>$1</h3>');
+  s=s.replace(/^##\s+(.+)$/gm,'<h3>$1</h3>');
+  s=s.replace(/^#\s+(.+)$/gm,'<h3>$1</h3>');
+  s=s.replace(/\[([^\]]+)\]\(([^)]+)\)/g,'<a href="$2" target="_blank" rel="noopener">$1</a>');
+  s=s.replace(/^>\s+(.+)$/gm,'<blockquote>$1</blockquote>');
+  s=s.replace(/(?:^|\n)((?:[-*]\s+.+(?:\n|$))+)/g,function(m,b){return'\n<ul>'+b.replace(/[-*]\s+(.+)/g,'<li>$1</li>').replace(/\n/g,'')+'</ul>\n'});
+  s=s.replace(/(?:^|\n)((?:\d+\.\s+.+(?:\n|$))+)/g,function(m,b){return'\n<ol>'+b.replace(/\d+\.\s+(.+)/g,'<li>$1</li>').replace(/\n/g,'')+'</ol>\n'});
+  s=s.replace(/\n/g,'<br>');
+  s=s.replace(/<br>(<\/?(?:pre|ul|ol|h3|blockquote)>)/g,'$1');
+  s=s.replace(/(<\/(?:pre|ul|ol|h3|blockquote)>)<br>/g,'$1');
+  return s;
+}
+let abortCtrl=null;
+function stopGen(){if(abortCtrl){abortCtrl.abort();abortCtrl=null}}
 function speak(text){if(!('speechSynthesis' in window))return;speechSynthesis.cancel();const u=new SpeechSynthesisUtterance(text);u.lang=/[\u0600-\u06FF]/.test(text)?'ar-SA':'en-US';u.rate=0.9;speechSynthesis.speak(u)}
 function addTyping(){
   const row=document.createElement('div');row.className='msg-row';
@@ -285,30 +316,63 @@ async function send(){
     clearImg();document.getElementById('send').disabled=false;scrollDown();return;
   }
   if(imgMode||/(ارسم|رسم|صوّر|صور|صورة|أنشئ|ولّد|صمم|generate image|create image|draw |paint )/i.test(txt)){await genImage(txt);return}
-  const typing=addTyping();document.getElementById('send').disabled=true;
+  const typing=addTyping();const sb=document.getElementById('send');sb.classList.remove('send');sb.classList.add('stop');sb.textContent='⏹';sb.onclick=stopGen;
   convs[curConv].hist.push({role:'user',parts:[{text:txt}]});
   if(convs[curConv].hist.length>12)convs[curConv].hist=convs[curConv].hist.slice(-12);
+  abortCtrl=new AbortController();
   try{
-    const res=await fetch('https://generativelanguage.googleapis.com/v1beta/models/gemini-3.5-flash-lite:streamGenerateContent?alt=sse&key='+encodeURIComponent(APIKEY),{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({systemInstruction:{parts:[{text:SYS}]},contents:convs[curConv].hist,generationConfig:{maxOutputTokens:600}})});
-    if(!res.ok){const ed=await res.json().catch(()=>({}));typing.remove();let m='وقع مشكل.';if(ed.error&&ed.error.message)m='خطأ: '+ed.error.message;addAi('⚠️ '+m+(ed.error&&ed.error.code===400?'\n\nتحقق من المفتاح (دوس 🔑).':''));document.getElementById('send').disabled=false;return}
+    const res=await fetch('https://generativelanguage.googleapis.com/v1beta/models/gemini-3.5-flash-lite:streamGenerateContent?alt=sse&key='+encodeURIComponent(APIKEY),{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({systemInstruction:{parts:[{text:SYS}]},contents:convs[curConv].hist,generationConfig:{maxOutputTokens:600}}),signal:abortCtrl.signal});
+    if(!res.ok){const ed=await res.json().catch(()=>({}));typing.remove();let m='وقع مشكل.';if(ed.error&&ed.error.message)m='خطأ: '+ed.error.message;addAi('⚠️ '+m+(ed.error&&ed.error.code===400?'\n\nتحقق من المفتاح (دوس 🔑).':''));resetSend();return}
     typing.querySelector('.typing').remove();
     const span=document.createElement('div');span.className='msg-text';typing.querySelector('.msg-body').appendChild(span);
     const reader=res.body.getReader();const dec=new TextDecoder();let full='',buf='';
     while(true){const{done,value}=await reader.read();if(done)break;buf+=dec.decode(value,{stream:true});const lines=buf.split('\n');buf=lines.pop();
       for(const ln of lines){const t=ln.trim();if(!t.startsWith('data:'))continue;const j=t.slice(5).trim();if(!j||j==='[DONE]')continue;
-        try{const o=JSON.parse(j);if(o.candidates&&o.candidates[0]&&o.candidates[0].content){full+=o.candidates[0].content.parts.map(p=>p.text).join('');span.innerHTML=esc(full);scrollDown()}}catch(e){}}}
-    if(!full)span.innerHTML=esc('ما قدرتش نولّد جواب، حاول مرة أخرى.');
+        try{const o=JSON.parse(j);if(o.candidates&&o.candidates[0]&&o.candidates[0].content){full+=o.candidates[0].content.parts.map(p=>p.text).join('');span.innerHTML=md(full);scrollDown()}}catch(e){}}}
+    if(!full)span.innerHTML=md('ما قدرتش نولّد جواب، حاول مرة أخرى.');
     if(full){
       convs[curConv].hist.push({role:'model',parts:[{text:full}]});if(convs[curConv].hist.length>12)convs[curConv].hist=convs[curConv].hist.slice(-12);
       const m={r:'ai',t:full};convs[curConv].msgs.push(m);saveConvs();
       const bar=document.createElement('div');bar.className='msg-bar';
       bar.appendChild(mkBtn('🔊',function(){speak(full)}));
       bar.appendChild(mkBtn('📋',function(){navigator.clipboard&&navigator.clipboard.writeText(full);this.textContent='✅';var b=this;setTimeout(function(){b.textContent='📋'},1500)}));
+      bar.appendChild(mkBtn('🔄',function(){regen()}));
       typing.querySelector('.msg-body').appendChild(bar);
     }
-  }catch(e){typing.remove();addAi('⚠️ ما قدرش نوصل للـAI. تأكد من الإنترنت.')}
-  document.getElementById('send').disabled=false;scrollDown();
+  }catch(e){if(e.name==='AbortError'){const t=typing.querySelector('.typing');if(t)t.remove();addAi('⏹️ توقّف.');}else{typing.remove();addAi('⚠️ ما قدرش نوصل للـAI. تأكد من الإنترنت.')}}
+  abortCtrl=null;resetSend();scrollDown();
 }
+/* === REGEN === */
+async function regen(){
+  const c=convs[curConv];if(!c||!c.hist.length)return;
+  if(c.msgs.length&&c.msgs[c.msgs.length-1].r==='ai')c.msgs.pop();
+  if(c.hist.length&&c.hist[c.hist.length-1].role==='model')c.hist.pop();
+  saveConvs();renderChat();
+  const typing=addTyping();const sb=document.getElementById('send');sb.classList.remove('send');sb.classList.add('stop');sb.textContent='⏹';sb.onclick=stopGen;
+  abortCtrl=new AbortController();
+  try{
+    const res=await fetch('https://generativelanguage.googleapis.com/v1beta/models/gemini-3.5-flash-lite:streamGenerateContent?alt=sse&key='+encodeURIComponent(APIKEY),{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({systemInstruction:{parts:[{text:SYS}]},contents:c.hist,generationConfig:{maxOutputTokens:600}}),signal:abortCtrl.signal});
+    if(!res.ok){const ed=await res.json().catch(()=>({}));typing.remove();let m='وقع مشلم.';if(ed.error&&ed.error.message)m='خطأ: '+ed.error.message;addAi('⚠️ '+m);resetSend();return}
+    typing.querySelector('.typing').remove();
+    const span=document.createElement('div');span.className='msg-text';typing.querySelector('.msg-body').appendChild(span);
+    const reader=res.body.getReader();const dec=new TextDecoder();let full='',buf='';
+    while(true){const{done,value}=await reader.read();if(done)break;buf+=dec.decode(value,{stream:true});const lines=buf.split('\n');buf=lines.pop();
+      for(const ln of lines){const t=ln.trim();if(!t.startsWith('data:'))continue;const j=t.slice(5).trim();if(!j||j==='[DONE]')continue;
+        try{const o=JSON.parse(j);if(o.candidates&&o.candidates[0]&&o.candidates[0].content){full+=o.candidates[0].content.parts.map(p=>p.text).join('');span.innerHTML=md(full);scrollDown()}}catch(e){}}}
+    if(!full)span.innerHTML=md('ما قدرتش نولّد جواب، حاول مرة أخرى.');
+    if(full){
+      c.hist.push({role:'model',parts:[{text:full}]});if(c.hist.length>12)c.hist=c.hist.slice(-12);
+      const m={r:'ai',t:full};c.msgs.push(m);saveConvs();
+      const bar=document.createElement('div');bar.className='msg-bar';
+      bar.appendChild(mkBtn('🔊',function(){speak(full)}));
+      bar.appendChild(mkBtn('📋',function(){navigator.clipboard&&navigator.clipboard.writeText(full);this.textContent='✅';var b=this;setTimeout(function(){b.textContent='📋'},1500)}));
+      bar.appendChild(mkBtn('🔄',function(){regen()}));
+      typing.querySelector('.msg-body').appendChild(bar);
+    }
+  }catch(e){if(e.name==='AbortError'){const t=typing.querySelector('.typing');if(t)t.remove();addAi('⏹️ توقّف.');}else{typing.remove();addAi('⚠️ ما قدرش نوصل للـAI. تأكد من الإنترنت.')}}
+  abortCtrl=null;resetSend();scrollDown();
+}
+function resetSend(){const sb=document.getElementById('send');sb.classList.remove('stop');sb.classList.add('send');sb.textContent='➤';sb.onclick=send}
 /* === IMAGE GEN === */
 async function genImage(prompt){
   const typing=addTyping();document.getElementById('send').disabled=true;
