@@ -186,11 +186,11 @@ async function send(){
   const typing=addTyping();
   document.getElementById('send').disabled=true;
   try{
-    const res=await fetch('https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key='+encodeURIComponent(APIKEY),{
+    const res=await fetch('https://generativelanguage.googleapis.com/v1beta/models/gemini-3.8-flash:generateContent?key='+encodeURIComponent(APIKEY),{
       method:'POST',
       headers:{'Content-Type':'application/json'},
       body:JSON.stringify({
-        systemInstruction:{parts:[{text:'You are AZAMI AI, a helpful multilingual AI assistant created in Morocco. Answer in the language the user uses (Arabic, Moroccan Darija, French, English). Be clear, friendly and honest. Keep answers concise on mobile.'}]},
+        systemInstruction:{parts:[{text:'You are AZAMI AI, a helpful multilingual AI assistant created in Morocco. You support almost all languages worldwide. Always answer in the same language the user writes in (Arabic, Darija, French, English, Spanish, Tamazight, Berber, German, Chinese, Japanese, Hindi, Urdu, Turkish, Russian, Portuguese, Italian, Dutch, and any other language). Be clear, friendly and honest. Keep answers concise on mobile.'}]},
         contents:[{role:'user',parts:[{text:txt}]}],
         generationConfig:{maxOutputTokens:1200,temperature:0.7}
       })
