@@ -13,11 +13,12 @@
 <link rel="apple-touch-icon" href="azami-logo.webp">
 <title>AZAMI AI — Moroccan Roots. Global Intelligence.</title>
 <meta name="description" content="AZAMI AI — مساعد ذكاء اصطناعي مغربي. From Morocco to the World.">
-<!-- Markdown + Sanitize + Code Highlight -->
+<!-- Markdown + Sanitize + Code Highlight (async = no blocking) -->
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github-dark.min.css">
-<script src="https://cdn.jsdelivr.net/npm/marked@4.3.0/marked.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/dompurify@3.0.11/dist/purify.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+<script>function onMdLoad(){if(window.marked)marked.setOptions({breaks:true,gfm:true,highlight:function(c,l){if(window.hljs){if(l&&hljs.getLanguage(l))return hljs.highlight(c,{language:l}).value;return hljs.highlightAuto(c).value}return c}})}</script>
+<script src="https://cdn.jsdelivr.net/npm/marked@4.3.0/marked.min.js" async onload="onMdLoad()"></script>
+<script src="https://cdn.jsdelivr.net/npm/dompurify@3.0.11/dist/purify.min.js" async></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js" async></script>
 <style>
   :root{
     --gold:#D4AF37; --gold2:#E8C66B; --green:#0E5C4A; --green2:#1B7A5A;
@@ -221,7 +222,6 @@ const chat=document.getElementById('chat');
 /* === STATE === */
 let abortCtrl=null,generating=false,editIndex=-1,imgMode=false,pickedImg=null,pickedType=null,lastRender=0;
 /* === MARKDOWN === */
-if(window.marked){marked.setOptions({breaks:true,gfm:true,highlight:function(code,lang){if(window.hljs){if(lang&&hljs.getLanguage(lang))return hljs.highlight(code,{language:lang}).value;return hljs.highlightAuto(code).value}return code}})}
 function renderMd(text){
   if(window.marked){try{var raw=marked.parse(text);if(window.DOMPurify)return DOMPurify.sanitize(raw,{ADD_ATTR:['target','rel']});return raw}catch(e){}}
   return esc(text).replace(/\n/g,'<br>');
