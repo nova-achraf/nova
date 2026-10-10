@@ -123,6 +123,7 @@
 <footer>
   <div class="inp">
     <textarea id="in" rows="1" placeholder="كتب رسالتك لـ AZAMI AI..." onkeydown="if(event.key==='Enter'&&!event.shiftKey){event.preventDefault();send()}"></textarea>
+    <button class="send" id="mic" onclick="toggleMic()" style="background:linear-gradient(135deg,#2A2A38,#3A3A48);font-size:18px" title="تحديث">🎤</button>
     <button class="send" id="send" onclick="send()">➤</button>
   </div>
 </footer>
@@ -187,7 +188,7 @@ async function send(){
   if(!APIKEY){openKey();return}
   ta.value='';ta.style.height='auto';
   addMe(txt);
-  if(/\b(ارسم|رسم|صوّر|صور|draw|paint|generate image|image of|create image|صورة|أنشئ صورة|ولّد صورة)\b/i.test(txt)){await genImage(txt);return}
+  if(/(ارسم|صوّر|أنشئ صورة|ولّد صورة|صمم صورة|generate image|create image|draw |paint )/i.test(txt)){await genImage(txt);return}
   const typing=addTyping();
   document.getElementById('send').disabled=true;
   try{
@@ -290,6 +291,23 @@ function clearChat(){
 // auto-resize textarea
 const ta=document.getElementById('in');
 ta.addEventListener('input',function(){this.style.height='auto';this.style.height=Math.min(this.scrollHeight,120)+'px'});
+
+// microphone
+let rec,listening=false;
+function toggleMic(){
+  const SR=window.SpeechRecognition||window.webkitSpeechRecognition;
+  if(!SR){addAi('⚠️ الميكروفون ما مدعومش فهاذ المتصفح.');return}
+  if(listening){rec.stop();return}
+  rec=new SR();
+  rec.lang='ar-MA';
+  rec.interimResults=true;
+  const ta=document.getElementById('in');
+  rec.onstart=function(){listening=true;document.getElementById('mic').style.background='linear-gradient(135deg,#C4342B,#E8483B)';document.getElementById('mic').textContent='⏹'};
+  rec.onresult=function(e){let t='';for(let i=0;i<e.results.length;i++)t+=e.results[i][0].transcript;ta.value=t;ta.style.height='auto';ta.style.height=Math.min(ta.scrollHeight,120)+'px'};
+  rec.onerror=function(e){addAi('⚠️ مشكل فالميكروفون: '+e.error)};
+  rec.onend=function(){listening=false;document.getElementById('mic').style.background='linear-gradient(135deg,#2A2A38,#3A3A48)';document.getElementById('mic').textContent='🎤'};
+  rec.start();
+}
 </script>
 </body>
 </html>
