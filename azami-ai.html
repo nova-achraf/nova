@@ -350,7 +350,7 @@ async function genImage(prompt){
       const tData=await tRes.json();
       if(tData&&tData[0]){eng=tData[0].map(i=>i[0]||'').join('').trim()||clean}
     }catch(e){}
-    const url='https://image.pollinations.ai/prompt/'+encodeURIComponent(eng+', high quality, detailed, professional photography')+'?width=768&height=768&nologo=true&model=flux&enhance=true';
+    const url='https://image.pollinations.ai/prompt/'+encodeURIComponent(eng+', ultra detailed, 4K, sharp focus, professional photography, high resolution')+'?width=1024&height=1024&nologo=true&model=flux&enhance=true';
     const img=new Image();
     img.onload=function(){
       typing.remove();
