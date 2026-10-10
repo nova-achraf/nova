@@ -80,6 +80,8 @@
   /* Key modal */
   .modal{position:fixed;inset:0;background:rgba(0,0,0,.85);display:flex;align-items:center;justify-content:center;z-index:50;padding:18px}
   .sheet{background:var(--bg2);border:1px solid var(--gold);border-radius:16px;padding:22px 18px;max-width:380px;width:100%}
+  .spk{background:none;border:1px solid var(--line);color:var(--muted);border-radius:6px;padding:3px 8px;font-size:13px;cursor:pointer;margin-top:6px;display:inline-block}
+  .spk:active{border-color:var(--gold);color:var(--gold2)}
   .sheet h3{color:var(--gold2);font-size:18px;margin-bottom:6px;font-family:Georgia,serif}
   .sheet p{color:var(--muted);font-size:13px;line-height:1.6;margin-bottom:14px}
   .sheet input{
@@ -171,8 +173,16 @@ function addMe(t){
 function addAi(t){
   const d=document.createElement('div');d.className='msg ai';
   d.innerHTML='<div class="who">AZAMI AI</div>'+esc(t);
+  if(t&&!t.startsWith('⚠️')){const b=document.createElement('button');b.textContent='🔊';b.style.cssText='background:none;border:none;color:var(--gold2);font-size:14px;cursor:pointer;padding:4px 0 0 4px;display:block';b.onclick=function(){speak(t)};d.appendChild(b)}
   chat.appendChild(d);scrollDown();
   return d;
+}
+function speak(text){
+  if(!('speechSynthesis' in window))return;
+  speechSynthesis.cancel();
+  const u=new SpeechSynthesisUtterance(text);
+  u.lang=/[\u0600-\u06FF]/.test(text)?'ar-SA':'en-US';
+  u.rate=0.9;speechSynthesis.speak(u);
 }
 function esc(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')}
 
@@ -239,6 +249,7 @@ async function send(){
       }
     }
     if(!full)span.innerHTML=esc('ما قدرتش نولّد جواب، حاول مرة أخرى.');
+    if(full){const b=document.createElement('button');b.textContent='🔊';b.style.cssText='background:none;border:none;color:var(--gold2);font-size:14px;cursor:pointer;padding:4px 0 0 4px;display:block';b.onclick=function(){speak(full)};typing.appendChild(b)}
   }catch(e){
     typing.remove();
     addAi('⚠️ ما قدرتش نوصل للـAI. تأكد من الإنترنت وحاول مرة أخرى.');
@@ -258,7 +269,7 @@ async function genImage(prompt){
       const tData=await tRes.json();
       if(tData&&tData[0]){eng=tData[0].map(i=>i[0]||'').join('').trim()||clean}
     }catch(e){}
-    const url='https://image.pollinations.ai/prompt/'+encodeURIComponent(eng)+'?width=512&height=512&nologo=true&model=flux';
+    const url='https://image.pollinations.ai/prompt/'+encodeURIComponent(eng+', high quality, detailed, professional photography')+'?width=768&height=768&nologo=true&model=flux&enhance=true';
     const img=new Image();
     img.onload=function(){
       typing.remove();
