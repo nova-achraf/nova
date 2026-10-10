@@ -211,7 +211,7 @@
 <div class="modal" id="keyModal">
   <div class="sheet">
     <h3>🔑 مفتاح AZAMI AI</h3>
-    <p>حط المفتاح ديال Gemini (من Google AI Studio) باش يخدم بجودة عالية + streaming. <b style="color:var(--gold2)">ما حطيتيش؟ ما مشكل — AZAMI AI كيخدم مجاني بلا مفتاح!</b></p>
+    <p>حط المفتاح ديال Gemini (مجاني من Google AI Studio) باش يخدم بجودة عالية + streaming. <b style="color:var(--gold2)">ما حطيتيش؟ ما مشكل — AZAMI AI كيخدم مجاني بلا مفتاح!</b><br><small style="color:var(--muted);line-height:1.6;display:block;margin-top:8px">📋 باش تاخد مفتاح مجاني: سير لـ aistudio.google.com → دوس Sign in → Get API Key</small></p>
     <input id="keyIn" placeholder="AQ-Ab8RN6..." autocomplete="off" spellcheck="false">
     <div class="err" id="keyErr">حط المفتاح من فضلك.</div>
     <button class="go" onclick="saveKey()">حفظ وبدأ ✅</button>
@@ -368,28 +368,38 @@ async function send(){
 /* === POLLINATIONS (FREE, NO KEY NEEDED) === */
 async function pollinationsChat(){
   var typing=addTyping();setGenerating(true);abortCtrl=new AbortController();
-  var ctx=SYS+'\n\n';
-  var m=convs[curConv].msgs,start=Math.max(0,m.length-6);
-  for(var i=start;i<m.length;i++){if(!m[i].t)continue;ctx+=(m[i].r==='ai'?'Assistant: ':'User: ')+m[i].t+'\n\n'}
-  ctx+='Assistant: ';
+  var msgs=convs[curConv].msgs,lastUser='';
+  for(var i=msgs.length-1;i>=0;i--){if(msgs[i].r==='me'&&msgs[i].t){lastUser=msgs[i].t;break}}
+  var chatCtx=[{role:'system',content:SYS}];
+  var start=Math.max(0,msgs.length-6);
+  for(var i=start;i<msgs.length;i++){if(!msgs[i].t)continue;chatCtx.push({role:msgs[i].r==='ai'?'assistant':'user',content:msgs[i].t})}
   try{
-    var res=await fetch('https://text.pollinations.ai/'+encodeURIComponent(ctx),{signal:abortCtrl.signal});
-    var full=await res.text();
-    if(full.startsWith('{')){var e=JSON.parse(full);throw new Error(e.error||'API error')}
+    var full='';
+    try{
+      var res=await fetch('https://text.pollinations.ai/openai',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({messages:chatCtx,model:'openai'}),signal:abortCtrl.signal});
+      var data=await res.json();
+      if(data.error)throw data.error;
+      if(!data.choices||!data.choices[0])throw new Error('no response');
+      full=data.choices[0].message.content;
+    }catch(postErr){
+      full='';
+      var res2=await fetch('https://text.pollinations.ai/'+encodeURIComponent(SYS+'\n\n'+lastUser),{signal:abortCtrl.signal});
+      full=await res2.text();
+      if(full.startsWith('{')){var e2=JSON.parse(full);throw new Error(e2.error||'error')}
+    }
+    if(!full)throw new Error('empty');
     typing.querySelector('.typing').remove();
     var span=document.createElement('div');span.className='msg-text';typing.querySelector('.msg-body').appendChild(span);
-    span.innerHTML=renderMd(full||'ما قدرتش نولّد جواب.');addCodeCopy(span);scrollDown();
-    if(full){
-      convs[curConv].msgs.push({r:'ai',t:full});saveConvs();
-      var bar=document.createElement('div');bar.className='msg-bar';
-      bar.appendChild(mkBtn('🔊',function(){speak(full)}));
-      bar.appendChild(mkBtn('📋',function(){navigator.clipboard&&navigator.clipboard.writeText(full);this.textContent='✅';var b=this;setTimeout(function(){b.textContent='📋'},1500)}));
-      bar.appendChild(mkBtn('🔄',function(){regenerate()}));
-      typing.querySelector('.msg-body').appendChild(bar);
-    }
+    span.innerHTML=renderMd(full);addCodeCopy(span);scrollDown();
+    convs[curConv].msgs.push({r:'ai',t:full});saveConvs();
+    var bar=document.createElement('div');bar.className='msg-bar';
+    bar.appendChild(mkBtn('🔊',function(){speak(full)}));
+    bar.appendChild(mkBtn('📋',function(){navigator.clipboard&&navigator.clipboard.writeText(full);this.textContent='✅';var b=this;setTimeout(function(){b.textContent='📋'},1500)}));
+    bar.appendChild(mkBtn('🔄',function(){regenerate()}));
+    typing.querySelector('.msg-body').appendChild(bar);
   }catch(e){
     if(e.name==='AbortError'){typing.remove()}
-    else{typing.remove();addAi('⚠️ ما قدرش نوصل للـAI مجاني. تأكد من الإنترنت ولا زيد مفتاح Gemini (دوس 🔑) باش يخدم بجودة عالية.')}
+    else{typing.remove();addAi('⚠️ الـAI المجاني ما خدامش دابا (مشكل فالسيرفر).\n\n✅ باش يخدم ديما بجودة عالية: دوس على 🔑 فالأعلى وحط مفتاح Gemini مجاني من Google AI Studio.')}
   }
   setGenerating(false);scrollDown();
 }
