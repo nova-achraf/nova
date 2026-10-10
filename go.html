@@ -12,6 +12,9 @@
 <meta name="apple-mobile-web-app-title" content="AZAMI AI">
 <link rel="manifest" href="azami-manifest.json">
 <link rel="apple-touch-icon" href="azami-logo.webp">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
 <title>AZAMI AI — Moroccan Roots. Global Intelligence.</title>
 <meta name="description" content="AZAMI AI — مساعد ذكاء اصطناعي مغربي. From Morocco to the World.">
 <!-- Markdown + Sanitize + Code Highlight (async = no blocking) -->
@@ -30,7 +33,7 @@
   *{box-sizing:border-box;margin:0;padding:0}
   html,body{height:100%}
   body{
-    font-family:'Segoe UI',system-ui,-apple-system,'Noto Sans Arabic',sans-serif;
+    font-family:'Cairo','Inter','Segoe UI',system-ui,-apple-system,'Noto Sans Arabic',sans-serif;
     background:var(--bg);color:var(--txt);
     display:flex;height:100dvh;overflow:hidden;
   }
@@ -208,11 +211,11 @@
 <div class="modal" id="keyModal">
   <div class="sheet">
     <h3>🔑 مفتاح AZAMI AI</h3>
-    <p>حط هنا المفتاح ديال Gemini (من Google AI Studio). كيبقى فالمتصفح، ما كيتسيفطش لشي حد.</p>
+    <p>حط المفتاح ديال Gemini (من Google AI Studio) باش يخدم بجودة عالية + streaming. <b style="color:var(--gold2)">ما حطيتيش؟ ما مشكل — AZAMI AI كيخدم مجاني بلا مفتاح!</b></p>
     <input id="keyIn" placeholder="AQ-Ab8RN6..." autocomplete="off" spellcheck="false">
     <div class="err" id="keyErr">حط المفتاح من فضلك.</div>
     <button class="go" onclick="saveKey()">حفظ وبدأ ✅</button>
-    <button class="skip" onclick="closeKey()">لحظة، نرجع من بعد</button>
+    <button class="skip" onclick="closeKey()">استعمل مجاني بلا مفتاح 🚀</button>
   </div>
 </div>
 <script>
@@ -267,7 +270,7 @@ function newChat(){var n='c'+Date.now();convs[n]={title:'محادثة جديدة
 function renderChat(){
   var c=convs[curConv];if(!c)return;chat.innerHTML='';
   if(!c.msgs.length){
-    chat.innerHTML='<div class="welcome"><img src="azami-logo.webp"><h2>أهلاً بك في AZAMI AI 🇲🇦</h2><p>مساعدك الذكي من المغرب إلى العالم 🌍<br>Markdown ✅ | إعادة 🔄 | إيقاف ⏹️ | تعديل ✏️ | تصدير ⬇️ | بحث 🔍<br>اكتب "ارسم" + وصف = تصويرة 🎨</p><div class="chips"><div class="chip" onclick="quick(\'شنو هو AZAMI AI؟\')">شنو هو AZAMI AI؟</div><div class="chip" onclick="quick(\'كتب ليا كود HTML\')">كتب ليا كود</div><div class="chip" onclick="quick(\'ارسم قط أزرق\')">🎨 ارسم تصويرة</div><div class="chip" onclick="quick(\'عطاني فكرة مشروع\')">فكرة مشروع</div></div></div>';
+    chat.innerHTML='<div class="welcome"><img src="azami-logo.webp"><h2>أهلاً بك في AZAMI AI 🇲🇦</h2><p>مساعدك الذكي من المغرب إلى العالم 🌍<br><b style="color:var(--green2)">مجاني بلا مفتاح — خدام دابا! 🚀</b><br>Markdown ✅ | إعادة 🔄 | إيقاف ⏹️ | تعديل ✏️ | تصدير ⬇️ | بحث 🔍<br>اكتب "ارسم" + وصف = تصويرة 🎨</p><div class="chips"><div class="chip" onclick="quick(\'شنو هو AZAMI AI؟\')">شنو هو AZAMI AI؟</div><div class="chip" onclick="quick(\'كتب ليا كود HTML\')">كتب ليا كود</div><div class="chip" onclick="quick(\'ارسم قط أزرق\')">🎨 ارسم تصويرة</div><div class="chip" onclick="quick(\'عطاني فكرة مشروع\')">فكرة مشروع</div></div></div>';
     return;
   }
   c.msgs.forEach(function(m,i){renderMsg(m,i)});scrollDown();
@@ -345,7 +348,7 @@ function toggleImg(){imgMode=!imgMode;var b=document.getElementById('imgBtn');if
 /* === SEND === */
 async function send(){
   var ta=document.getElementById('in');var txt=ta.value.trim();
-  if(!txt&&!pickedImg)return;if(!APIKEY){openKey();return}
+  if(!txt&&!pickedImg)return;
   // EDIT MODE
   if(editIndex>=0){
     var c=convs[curConv];c.msgs=c.msgs.slice(0,editIndex);
@@ -362,8 +365,37 @@ async function send(){
   if(convs[curConv].hist.length>12)convs[curConv].hist=convs[curConv].hist.slice(-12);
   await streamResp();
 }
+/* === POLLINATIONS (FREE, NO KEY NEEDED) === */
+async function pollinationsChat(){
+  var typing=addTyping();setGenerating(true);abortCtrl=new AbortController();
+  var ctx=SYS+'\n\n';
+  var m=convs[curConv].msgs,start=Math.max(0,m.length-6);
+  for(var i=start;i<m.length;i++){if(!m[i].t)continue;ctx+=(m[i].r==='ai'?'Assistant: ':'User: ')+m[i].t+'\n\n'}
+  ctx+='Assistant: ';
+  try{
+    var res=await fetch('https://text.pollinations.ai/'+encodeURIComponent(ctx),{signal:abortCtrl.signal});
+    var full=await res.text();
+    if(full.startsWith('{')){var e=JSON.parse(full);throw new Error(e.error||'API error')}
+    typing.querySelector('.typing').remove();
+    var span=document.createElement('div');span.className='msg-text';typing.querySelector('.msg-body').appendChild(span);
+    span.innerHTML=renderMd(full||'ما قدرتش نولّد جواب.');addCodeCopy(span);scrollDown();
+    if(full){
+      convs[curConv].msgs.push({r:'ai',t:full});saveConvs();
+      var bar=document.createElement('div');bar.className='msg-bar';
+      bar.appendChild(mkBtn('🔊',function(){speak(full)}));
+      bar.appendChild(mkBtn('📋',function(){navigator.clipboard&&navigator.clipboard.writeText(full);this.textContent='✅';var b=this;setTimeout(function(){b.textContent='📋'},1500)}));
+      bar.appendChild(mkBtn('🔄',function(){regenerate()}));
+      typing.querySelector('.msg-body').appendChild(bar);
+    }
+  }catch(e){
+    if(e.name==='AbortError'){typing.remove()}
+    else{typing.remove();addAi('⚠️ ما قدرش نوصل للـAI مجاني. تأكد من الإنترنت ولا زيد مفتاح Gemini (دوس 🔑) باش يخدم بجودة عالية.')}
+  }
+  setGenerating(false);scrollDown();
+}
 /* === STREAM RESPONSE === */
 async function streamResp(){
+  if(!APIKEY)return pollinationsChat();
   var typing=addTyping();setGenerating(true);abortCtrl=new AbortController();var full='';
   try{
     var res=await fetch('https://generativelanguage.googleapis.com/v1beta/models/gemini-3.5-flash-lite:streamGenerateContent?alt=sse&key='+encodeURIComponent(APIKEY),{
@@ -455,7 +487,7 @@ function toggleMic(){
 /* === INIT === */
 renderConvList();renderChat();
 if(window.innerWidth<=768)document.getElementById('sidebar').classList.add('hide');
-if(!APIKEY)openKey();
+if(!APIKEY){var f=document.createElement('span');f.textContent='مجاني';f.style.cssText='font-size:9px;color:var(--green2);border:1px solid var(--green2);padding:2px 7px;border-radius:6px;margin-left:4px';document.querySelector('.h-right').prepend(f)}
 var ta=document.getElementById('in');ta.addEventListener('input',function(){this.style.height='auto';this.style.height=Math.min(this.scrollHeight,120)+'px'});
 </script>
 </body>
