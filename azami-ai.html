@@ -5,6 +5,12 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
 <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
 <meta http-equiv="Pragma" content="no-cache">
+<meta name="theme-color" content="#0A0A0F">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black">
+<meta name="apple-mobile-web-app-title" content="AZAMI AI">
+<link rel="manifest" href="azami-manifest.json">
+<link rel="apple-touch-icon" href="azami-logo.webp">
 <title>AZAMI AI — Moroccan Roots. Global Intelligence.</title>
 <meta name="description" content="AZAMI AI — مساعد ذكاء اصطناعي مغربي. From Morocco to the World.">
 <style>
@@ -247,7 +253,7 @@ async function send(){
         method:'POST',
         headers:{'Content-Type':'application/json'},
         body:JSON.stringify({
-          systemInstruction:{parts:[{text:'You are AZAMI AI, a multilingual assistant from Morocco. Answer in the user language. Be concise.'}]},
+          systemInstruction:{parts:[{text:'You are AZAMI AI, a multilingual assistant from Morocco. Answer in the exact language and dialect the user writes in. Support all Arabic dialects (Moroccan Darija, Egyptian, Gulf, Levantine, Algerian, Tunisian, Iraqi, Sudanese, Yemeni) and all world languages. Be concise, friendly and helpful.'}]},
           contents:[{role:'user',parts:parts}],
           generationConfig:{maxOutputTokens:800}
         })

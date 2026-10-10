@@ -1,0 +1,20 @@
+{
+  "name": "AZAMI AI — Moroccan Roots. Global Intelligence.",
+  "short_name": "AZAMI AI",
+  "description": "مساعد ذكاء اصطناعي مغربي. From Morocco to the World.",
+  "start_url": "azami-ai.html",
+  "display": "standalone",
+  "background_color": "#0A0A0F",
+  "theme_color": "#0A0A0F",
+  "orientation": "portrait",
+  "lang": "ar",
+  "dir": "rtl",
+  "icons": [
+    {
+      "src": "azami-logo.webp",
+      "sizes": "192x192 512x512",
+      "type": "image/webp",
+      "purpose": "any maskable"
+    }
+  ]
+}
