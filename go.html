@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
-<script>if("serviceWorker" in navigator){navigator.serviceWorker.getRegistrations().then(function(r){r.forEach(function(s){s.unregister()})});if(window.caches){caches.keys().then(function(k){k.forEach(function(c){caches.delete(c)})})}}</script>
+<script>/* KILL OLD SERVICE WORKERS */if('serviceWorker'in navigator){navigator.serviceWorker.getRegistrations().then(function(r){r.forEach(function(s){s.unregister()})})}if('caches'in window){caches.keys().then(function(k){k.forEach(function(c){caches.delete(c)})})}</script>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
 <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
@@ -14,7 +14,12 @@
 <link rel="apple-touch-icon" href="azami-logo.webp">
 <title>AZAMI AI — Moroccan Roots. Global Intelligence.</title>
 <meta name="description" content="AZAMI AI — مساعد ذكاء اصطناعي مغربي. From Morocco to the World.">
-<!-- 100% self-contained: no external libraries -->
+<!-- Markdown + Sanitize + Code Highlight (async = no blocking) -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github-dark.min.css">
+<script>function onMdLoad(){if(window.marked)marked.setOptions({breaks:true,gfm:true,highlight:function(c,l){if(window.hljs){if(l&&hljs.getLanguage(l))return hljs.highlight(c,{language:l}).value;return hljs.highlightAuto(c).value}return c}})}</script>
+<script src="https://cdn.jsdelivr.net/npm/marked@4.3.0/marked.min.js" async onload="onMdLoad()"></script>
+<script src="https://cdn.jsdelivr.net/npm/dompurify@3.0.11/dist/purify.min.js" async></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js" async></script>
 <style>
   :root{
     --gold:#D4AF37; --gold2:#E8C66B; --green:#0E5C4A; --green2:#1B7A5A;
@@ -217,29 +222,10 @@ const SYS='You are AZAMI AI, a multilingual assistant from Morocco. Answer in th
 const chat=document.getElementById('chat');
 /* === STATE === */
 let abortCtrl=null,generating=false,editIndex=-1,imgMode=false,pickedImg=null,pickedType=null,lastRender=0;
-/* === MARKDOWN (inline parser, no libraries) === */
+/* === MARKDOWN === */
 function renderMd(text){
-  if(!text)return '';
-  var blocks=[];
-  text=text.replace(/```(\w*)\n?([\s\S]*?)```/g,function(m,l,c){blocks.push('<pre><code>'+esc(c.trimEnd())+'</code></pre>');return'\x00B'+(blocks.length-1)+'\x00'});
-  text=text.replace(/`([^`]+)`/g,function(m,c){blocks.push('<code>'+esc(c)+'</code>');return'\x00B'+(blocks.length-1)+'\x00'});
-  text=esc(text);
-  text=text.replace(/^### (.+)$/gm,'<h3>$1</h3>');
-  text=text.replace(/^## (.+)$/gm,'<h2>$1</h2>');
-  text=text.replace(/^# (.+)$/gm,'<h1>$1</h1>');
-  text=text.replace(/\*\*([^*]+)\*\*/g,'<strong>$1</strong>');
-  text=text.replace(/\*([^*]+)\*/g,'<em>$1</em>');
-  text=text.replace(/\[([^\]]+)\]\(([^)]+)\)/g,'<a href="$2" target="_blank" rel="noopener">$1</a>');
-  text=text.replace(/^&gt; (.+)$/gm,'<blockquote>$1</blockquote>');
-  text=text.replace(/^---$/gm,'<hr>');
-  text=text.replace(/^[\-*] (.+)$/gm,'<li>$1</li>');
-  text=text.replace(/^\d+\. (.+)$/gm,'<li>$1</li>');
-  text=text.replace(/(<li>.*?<\/li>\n?)+/g,function(m){return '<ul>'+m.replace(/\n/g,'')+'</ul>'});
-  text=text.replace(/\n/g,'<br>');
-  text=text.replace(/(<\/h[123]>|<hr>|<\/pre>|<\/blockquote>|<\/ul>)<br>/g,'$1');
-  text=text.replace(/<br>(<(?:h[123]|hr|pre|blockquote|ul))/g,'$1');
-  text=text.replace(/\x00B(\d+)\x00/g,function(m,i){return blocks[parseInt(i)]||''});
-  return text;
+  if(window.marked){try{var raw=marked.parse(text);if(window.DOMPurify)return DOMPurify.sanitize(raw,{ADD_ATTR:['target','rel']});return raw}catch(e){}}
+  return esc(text).replace(/\n/g,'<br>');
 }
 function esc(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')}
 function addCodeCopy(container){
@@ -474,3 +460,4 @@ var ta=document.getElementById('in');ta.addEventListener('input',function(){this
 </script>
 </body>
 </html>
+
