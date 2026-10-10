@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0">
+<meta name="theme-color" content="#0A0A0F">
+<title>AZAMI AI</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:system-ui,'Noto Sans Arabic',sans-serif;background:#0A0A0F;color:#F4F1E8;display:flex;flex-direction:column;height:100dvh;overflow:hidden}
+header{display:flex;align-items:center;gap:8px;padding:10px 14px;background:#12121A;border-bottom:1px solid #2A2A38}
+header img{width:30px;height:30px;border-radius:7px}
+header b{color:#E8C66B;font-size:15px}
+header small{color:#8A8A9A;font-size:9px;display:block}
+header button{margin-right:auto;background:transparent;border:1px solid #2A2A38;color:#E8C66B;border-radius:8px;padding:5px 10px;font-size:11px;cursor:pointer;font-family:inherit}
+#status{padding:4px 14px;font-size:11px;color:#1B7A5A;background:#12121A;text-align:center}
+#chat{flex:1;overflow-y:auto;padding:14px;display:flex;flex-direction:column;gap:10px}
+.m{max-width:640px;width:100%;margin:0 auto;padding:10px 14px;border-radius:12px;font-size:15px;line-height:1.7;white-space:pre-wrap;word-wrap:break-word}
+.me{background:#181822;border:1px solid #2A2A38}
+.ai{background:#0E2A22;border:1px solid #D4AF37}
+.er{background:#2A1010;border:1px solid #C4342B;color:#FF6B6B}
+.wc{text-align:center;padding:40px 16px;max-width:420px;margin:auto}
+.wc img{width:56px;height:56px;border-radius:12px;margin-bottom:10px}
+.wc h2{color:#E8C66B;font-size:18px;margin-bottom:6px}
+.wc p{color:#8A8A9A;font-size:13px;line-height:1.7}
+.chips{display:flex;flex-wrap:wrap;justify-content:center;gap:6px;margin-top:14px}
+.chips button{background:#181822;border:1px solid #2A2A38;color:#F4F1E8;padding:9px 12px;border-radius:10px;font-size:12px;cursor:pointer;font-family:inherit}
+.chips button:active{border-color:#D4AF37;color:#E8C66B}
+footer{padding:8px 12px;padding-bottom:calc(8px + env(safe-area-inset-bottom));background:#12121A;border-top:1px solid #2A2A38}
+.fw{max-width:640px;margin:0 auto;display:flex;gap:6px}
+.fw textarea{flex:1;background:#181822;border:1px solid #2A2A38;color:#F4F1E8;border-radius:20px;padding:10px 14px;font-size:15px;font-family:inherit;resize:none;max-height:100px;min-height:42px;outline:none;line-height:1.5}
+.fw textarea:focus{border-color:#D4AF37}
+.fw button{width:42px;height:42px;flex-shrink:0;border:none;border-radius:50%;background:linear-gradient(135deg,#D4AF37,#E8C66B);color:#0A0A0F;font-size:17px;cursor:pointer}
+.fw button:active{opacity:.6}
+.md{position:fixed;inset:0;background:rgba(0,0,0,.85);display:none;align-items:center;justify-content:center;z-index:50;padding:20px}
+.md.show{display:flex}
+.sh{background:#12121A;border:1px solid #D4AF37;border-radius:14px;padding:20px 16px;max-width:340px;width:100%}
+.sh h3{color:#E8C66B;font-size:17px;margin-bottom:6px}
+.sh p{color:#8A8A9A;font-size:12px;margin-bottom:12px;line-height:1.5}
+.sh input{width:100%;background:#181822;border:1px solid #2A2A38;color:#F4F1E8;border-radius:10px;padding:11px;font-size:14px;font-family:monospace;outline:none;margin-bottom:8px}
+.sh input:focus{border-color:#D4AF37}
+.sh button{width:100%;padding:11px;border:none;border-radius:10px;font-weight:700;font-size:14px;cursor:pointer;font-family:inherit;background:linear-gradient(135deg,#0E5C4A,#1B7A5A);color:#fff;margin-bottom:6px}
+.sh button.s{background:transparent;color:#8A8A9A;border:1px solid #2A2A38}
+</style>
+</head>
+<body>
+<header>
+<img src="azami-logo.webp" onerror="this.style.display='none'">
+<div><b>AZAMI AI</b><small>Moroccan Roots · Global Intelligence</small></div>
+<button onclick="openKey()">🔑 المفتاح</button>
+</header>
+<div id="status">⏳ كتحمل...</div>
+<div id="chat"></div>
+<footer>
+<div class="fw">
+<textarea id="in" rows="1" placeholder="كتب رسالتك لـ AZAMI AI..."></textarea>
+<button id="snd" onclick="send()">➤</button>
+</div>
+</footer>
+<div class="md" id="kmd">
+<div class="sh">
+<h3>🔑 مفتاح AZAMI AI</h3>
+<p>حط المفتاح ديال Gemini (من Google AI Studio). كيبقى فالمتصفح فقط.</p>
+<input id="kin" placeholder="AIza..." autocomplete="off">
+<button onclick="saveKey()">حفظ وبدأ ✅</button>
+<button class="s" onclick="closeKey()">لحظة</button>
+</div>
+</div>
+<script>
+var K='azami_ai_gemini_key',AK='';
+try{AK=localStorage.getItem(K)||''}catch(e){}
+var SYS='You are AZAMI AI, a multilingual assistant from Morocco. Answer in the exact language and dialect the user writes in. Support all Arabic dialects and all world languages. Be concise, friendly and helpful.';
+var chat=document.getElementById('chat');
+var hist=[];
+var gen=false,ac=null;
+
+// STATUS CHECK — this proves JS works
+document.getElementById('status').textContent='✅ جاهز — اكتب سؤالك!';
+document.getElementById('status').style.color='#1B7A5A';
+
+function openKey(){
+document.getElementById('kmd').className='md show';
+document.getElementById('kin').value=AK||'';
+document.getElementById('kin').focus();
+}
+function closeKey(){document.getElementById('kmd').className='md'}
+function saveKey(){
+var v=document.getElementById('kin').value.trim();
+if(!v)return;
+AK=v;
+try{localStorage.setItem(K,v)}catch(e){}
+closeKey();
+addAi('مزيان! المفتاح تحفظ. سؤلني أي حاجة 🚀');
+}
+
+function render(){
+chat.innerHTML='';
+if(!hist.length){
+chat.innerHTML='<div class="wc"><img src="azami-logo.webp" onerror="this.style.display=\'none\'"><h2>أهلاً بك في AZAMI AI 🇲🇦</h2><p>مساعدك الذكي من المغرب إلى العالم 🌍<br>اكتب أي سؤال وأنا نجاونك</p><div class="chips"><button onclick="q(\'شنو هو AZAMI AI؟\')">شنو هو AZAMI AI؟</button><button onclick="q(\'كتب ليا بوستر\')">كتب ليا بوستر</button><button onclick="q(\'عطاني فكرة مشروع\')">فكرة مشروع</button></div></div>';
+return;
+}
+for(var i=0;i<hist.length;i++){
+var d=document.createElement('div');
+d.className='m '+(hist[i].role==='user'?'me':'ai');
+d.textContent=hist[i].parts[0].text;
+chat.appendChild(d);
+}
+chat.scrollTop=chat.scrollHeight;
+}
+
+function q(t){document.getElementById('in').value=t;send()}
+
+function send(){
+if(gen){if(ac)try{ac.abort()}catch(e){}return}
+var ta=document.getElementById('in');
+var txt=ta.value.trim();
+if(!txt)return;
+if(!AK){openKey();return}
+ta.value='';
+ta.style.height='auto';
+hist.push({role:'user',parts:[{text:txt}]});
+var ud=document.createElement('div');
+ud.className='m me';
+ud.textContent=txt;
+chat.appendChild(ud);
+chat.scrollTop=chat.scrollHeight;
+var td=document.createElement('div');
+td.className='m ai';
+td.textContent='⏳ AZAMI AI كيكتب...';
+td.style.color='#8A8A9A';
+chat.appendChild(td);
+gen=true;
+ac=new AbortController();
+var btn=document.getElementById('snd');
+btn.textContent='⏹';
+btn.style.background='#C4342B';
+fetch('https://generativelanguage.googleapis.com/v1beta/models/gemini-3.5-flash-lite:streamGenerateContent?alt=sse&key='+encodeURIComponent(AK),{
+method:'POST',
+headers:{'Content-Type':'application/json'},
+body:JSON.stringify({systemInstruction:{parts:[{text:SYS}]},contents:hist,generationConfig:{maxOutputTokens:600}}),
+signal:ac.signal
+}).then(function(res){
+if(!res.ok){
+return res.json().catch(function(){return{}}).then(function(ed){
+td.remove();
+var m='وقع مشلم.';
+if(ed.error&&ed.error.message)m=ed.error.message;
+var d=document.createElement('div');
+d.className='m er';
+d.textContent='⚠️ '+m+(ed.error&&ed.error.code===400?'\nتحقق من المفتاح (دوس 🔑)':'');
+chat.appendChild(d);
+chat.scrollTop=chat.scrollHeight;
+done();
+});
+}
+td.textContent='';
+td.style.color='';
+var reader=res.body.getReader();
+var dec=new TextDecoder();
+var full='',buf='';
+function rd(){
+reader.read().then(function(ch){
+if(ch.done){
+if(!full)td.textContent='ما قدرتش نولّد جواب.';
+hist.push({role:'model',parts:[{text:full||'ما قدرتش نولّد جواب.'}]});
+done();
+chat.scrollTop=chat.scrollHeight;
+return;
+}
+buf+=dec.decode(ch.value,{stream:true});
+var lines=buf.split('\n');
+buf=lines.pop();
+for(var i=0;i<lines.length;i++){
+var t=lines[i].trim();
+if(!t.startsWith('data:'))continue;
+var j=t.slice(5).trim();
+if(!j||j==='[DONE]')continue;
+try{
+var o=JSON.parse(j);
+if(o.candidates&&o.candidates[0]&&o.candidates[0].content){
+full+=o.candidates[0].content.parts.map(function(p){return p.text}).join('');
+td.textContent=full;
+chat.scrollTop=chat.scrollHeight;
+}
+}catch(e){}
+}
+rd();
+});
+}
+rd();
+}).catch(function(e){
+td.remove();
+if(e.name==='AbortError'){
+if(td.textContent)hist.push({role:'model',parts:[{text:td.textContent}]});
+}else{
+var d=document.createElement('div');
+d.className='m er';
+d.textContent='⚠️ ما قدرش نوصل للـAI. تأكد من الإنترنت.';
+chat.appendChild(d);
+chat.scrollTop=chat.scrollHeight;
+}
+done();
+});
+}
+
+function done(){
+gen=false;
+var btn=document.getElementById('snd');
+btn.textContent='➤';
+btn.style.background='';
+}
+
+var ta=document.getElementById('in');
+ta.addEventListener('input',function(){this.style.height='auto';this.style.height=Math.min(this.scrollHeight,100)+'px'});
+ta.onkeydown=function(e){if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();send()}};
+render();
+if(!AK)openKey();
+</script>
+</body>
+</html>
