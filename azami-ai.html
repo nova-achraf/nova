@@ -343,6 +343,7 @@ function toggleMic(){
 }
 /* === INIT === */
 renderConvList();renderChat();
+if(window.innerWidth<=768)document.getElementById('sidebar').classList.add('hide');
 if(!APIKEY)openKey();
 const ta=document.getElementById('in');ta.addEventListener('input',function(){this.style.height='auto';this.style.height=Math.min(this.scrollHeight,120)+'px'});
 </script>
