@@ -350,12 +350,12 @@ async function genImage(prompt){
       const tData=await tRes.json();
       if(tData&&tData[0]){eng=tData[0].map(i=>i[0]||'').join('').trim()||clean}
     }catch(e){}
-    const url='https://image.pollinations.ai/prompt/'+encodeURIComponent(eng+', ultra detailed, 4K, sharp focus, professional photography, high resolution')+'?width=1024&height=1024&nologo=true&model=flux&enhance=true';
+    const url='https://image.pollinations.ai/prompt/'+encodeURIComponent(eng+', ultra detailed, 4K, sharp focus, clear, crisp, professional photography, high resolution, no haze')+'?width=1024&height=1024&nologo=true&model=flux';
     const img=new Image();
     img.onload=function(){
       typing.remove();
       const d=document.createElement('div');d.className='msg ai';
-      d.innerHTML='<div class="who">AZAMI AI</div><div style="font-size:12px;color:var(--muted);margin-bottom:4px">'+esc(eng)+'</div><img src="'+url+'" style="max-width:100%;border-radius:12px;margin-top:6px" alt="generated"><div style="font-size:11px;color:var(--muted);margin-top:4px">🎨 Pollinations.ai</div>';
+      d.innerHTML='<div class="who">AZAMI AI</div><div style="font-size:12px;color:var(--muted);margin-bottom:4px">'+esc(eng)+'</div><img src="'+url+'" style="max-width:100%;border-radius:12px;margin-top:6px" alt="generated"><div style="display:flex;gap:8px;margin-top:4px"><a href="'+url+'" download="azami-ai-image.jpg" style="font-size:13px;color:var(--gold2);text-decoration:none">⬇️ تحميل</a><span style="font-size:11px;color:var(--muted)">🎨 Pollinations.ai</span></div>';
       chat.appendChild(d);scrollDown();
       document.getElementById('send').disabled=false;
     };
