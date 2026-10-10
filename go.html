@@ -2,6 +2,14 @@
 <html lang="ar" dir="rtl">
 <head>
 <meta charset="UTF-8">
+<script>
+// KILL OLD SERVICE WORKERS + CLEAR ALL CACHES
+if('serviceWorker' in navigator){
+  navigator.serviceWorker.getRegistrations().then(function(r){r.forEach(function(s){s.unregister()})});
+  if(window.caches){caches.keys().then(function(k){k.forEach(function(c){caches.delete(c)})})}
+}
+</script>
+<meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0">
 <meta name="theme-color" content="#0A0A0F">
 <title>AZAMI AI</title>
