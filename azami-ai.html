@@ -252,12 +252,29 @@ async function genImage(prompt){
   document.getElementById('send').disabled=true;
   const clean=prompt.replace(/^(ارسم|صوّر|أنشئ صورة|ولّد صورة|صمم صورة|صورة|صور|draw|paint|generate image|create image)\s*/i,'').trim()||prompt;
   try{
-    const url='https://image.pollinations.ai/prompt/'+encodeURIComponent(clean)+'?width=512&height=512&nologo=true&model=flux';
+    let eng=clean;
+    if(APIKEY){
+      try{
+        const tRes=await fetch('https://generativelanguage.googleapis.com/v1beta/models/gemini-3.5-flash-lite:generateContent?key='+encodeURIComponent(APIKEY),{
+          method:'POST',
+          headers:{'Content-Type':'application/json'},
+          body:JSON.stringify({
+            contents:[{parts:[{text:'Translate this image prompt to English. Output ONLY the English text: '+clean}]}],
+            generationConfig:{maxOutputTokens:200}
+          })
+        });
+        const tData=await tRes.json();
+        if(tData.candidates&&tData.candidates[0]&&tData.candidates[0].content){
+          eng=tData.candidates[0].content.parts.map(p=>p.text).join('').trim()||clean;
+        }
+      }catch(e){}
+    }
+    const url='https://image.pollinations.ai/prompt/'+encodeURIComponent(eng)+'?width=512&height=512&nologo=true&model=flux';
     const img=new Image();
     img.onload=function(){
       typing.remove();
       const d=document.createElement('div');d.className='msg ai';
-      d.innerHTML='<div class="who">AZAMI AI</div><img src="'+url+'" style="max-width:100%;border-radius:12px;margin-top:6px" alt="generated"><div style="font-size:11px;color:var(--muted);margin-top:4px">🎨 Pollinations.ai</div>';
+      d.innerHTML='<div class="who">AZAMI AI</div>'+(eng!==clean?'<div style="font-size:12px;color:var(--muted);margin-bottom:4px">'+esc(eng)+'</div>':'')+'<img src="'+url+'" style="max-width:100%;border-radius:12px;margin-top:6px" alt="generated"><div style="font-size:11px;color:var(--muted);margin-top:4px">🎨 Pollinations.ai</div>';
       chat.appendChild(d);scrollDown();
       document.getElementById('send').disabled=false;
     };
