@@ -1,6 +1,6 @@
 // AZAMI AI — Service Worker (PWA)
 // Network-first for HTML (always fresh), cache-first for assets, offline support
-const CACHE = 'azami-ai-v1';
+const CACHE = 'azami-ai-v2';
 const ASSETS = [
   'azami-global.html',
   'azami-manifest.json',
