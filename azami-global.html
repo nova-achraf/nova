@@ -84,9 +84,21 @@
   .sheet .go{background:linear-gradient(135deg,var(--green),var(--green2));color:#fff;margin-bottom:8px}
   .sheet .skip{background:transparent;color:var(--muted);border:1px solid var(--line)}
   .err{color:var(--red);font-size:12px;margin-top:6px;display:none}
+  .install-banner{position:fixed;bottom:0;left:0;right:0;background:linear-gradient(135deg,var(--green),var(--green2));padding:12px 16px;display:none;align-items:center;gap:12px;z-index:40;box-shadow:0 -4px 20px rgba(0,0,0,.5)}
+  .install-banner.show{display:flex}
+  .install-banner .txt{flex:1;color:#fff;font-size:13px;line-height:1.4}
+  .install-banner .txt b{display:block;font-size:15px;margin-bottom:2px}
+  .install-banner button{background:var(--gold);color:var(--bg);border:none;border-radius:10px;padding:10px 18px;font-weight:800;font-size:14px;cursor:pointer;font-family:inherit;white-space:nowrap}
+  .install-banner .close{background:transparent;color:rgba(255,255,255,.7);border:none;font-size:22px;cursor:pointer;padding:0 4px}
 </style>
 </head>
 <body>
+
+<div class="install-banner" id="installBanner">
+  <div class="txt"><b>📥 تثبيت التطبيق</b>نصّب AZAMI AI على التيليفون</div>
+  <button id="installBtn">تثبيت</button>
+  <button class="close" id="installClose">×</button>
+</div>
 
 <header>
   <img src="azami-logo.webp" class="logo" alt="AZAMI AI">
@@ -287,6 +299,14 @@ var ta=document.getElementById('in');
 ta.addEventListener('input',function(){this.style.height='auto';this.style.height=Math.min(this.scrollHeight,120)+'px'});
 // PWA: register service worker for offline + app install
 if('serviceWorker' in navigator){navigator.serviceWorker.register('sw.js').catch(function(){});}
+// PWA: install button
+var deferredPrompt=null;
+window.addEventListener('beforeinstallprompt',function(e){e.preventDefault();deferredPrompt=e;document.getElementById('installBanner').classList.add('show');});
+document.getElementById('installBtn').addEventListener('click',function(){
+  if(deferredPrompt){deferredPrompt.prompt();deferredPrompt.userChoice.then(function(){deferredPrompt=null;document.getElementById('installBanner').classList.remove('show');});}
+});
+document.getElementById('installClose').addEventListener('click',function(){document.getElementById('installBanner').classList.remove('show');});
+window.addEventListener('appinstalled',function(){document.getElementById('installBanner').classList.remove('show');});
 </script>
 </body>
 </html>
