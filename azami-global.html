@@ -299,14 +299,20 @@ var ta=document.getElementById('in');
 ta.addEventListener('input',function(){this.style.height='auto';this.style.height=Math.min(this.scrollHeight,120)+'px'});
 // PWA: register service worker for offline + app install
 if('serviceWorker' in navigator){navigator.serviceWorker.register('sw.js').catch(function(){});}
-// PWA: install button
+// PWA: install button — show banner after 2s, fallback to manual instructions
 var deferredPrompt=null;
-window.addEventListener('beforeinstallprompt',function(e){e.preventDefault();deferredPrompt=e;document.getElementById('installBanner').classList.add('show');});
-document.getElementById('installBtn').addEventListener('click',function(){
-  if(deferredPrompt){deferredPrompt.prompt();deferredPrompt.userChoice.then(function(){deferredPrompt=null;document.getElementById('installBanner').classList.remove('show');});}
+var banner=document.getElementById('installBanner');
+var btn=document.getElementById('installBtn');
+var bannerText=banner.querySelector('.txt');
+window.addEventListener('beforeinstallprompt',function(e){e.preventDefault();deferredPrompt=e;banner.classList.add('show');bannerText.innerHTML='<b>📥 تثبيت التطبيق</b>نصّب AZAMI AI على التيليفون';});
+btn.addEventListener('click',function(){
+  if(deferredPrompt){deferredPrompt.prompt();deferredPrompt.userChoice.then(function(){deferredPrompt=null;banner.classList.remove('show');});}
+  else{bannerText.innerHTML='<b>📋 كيفاش تنصّب؟</b>كليكي على ⋮ (فوق) ← إضافة إلى الشاشة الرئيسية';btn.style.display='none';}
 });
-document.getElementById('installClose').addEventListener('click',function(){document.getElementById('installBanner').classList.remove('show');});
-window.addEventListener('appinstalled',function(){document.getElementById('installBanner').classList.remove('show');});
+document.getElementById('installClose').addEventListener('click',function(){banner.classList.remove('show');});
+window.addEventListener('appinstalled',function(){banner.classList.remove('show');});
+// Fallback: show banner after 3s if beforeinstallprompt didn't fire
+setTimeout(function(){if(!deferredPrompt){banner.classList.add('show');bannerText.innerHTML='<b>📱 ثبّت AZAMI AI</b>كليكي هنا ولا ⋮ ← إضافة للشاشة';}},3000);
 </script>
 </body>
 </html>
