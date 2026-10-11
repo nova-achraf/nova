@@ -3,6 +3,12 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<meta name="theme-color" content="#0A0A0F">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black">
+<meta name="apple-mobile-web-app-title" content="AZAMI AI">
+<link rel="manifest" href="azami-manifest.json">
+<link rel="apple-touch-icon" href="azami-logo.webp">
 <title>AZAMI AI — Moroccan Roots. Global Intelligence.</title>
 <meta name="description" content="AZAMI AI — مساعد ذكاء اصطناعي مغربي. From Morocco to the World.">
 <style>
@@ -18,7 +24,6 @@
     background:radial-gradient(circle at 50% 0%,#15151f 0%,var(--bg) 60%);
     color:var(--txt);display:flex;flex-direction:column;height:100dvh;overflow:hidden;
   }
-  /* Header */
   header{
     display:flex;align-items:center;gap:12px;padding:12px 14px;
     background:linear-gradient(135deg,rgba(14,92,74,.18),rgba(212,175,55,.10));
@@ -36,56 +41,48 @@
   .brand b{font-size:18px;letter-spacing:.5px;color:var(--gold2)}
   .brand small{font-size:10.5px;color:var(--muted)}
   .dot{width:8px;height:8px;border-radius:50%;background:var(--green2);box-shadow:0 0 8px var(--green2);margin-right:auto;align-self:center}
-  .dot::after{content:"";display:inline-block}
-  .key-btn{
-    background:transparent;border:1px solid var(--line);color:var(--muted);
-    border-radius:8px;padding:6px 10px;font-size:12px;cursor:pointer;white-space:nowrap;
-  }
-  /* Chat area */
+  .key-btn{background:transparent;border:1px solid var(--line);color:var(--muted);border-radius:8px;padding:6px 10px;font-size:12px;cursor:pointer;white-space:nowrap;font-family:inherit}
+  .key-btn:active{border-color:var(--gold);color:var(--gold2)}
+  .free-badge{font-size:9px;color:var(--green2);border:1px solid var(--green2);padding:2px 6px;border-radius:6px;margin-left:4px}
   main{flex:1;overflow-y:auto;padding:14px;display:flex;flex-direction:column;gap:12px;-webkit-overflow-scrolling:touch}
   .msg{max-width:88%;padding:11px 14px;border-radius:14px;font-size:15px;line-height:1.6;white-space:pre-wrap;word-wrap:break-word}
   .ai{background:var(--card);border:1px solid var(--line);align-self:flex-start;border-bottom-left-radius:4px}
   .me{background:linear-gradient(135deg,var(--green),var(--green2));color:#fff;align-self:flex-end;border-bottom-right-radius:4px}
   .who{font-size:11px;color:var(--gold2);margin-bottom:3px;font-weight:700}
   .me .who{color:rgba(255,255,255,.7)}
+  .msg img{max-width:100%;border-radius:10px;margin:6px 0}
+  .msg-bar{display:flex;gap:6px;margin-top:6px;flex-wrap:wrap}
+  .msg-bar button{background:none;border:none;color:var(--muted);font-size:13px;cursor:pointer;padding:3px 6px;border-radius:6px}
+  .msg-bar button:active{background:var(--card);color:var(--gold2)}
+  .msg-bar a{font-size:13px;color:var(--gold2);text-decoration:none;padding:3px 6px}
   .typing{display:inline-flex;gap:4px;align-items:center;color:var(--muted);font-size:14px}
   .typing i{width:7px;height:7px;border-radius:50%;background:var(--gold);opacity:.4;animation:bnc 1s infinite}
   .typing i:nth-child(2){animation-delay:.2s}.typing i:nth-child(3){animation-delay:.4s}
   @keyframes bnc{0%,100%{transform:translateY(0);opacity:.4}50%{transform:translateY(-5px);opacity:1}}
   .welcome{text-align:center;padding:20px 16px;color:var(--muted);font-size:14px;line-height:1.8}
   .welcome h2{color:var(--gold2);font-size:20px;margin-bottom:8px;font-family:Georgia,serif}
-  .chip{
-    display:inline-block;background:var(--card);border:1px solid var(--line);
-    color:var(--txt);padding:8px 12px;border-radius:20px;font-size:13px;margin:4px;cursor:pointer;
-  }
+  .chip{display:inline-block;background:var(--card);border:1px solid var(--line);color:var(--txt);padding:8px 12px;border-radius:20px;font-size:13px;margin:4px;cursor:pointer}
   .chip:active{border-color:var(--gold);color:var(--gold2)}
-  /* Input bar */
   footer{flex-shrink:0;padding:10px 12px calc(10px + env(safe-area-inset-bottom));background:var(--bg2);border-top:1px solid var(--line)}
-  .inp{display:flex;gap:8px;align-items:flex-end}
-  textarea{
-    flex:1;background:var(--card);border:1px solid var(--line);color:var(--txt);
-    border-radius:14px;padding:11px 14px;font-size:15px;font-family:inherit;resize:none;
-    max-height:120px;min-height:46px;outline:none;line-height:1.5;
-  }
+  #imgPrev{display:none;margin-bottom:6px;position:relative}
+  #prevThumb{max-height:70px;border-radius:8px;border:1px solid var(--line)}
+  .clear-img{position:absolute;top:-6px;right:-6px;background:var(--red);color:#fff;border:none;border-radius:50%;width:22px;height:22px;font-size:12px;cursor:pointer}
+  .inp{display:flex;gap:6px;align-items:flex-end}
+  textarea{flex:1;background:var(--card);border:1px solid var(--line);color:var(--txt);border-radius:14px;padding:11px 14px;font-size:15px;font-family:inherit;resize:none;max-height:120px;min-height:46px;outline:none;line-height:1.5}
   textarea:focus{border-color:var(--gold)}
-  button.send{
-    width:46px;height:46px;flex-shrink:0;border:none;border-radius:50%;
-    background:linear-gradient(135deg,var(--gold),var(--gold2));color:var(--bg);
-    font-size:20px;cursor:pointer;display:flex;align-items:center;justify-content:center;
-    box-shadow:0 0 12px rgba(212,175,55,.3);
-  }
-  button.send:disabled{opacity:.4;cursor:not-allowed}
-  /* Key modal */
-  .modal{position:fixed;inset:0;background:rgba(0,0,0,.85);display:flex;align-items:center;justify-content:center;z-index:50;padding:18px}
+  .inp-btn{width:42px;height:42px;flex-shrink:0;border:none;border-radius:50%;background:transparent;color:var(--muted);font-size:18px;cursor:pointer;display:flex;align-items:center;justify-content:center}
+  .inp-btn:active{color:var(--gold)}
+  .inp-btn.active{background:linear-gradient(135deg,var(--gold),var(--gold2));color:var(--bg)}
+  .inp-btn.stop{background:var(--red);color:#fff;animation:pulse 1.5s infinite}
+  @keyframes pulse{0%,100%{opacity:1}50%{opacity:.7}}
+  .modal{position:fixed;inset:0;background:rgba(0,0,0,.85);display:none;align-items:center;justify-content:center;z-index:50;padding:18px}
+  .modal.show{display:flex}
   .sheet{background:var(--bg2);border:1px solid var(--gold);border-radius:16px;padding:22px 18px;max-width:380px;width:100%}
   .sheet h3{color:var(--gold2);font-size:18px;margin-bottom:6px;font-family:Georgia,serif}
   .sheet p{color:var(--muted);font-size:13px;line-height:1.6;margin-bottom:14px}
-  .sheet input{
-    width:100%;background:var(--card);border:1px solid var(--line);color:var(--txt);
-    border-radius:10px;padding:12px;font-size:14px;font-family:monospace;outline:none;margin-bottom:12px;
-  }
+  .sheet input{width:100%;background:var(--card);border:1px solid var(--line);color:var(--txt);border-radius:10px;padding:12px;font-size:14px;font-family:monospace;outline:none;margin-bottom:12px}
   .sheet input:focus{border-color:var(--gold)}
-  .sheet button{width:100%;padding:12px;border:none;border-radius:10px;font-weight:700;font-size:15px;cursor:pointer}
+  .sheet button{width:100%;padding:12px;border:none;border-radius:10px;font-weight:700;font-size:15px;cursor:pointer;font-family:inherit}
   .sheet .go{background:linear-gradient(135deg,var(--green),var(--green2));color:#fff;margin-bottom:8px}
   .sheet .skip{background:transparent;color:var(--muted);border:1px solid var(--line)}
   .err{color:var(--red);font-size:12px;margin-top:6px;display:none}
@@ -100,6 +97,7 @@
     <small>Moroccan Roots · Global Intelligence</small>
   </div>
   <div class="dot" title="online"></div>
+  <span class="free-badge" id="freeBadge">مجاني</span>
   <button class="key-btn" onclick="openKey()">🔑 المفتاح</button>
 </header>
 
@@ -117,21 +115,25 @@
 </main>
 
 <footer>
+  <div id="imgPrev"><img id="prevThumb"><button class="clear-img" onclick="clearImg()">✕</button></div>
   <div class="inp">
     <textarea id="in" rows="1" placeholder="كتب رسالتك لـ AZAMI AI..." onkeydown="if(event.key==='Enter'&&!event.shiftKey){event.preventDefault();send()}"></textarea>
-    <button class="send" id="send" onclick="send()">➤</button>
+    <input type="file" id="camInput" accept="image/*" capture="environment" hidden onchange="onImgPick(this)">
+    <button class="inp-btn" onclick="document.getElementById('camInput').click()" title="تصوير">📷</button>
+    <button class="inp-btn" id="imgBtn" onclick="toggleImg()" title="وضع التصاور">🎨</button>
+    <button class="inp-btn" id="micBtn" onclick="toggleMic()" title="ميكروفون">🎤</button>
+    <button class="inp-btn" id="send" onclick="handleSend()" title="إرسال">➤</button>
   </div>
 </footer>
 
-<!-- Key modal -->
-<div class="modal" id="keyModal" style="display:none">
+<div class="modal" id="keyModal">
   <div class="sheet">
     <h3>🔑 مفتاح AZAMI AI</h3>
-    <p>حط هنا المفتاح ديال Gemini (اللي لقيتي فـ Google AI Studio). كيبقى عندك فالمتصفح، ما كيتسيفطش لشي حد.</p>
-    <input id="keyIn" placeholder="AQ-Ab8RN6..." autocomplete="off" spellcheck="false">
+    <p>AZAMI AI خدام <b style="color:var(--green2)">مجاني بلا مفتاح</b>! حط مفتاح Gemini (من Google AI Studio) باش يخدم بجودة أعلى + streaming.<br><small style="color:var(--muted);display:block;margin-top:6px">باش تاخد مفتاح مجاني: aistudio.google.com → Sign in → Get API Key</small></p>
+    <input id="keyIn" placeholder="AIza..." autocomplete="off" spellcheck="false">
     <div class="err" id="keyErr">حط المفتاح من فضلك.</div>
-    <button class="go" onclick="saveKey()">حفظ وبدأ ✅</button>
-    <button class="skip" onclick="closeKey()">لحظة، نرجع من بعد</button>
+    <button class="go" onclick="saveKey()">حفظ ✅</button>
+    <button class="skip" onclick="closeKey()">استعمل مجاني بلا مفتاح 🚀</button>
   </div>
 </div>
 
@@ -139,112 +141,124 @@
 const KEY='azami_ai_gemini_key';
 let APIKEY='';
 try{APIKEY=localStorage.getItem(KEY)||''}catch(e){}
-const SYS='You are AZAMI AI, a helpful multilingual AI assistant created in Morocco. Answer in the language the user uses (Arabic, Moroccan Darija, French, English). Be clear, friendly and honest. Keep answers concise on mobile.';
+const SYS='You are AZAMI AI, a helpful multilingual AI assistant created in Morocco (From Morocco to the World). Answer in the EXACT language and dialect the user writes in — Arabic, Moroccan Darija, Egyptian, French, English, Spanish, German, Chinese, Japanese, Hindi, or any language. Be clear, friendly and honest. Keep answers concise for mobile. Use simple Markdown when helpful.';
+const chat=document.getElementById('chat');
+let generating=false,abortCtrl=null,imgMode=false,pickedImg=null,pickedType=null;
 
-function openKey(){document.getElementById('keyModal').style.display='flex';document.getElementById('keyIn').value=APIKEY||'';document.getElementById('keyIn').focus()}
-function closeKey(){document.getElementById('keyModal').style.display='none'}
-function saveKey(){
-  const v=document.getElementById('keyIn').value.trim();
-  if(!v){document.getElementById('keyErr').style.display='block';return}
-  APIKEY=v;
-  try{localStorage.setItem(KEY,v)}catch(e){}
-  closeKey();
-  addAi('مزيان! المفتاح تحفظ. سؤلني أي حاجة 🚀');
-}
+function openKey(){document.getElementById('keyModal').classList.add('show');document.getElementById('keyIn').value=APIKEY||'';document.getElementById('keyIn').focus()}
+function closeKey(){document.getElementById('keyModal').classList.remove('show')}
+function saveKey(){var v=document.getElementById('keyIn').value.trim();if(!v){document.getElementById('keyErr').style.display='block';return}APIKEY=v;try{localStorage.setItem(KEY,v)}catch(e){}closeKey();document.getElementById('freeBadge').style.display='none';addAi('مزيان! المفتاح تحفظ. سؤلني أي حاجة 🚀')}
+if(APIKEY)document.getElementById('freeBadge').style.display='none';
 
 function quick(t){document.getElementById('in').value=t;send()}
-
-const chat=document.getElementById('chat');
 function scrollDown(){chat.scrollTop=chat.scrollHeight}
-
-function addMe(t){
-  const d=document.createElement('div');d.className='msg me';
-  d.innerHTML='<div class="who">أنا</div>'+esc(t);
-  chat.appendChild(d);scrollDown();
-}
-function addAi(t){
-  const d=document.createElement('div');d.className='msg ai';
-  d.innerHTML='<div class="who">AZAMI AI</div>'+esc(t);
-  chat.appendChild(d);scrollDown();
-  return d;
-}
 function esc(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')}
+function addMe(t){var d=document.createElement('div');d.className='msg me';d.innerHTML='<div class="who">أنا</div>'+esc(t);chat.appendChild(d);scrollDown()}
+function addAi(t){var d=document.createElement('div');d.className='msg ai';d.innerHTML='<div class="who">AZAMI AI</div>'+esc(t);chat.appendChild(d);scrollDown();return d}
+function addTyping(){var d=document.createElement('div');d.className='msg ai';d.innerHTML='<div class="who">AZAMI AI</div><span class="typing"><i></i><i></i><i></i></span>';chat.appendChild(d);scrollDown();return d}
+function mkBtn(t,fn){var b=document.createElement('button');b.textContent=t;b.onclick=fn;return b}
 
-function addTyping(){
-  const d=document.createElement('div');d.className='msg ai';
-  d.innerHTML='<div class="who">AZAMI AI</div><span class="typing"><i></i><i></i><i></i></span>';
-  chat.appendChild(d);scrollDown();return d;
-}
+function onImgPick(input){var f=input.files[0];if(!f)return;var r=new FileReader();r.onload=function(e){pickedImg=e.target.result;pickedType=f.type||'image/jpeg';document.getElementById('prevThumb').src=pickedImg;document.getElementById('imgPrev').style.display='block'};r.readAsDataURL(f);input.value=''}
+function clearImg(){pickedImg=null;pickedType=null;document.getElementById('imgPrev').style.display='none'}
+function toggleImg(){imgMode=!imgMode;var b=document.getElementById('imgBtn');if(imgMode){b.classList.add('active');b.textContent='🎨✓';document.getElementById('in').placeholder='اكتب وصف التصويرة...'}else{b.classList.remove('active');b.textContent='🎨';document.getElementById('in').placeholder='كتب رسالتك لـ AZAMI AI...'}}
 
+function handleSend(){if(generating){if(abortCtrl){try{abortCtrl.abort()}catch(e){}}return}send()}
 async function send(){
-  const ta=document.getElementById('in');
-  const txt=ta.value.trim();
-  if(!txt)return;
+  var ta=document.getElementById('in');var txt=ta.value.trim();
+  if(!txt&&!pickedImg)return;
   ta.value='';ta.style.height='auto';
   addMe(txt);
-  const typing=addTyping();
   document.getElementById('send').disabled=true;
+  if(imgMode||/(ارسم|رسم|صوّر|صور|صورة|أنشئ|ولّد|صمم|generate image|create image|draw |paint )/i.test(txt)){await genImage(txt);return}
+  if(pickedImg){if(APIKEY){await visionReq(txt)}else{addAi('⚠️ تحليل الصور خاصو مفتاح Gemini. دوس على 🔑 المفتاح.')}clearImg();document.getElementById('send').disabled=false;return}
+  if(APIKEY){await geminiChat(txt)}else{await pollinationsChat(txt)}
+}
+
+async function pollinationsChat(txt){
+  var typing=addTyping();generating=true;abortCtrl=new AbortController();
   try{
-    var out='';
-    if(APIKEY){
-      // GEMINI (with key = high quality)
-      const res=await fetch('https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key='+encodeURIComponent(APIKEY),{
-        method:'POST',
-        headers:{'Content-Type':'application/json'},
-        body:JSON.stringify({
-          systemInstruction:{parts:[{text:SYS}]},
-          contents:[{role:'user',parts:[{text:txt}]}],
-          generationConfig:{maxOutputTokens:1200,temperature:0.7}
-        })
-      });
-      const data=await res.json();
-      typing.remove();
-      if(data.candidates&&data.candidates[0]&&data.candidates[0].content){
-        out=data.candidates[0].content.parts.map(p=>p.text).join('\n');
-      }else{
-        let m='وقع مشكل.';
-        if(data.error&&data.error.message)m='خطأ: '+data.error.message;
-        addAi('⚠️ '+m+(data.error&&data.error.code===400?'\n\nتحقق من المفتاح (دوس 🔑).':''));
-        document.getElementById('send').disabled=false;scrollDown();return;
-      }
-    }else{
-      // POLLINATIONS (FREE, no key needed!)
-      try{
-        const res=await fetch('https://text.pollinations.ai/openai',{
-          method:'POST',
-          headers:{'Content-Type':'application/json'},
-          body:JSON.stringify({messages:[{role:'system',content:SYS},{role:'user',content:txt}],model:'openai'})
-        });
-        const data=await res.json();
-        typing.remove();
-        if(data.choices&&data.choices[0]){
-          out=data.choices[0].message.content;
-        }else{throw new Error('no response')}
-      }catch(postErr){
-        typing.remove();
-        // Fallback to GET
-        try{
-          const res2=await fetch('https://text.pollinations.ai/'+encodeURIComponent(SYS+'\n\n'+txt));
-          out=await res2.text();
-          if(out.startsWith('{')){out='';throw new Error('api error')}
-        }catch(getErr){throw getErr}
+    var msgs=[{role:'system',content:SYS},{role:'user',content:txt}];
+    var res=await fetch('https://text.pollinations.ai/openai',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({messages:msgs,model:'openai'}),signal:abortCtrl.signal});
+    var data=await res.json();
+    if(data.error)throw data.error;
+    var full=(data.choices&&data.choices[0])?data.choices[0].message.content:'';
+    if(!full){var r2=await fetch('https://text.pollinations.ai/'+encodeURIComponent(SYS+'\n\n'+txt),{signal:abortCtrl.signal});full=await r2.text();if(full.startsWith('{'))throw new Error('error')}
+    typing.remove();var d=addAi(full);addBar(d,full);
+  }catch(e){typing.remove();if(e.name!=='AbortError')addAi('⚠️ الـAI المجاني ما خدامش دابا. تأكد من الإنترنت ولا زيد مفتاح Gemini (🔑) باش يخدم بجودة عالية.')}
+  generating=false;document.getElementById('send').disabled=false;scrollDown();
+}
+
+async function geminiChat(txt){
+  var typing=addTyping();generating=true;abortCtrl=new AbortController();var full='';
+  try{
+    var res=await fetch('https://generativelanguage.googleapis.com/v1beta/models/gemini-3.5-flash-lite:streamGenerateContent?alt=sse&key='+encodeURIComponent(APIKEY),{
+      method:'POST',headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({systemInstruction:{parts:[{text:SYS}]},contents:[{role:'user',parts:[{text:txt}]}],generationConfig:{maxOutputTokens:1200}}),
+      signal:abortCtrl.signal
+    });
+    if(!res.ok){var ed=await res.json().catch(function(){return{}});typing.remove();var m='وقع مشلم.';if(ed.error&&ed.error.message)m='خطأ: '+ed.error.message;addAi('⚠️ '+m+(ed.error&&ed.error.code===400?'\n\nتحقق من المفتاح (دوس 🔑).':''));generating=false;document.getElementById('send').disabled=false;return}
+    typing.querySelector('.typing').remove();
+    var d=document.createElement('div');d.className='msg ai';d.innerHTML='<div class="who">AZAMI AI</div>';var span=document.createElement('span');d.appendChild(span);chat.appendChild(d);scrollDown();
+    var reader=res.body.getReader(),dec=new TextDecoder(),buf='';
+    while(true){var ch=await reader.read();if(ch.done)break;buf+=dec.decode(ch.value,{stream:true});var lines=buf.split('\n');buf=lines.pop();
+      for(var i=0;i<lines.length;i++){var t=lines[i].trim();if(!t.startsWith('data:'))continue;var j=t.slice(5).trim();if(!j||j==='[DONE]')continue;
+        try{var o=JSON.parse(j);if(o.candidates&&o.candidates[0]&&o.candidates[0].content){full+=o.candidates[0].content.parts.map(function(p){return p.text}).join('');span.textContent=full;scrollDown()}}catch(e){}
       }
     }
-    addAi(out||'ما قدرتش نولّد جواب، حاول مرة أخرى.');
-  }catch(e){
-    typing.remove();
-    if(!APIKEY){
-      addAi('⚠️ الـAI المجاني ما خدامش دابا. دوس على 🔑 المفتاح وحط مفتاح Gemini مجاني من Google AI Studio.');
-    }else{
-      addAi('⚠️ ما قدرتش نوصل للـAI. تأكد من الإنترنت وحاول مرة أخرى.');
-    }
-  }
-  document.getElementById('send').disabled=false;
+    span.textContent=full||'ما قدرتش نولّد جواب.';if(full)addBar(d,full);
+  }catch(e){if(e.name==='AbortError'){if(full){addAi(full)}else{typing.remove()}}else{typing.remove();addAi('⚠️ ما قدرش نوصل للـAI. تأكد من الإنترنت.')}}
+  generating=false;document.getElementById('send').disabled=false;scrollDown();
+}
+
+async function visionReq(txt){
+  var b64=pickedImg.split(',')[1];var typing=addTyping();generating=true;abortCtrl=new AbortController();
+  try{
+    var parts=[];if(txt)parts.push({text:txt});parts.push({inlineData:{mimeType:pickedType,data:b64}});
+    var res=await fetch('https://generativelanguage.googleapis.com/v1beta/models/gemini-3.5-flash-lite:generateContent?key='+encodeURIComponent(APIKEY),{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({systemInstruction:{parts:[{text:SYS}]},contents:[{role:'user',parts:parts}]}),signal:abortCtrl.signal});
+    var data=await res.json();typing.remove();
+    if(data.candidates&&data.candidates[0]&&data.candidates[0].content){var out=data.candidates[0].content.parts.map(function(p){return p.text}).join('\n')||'ما قدرش نولّد جواب.';var d=addAi(out);addBar(d,out)}
+    else{var m='وقع مشلم.';if(data.error&&data.error.message)m='خطأ: '+data.error.message;addAi('⚠️ '+m)}
+  }catch(e){if(e.name!=='AbortError'){typing.remove();addAi('⚠️ ما قدرش نوصل للـAI.')}}
+  generating=false;clearImg();document.getElementById('send').disabled=false;scrollDown();
+}
+
+async function genImage(prompt){
+  var typing=addTyping();generating=true;
+  var clean=prompt.replace(/^(ارسم|صوّر|أنشئ صورة|ولّد صورة|صمم صورة|صورة|صور|draw|paint|generate image|create image)\s*/i,'').trim()||prompt;
+  try{
+    var eng=clean;
+    try{var tRes=await fetch('https://translate.googleapis.com/translate_a/single?client=gtx&sl=auto&tl=en&dt=t&q='+encodeURIComponent(clean));var tData=await tRes.json();if(tData&&tData[0])eng=tData[0].map(function(i){return i[0]||''}).join('').trim()||clean}catch(e){}
+    var url='https://image.pollinations.ai/prompt/'+encodeURIComponent(eng+', ultra detailed, 4K, sharp focus')+'?width=1024&height=1024&nologo=true&model=flux&enhance=true';
+    var img=new Image();
+    img.onload=function(){typing.remove();var d=document.createElement('div');d.className='msg ai';d.innerHTML='<div class="who">AZAMI AI</div>';var im=document.createElement('img');im.src=url;d.appendChild(im);var bar=document.createElement('div');bar.className='msg-bar';var a=document.createElement('a');a.href=url;a.download='azami-ai.jpg';a.textContent='⬇️ تحميل';bar.appendChild(a);d.appendChild(bar);chat.appendChild(d);scrollDown();generating=false;document.getElementById('send').disabled=false};
+    img.onerror=function(){typing.remove();addAi('⚠️ ما قدرتش نولّد التصويرة.');generating=false;document.getElementById('send').disabled=false};
+    img.src=url;
+  }catch(e){typing.remove();addAi('⚠️ ما قدرتش نولّد التصويرة.');generating=false;document.getElementById('send').disabled=false}
   scrollDown();
 }
 
-// auto-resize textarea
-const ta=document.getElementById('in');
+function addBar(d,text){
+  var bar=document.createElement('div');bar.className='msg-bar';
+  bar.appendChild(mkBtn('🔊',function(){speak(text)}));
+  bar.appendChild(mkBtn('📋',function(){navigator.clipboard&&navigator.clipboard.writeText(text);this.textContent='✅';var b=this;setTimeout(function(){b.textContent='📋'},1500)}));
+  d.appendChild(bar);
+}
+
+function speak(text){if(!('speechSynthesis' in window))return;speechSynthesis.cancel();var u=new SpeechSynthesisUtterance(text);u.lang=/[\u0600-\u06FF]/.test(text)?'ar-SA':'en-US';u.rate=0.9;speechSynthesis.speak(u)}
+
+let rec,listening=false;
+function toggleMic(){
+  var SR=window.SpeechRecognition||window.webkitSpeechRecognition;if(!SR){addAi('⚠️ الميكروفون ما مدعومش.');return}
+  if(listening){rec.stop();return}
+  rec=new SR();rec.lang='ar-MA';rec.interimResults=true;var ta=document.getElementById('in');
+  rec.onstart=function(){listening=true;document.getElementById('micBtn').classList.add('active');document.getElementById('micBtn').textContent='⏹'};
+  rec.onresult=function(e){var t='';for(var i=0;i<e.results.length;i++)t+=e.results[i][0].transcript;ta.value=t;ta.style.height='auto';ta.style.height=Math.min(ta.scrollHeight,120)+'px'};
+  rec.onerror=function(e){addAi('⚠️ مشكل فالميكروفون: '+e.error)};
+  rec.onend=function(){listening=false;document.getElementById('micBtn').classList.remove('active');document.getElementById('micBtn').textContent='🎤'};
+  rec.start();
+}
+
+var ta=document.getElementById('in');
 ta.addEventListener('input',function(){this.style.height='auto';this.style.height=Math.min(this.scrollHeight,120)+'px'});
 </script>
 </body>
