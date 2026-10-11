@@ -11,7 +11,7 @@
 <link rel="apple-touch-icon" href="azami-apple-icon.png">
 <script src="https://js.puter.com/v2/"></script>
 <title>AZAMI AI — Moroccan Roots. Global Intelligence.</title>
-<meta name="description" content="AZAMI AI — مساعد ذكاء اصطناعي مغربي. From Morocco to the World.">
+<meta name="description" content="AZAMI AI — Moroccan AI Assistant. From Morocco to the World.">
 <style>
   :root{
     --gold:#D4AF37; --gold2:#E8C66B; --green:#0E5C4A; --green2:#1B7A5A;
@@ -317,10 +317,10 @@ var btn=document.getElementById('installBtn');
 var bannerText=banner.querySelector('.txt');
 function updateBanner(){
   if(deferredPrompt){
-    bannerText.innerHTML='<b>📥 تثبيت التطبيق</b>نصّب AZAMI AI على التيليفون · SW '+swStatus;
-    btn.style.display='';btn.textContent='تثبيت';
+    bannerText.innerHTML='<b>📥 Install App</b>Install AZAMI AI on your phone · SW '+swStatus;
+    btn.style.display='';btn.textContent='Install';
   }else{
-    bannerText.innerHTML='<b>📱 ثبّت AZAMI AI</b>كليكي على ⋮ (تحت ليمين) ← إضافة إلى الشاشة الرئيسية · SW '+swStatus;
+    bannerText.innerHTML='<b>📱 Install AZAMI AI</b>Tap ⋮ (bottom right) ← Add to Home screen · SW '+swStatus;
     btn.style.display='none';
   }
   banner.classList.add('show');
