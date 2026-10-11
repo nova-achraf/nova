@@ -15,20 +15,20 @@
 <style>
   :root{
     --gold:#D4AF37; --gold2:#E8C66B; --green:#0E5C4A; --green2:#1B7A5A;
-    --bg:#0A0A0F; --bg2:#12121A; --card:#181822; --line:#2A2A38;
-    --txt:#F4F1E8; --muted:#8A8A9A; --red:#C4342B;
+    --bg:#06120E; --bg2:#0A1F18; --card:#0E2520; --line:#1A3A30;
+    --txt:#F0F5F0; --muted:#6B9990; --red:#C4342B;
   }
   *{box-sizing:border-box;margin:0;padding:0}
   html,body{height:100%}
   body{
     font-family:'Segoe UI',system-ui,-apple-system,'Noto Sans Arabic',sans-serif;
-    background:radial-gradient(circle at 50% 0%,#15151f 0%,var(--bg) 60%);
+    background:radial-gradient(ellipse at 50% 0%,#0E2520 0%,#06120E 70%);
     color:var(--txt);display:flex;flex-direction:column;height:100dvh;overflow:hidden;
   }
   header{
     display:flex;align-items:center;gap:12px;padding:12px 14px;
-    background:linear-gradient(135deg,rgba(14,92,74,.18),rgba(212,175,55,.10));
-    border-bottom:1px solid var(--line);flex-shrink:0;
+    background:linear-gradient(135deg,rgba(27,122,90,.35),rgba(212,175,55,.15));
+    border-bottom:1px solid var(--green2);flex-shrink:0;
   }
   .logo{
     width:46px;height:46px;flex-shrink:0;border-radius:10px;object-fit:cover;
@@ -242,8 +242,8 @@ async function genImage(prompt){
   try{
     var eng=clean;
     try{var tRes=await fetch('https://translate.googleapis.com/translate_a/single?client=gtx&sl=auto&tl=en&dt=t&q='+encodeURIComponent(clean));var tData=await tRes.json();if(tData&&tData[0])eng=tData[0].map(function(i){return i[0]||''}).join('').trim()||clean}catch(e){}
-    eng=eng+', ultra detailed, 8K UHD, sharp focus, professional photography, high resolution, crystal clear, vivid colors, cinematic lighting, photorealistic, masterpiece quality, best quality, stunning detail';
-    var url='https://image.pollinations.ai/prompt/'+encodeURIComponent(eng)+'?width=1536&height=1536&nologo=true&model=flux&enhance=true&safe=false';
+    eng=eng+', ultra detailed, 8K UHD, sharp focus, professional photography, high resolution, crystal clear, vivid colors, cinematic lighting, photorealistic, masterpiece quality, best quality, stunning detail, highly detailed textures, intricate details, professional color grading, dramatic composition, studio quality, award winning, depth of field, fine art, extremely detailed';
+    var url='https://image.pollinations.ai/prompt/'+encodeURIComponent(eng)+'?width=1536&height=1536&nologo=true&model=flux&enhance=true&safe=false&private=true';
     var img=new Image();
     img.onload=function(){typing.remove();var d=document.createElement('div');d.className='msg ai';d.innerHTML='<div class="who">AZAMI AI</div>';var im=document.createElement('img');im.src=url;im.style.maxWidth='100%';im.style.borderRadius='10px';d.appendChild(im);var bar=document.createElement('div');bar.className='msg-bar';var a=document.createElement('a');a.href=url;a.download='azami-ai.jpg';a.textContent='⬇️ تحميل';bar.appendChild(a);d.appendChild(bar);chat.appendChild(d);scrollDown();generating=false;document.getElementById('send').disabled=false};
     img.onerror=function(){typing.remove();addAi('⚠️ ما قدرتش نولّد التصويرة.');generating=false;document.getElementById('send').disabled=false};
