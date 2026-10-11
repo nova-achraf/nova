@@ -298,28 +298,41 @@ function toggleMic(){
 var ta=document.getElementById('in');
 ta.addEventListener('input',function(){this.style.height='auto';this.style.height=Math.min(this.scrollHeight,120)+'px'});
 // PWA: register service worker — auto-reload once so SW controls the page
+var swStatus='⏳';
 if('serviceWorker' in navigator){
+  swStatus='🔄';
   navigator.serviceWorker.register('sw.js').then(function(reg){
+    swStatus=navigator.serviceWorker.controller?'✅':'🔄';
     if(!navigator.serviceWorker.controller && !sessionStorage.getItem('swR')){
       sessionStorage.setItem('swR','1');
       window.location.reload();
     }
-  }).catch(function(){});
-}
-// PWA: install button — show banner after 2s, fallback to manual instructions
+    updateBanner();
+  }).catch(function(e){swStatus='❌';updateBanner();});
+}else{swStatus='❌';}
+// PWA: install button
 var deferredPrompt=null;
 var banner=document.getElementById('installBanner');
 var btn=document.getElementById('installBtn');
 var bannerText=banner.querySelector('.txt');
-window.addEventListener('beforeinstallprompt',function(e){e.preventDefault();deferredPrompt=e;banner.classList.add('show');bannerText.innerHTML='<b>📥 تثبيت التطبيق</b>نصّب AZAMI AI على التيليفون';});
+function updateBanner(){
+  if(deferredPrompt){
+    bannerText.innerHTML='<b>📥 تثبيت التطبيق</b>نصّب AZAMI AI على التيليفون · SW '+swStatus;
+    btn.style.display='';btn.textContent='تثبيت';
+  }else{
+    bannerText.innerHTML='<b>📱 ثبّت AZAMI AI</b>كليكي على ⋮ (فوق لليمين) ← إضافة إلى الشاشة الرئيسية · SW '+swStatus;
+    btn.style.display='none';
+  }
+  banner.classList.add('show');
+}
+window.addEventListener('beforeinstallprompt',function(e){e.preventDefault();deferredPrompt=e;updateBanner();});
 btn.addEventListener('click',function(){
   if(deferredPrompt){deferredPrompt.prompt();deferredPrompt.userChoice.then(function(){deferredPrompt=null;banner.classList.remove('show');});}
-  else{bannerText.innerHTML='<b>📋 كيفاش تنصّب؟</b>كليكي على ⋮ (فوق) ← إضافة إلى الشاشة الرئيسية';btn.style.display='none';}
 });
 document.getElementById('installClose').addEventListener('click',function(){banner.classList.remove('show');});
 window.addEventListener('appinstalled',function(){banner.classList.remove('show');});
-// Fallback: show banner after 3s if beforeinstallprompt didn't fire
-setTimeout(function(){if(!deferredPrompt){banner.classList.add('show');bannerText.innerHTML='<b>📱 ثبّت AZAMI AI</b>كليكي هنا ولا ⋮ ← إضافة للشاشة';}},3000);
+// Show banner after 2s with status
+setTimeout(function(){updateBanner();},2000);
 </script>
 </body>
 </html>
