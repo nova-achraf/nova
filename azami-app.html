@@ -1,0 +1,325 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<meta name="theme-color" content="#0A0A0F">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black">
+<meta name="apple-mobile-web-app-title" content="AZAMI AI">
+<link rel="manifest" href="azami-manifest.json">
+<link rel="apple-touch-icon" href="azami-apple-icon.png">
+<script src="https://js.puter.com/v2/"></script>
+<title>AZAMI AI — Moroccan Roots. Global Intelligence.</title>
+<meta name="description" content="AZAMI AI — مساعد ذكاء اصطناعي مغربي. From Morocco to the World.">
+<style>
+  :root{
+    --gold:#D4AF37; --gold2:#E8C66B; --green:#0E5C4A; --green2:#1B7A5A;
+    --bg:#06120E; --bg2:#0A1F18; --card:#0E2520; --line:#1A3A30;
+    --txt:#F0F5F0; --muted:#6B9990; --red:#C4342B;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html,body{height:100%}
+  body{
+    font-family:'Segoe UI',system-ui,-apple-system,'Noto Sans Arabic',sans-serif;
+    background:radial-gradient(ellipse at 50% 0%,#0E2520 0%,#06120E 70%);
+    color:var(--txt);display:flex;flex-direction:column;height:100dvh;overflow:hidden;
+  }
+  header{
+    display:flex;align-items:center;gap:12px;padding:12px 14px;
+    background:linear-gradient(135deg,rgba(27,122,90,.35),rgba(212,175,55,.15));
+    border-bottom:1px solid var(--green2);flex-shrink:0;
+  }
+  .logo{
+    width:46px;height:46px;flex-shrink:0;border-radius:10px;object-fit:cover;
+    border:2px solid var(--gold);
+    box-shadow:0 0 14px rgba(212,175,55,.25);
+  }
+  .brand{display:flex;flex-direction:column;line-height:1.15}
+  .brand b{font-size:18px;letter-spacing:.5px;color:var(--gold2)}
+  .brand small{font-size:10.5px;color:var(--muted)}
+  .dot{width:8px;height:8px;border-radius:50%;background:var(--green2);box-shadow:0 0 8px var(--green2);margin-right:auto;align-self:center}
+  .key-btn{background:transparent;border:1px solid var(--line);color:var(--muted);border-radius:8px;padding:6px 10px;font-size:12px;cursor:pointer;white-space:nowrap;font-family:inherit}
+  .key-btn:active{border-color:var(--gold);color:var(--gold2)}
+  .free-badge{font-size:9px;color:var(--green2);border:1px solid var(--green2);padding:2px 6px;border-radius:6px;margin-left:4px}
+  main{flex:1;overflow-y:auto;padding:14px;display:flex;flex-direction:column;gap:12px;-webkit-overflow-scrolling:touch}
+  .msg{max-width:88%;padding:11px 14px;border-radius:14px;font-size:15px;line-height:1.6;white-space:pre-wrap;word-wrap:break-word}
+  .ai{background:var(--card);border:1px solid var(--line);align-self:flex-start;border-bottom-left-radius:4px}
+  .me{background:linear-gradient(135deg,var(--green),var(--green2));color:#fff;align-self:flex-end;border-bottom-right-radius:4px}
+  .who{font-size:11px;color:var(--gold2);margin-bottom:3px;font-weight:700}
+  .me .who{color:rgba(255,255,255,.7)}
+  .msg img{max-width:100%;border-radius:10px;margin:6px 0}
+  .msg-bar{display:flex;gap:6px;margin-top:6px;flex-wrap:wrap}
+  .msg-bar button{background:none;border:none;color:var(--muted);font-size:13px;cursor:pointer;padding:3px 6px;border-radius:6px}
+  .msg-bar button:active{background:var(--card);color:var(--gold2)}
+  .msg-bar a{font-size:13px;color:var(--gold2);text-decoration:none;padding:3px 6px}
+  .typing{display:inline-flex;gap:4px;align-items:center;color:var(--muted);font-size:14px}
+  .typing i{width:7px;height:7px;border-radius:50%;background:var(--gold);opacity:.4;animation:bnc 1s infinite}
+  .typing i:nth-child(2){animation-delay:.2s}.typing i:nth-child(3){animation-delay:.4s}
+  @keyframes bnc{0%,100%{transform:translateY(0);opacity:.4}50%{transform:translateY(-5px);opacity:1}}
+  .welcome{text-align:center;padding:20px 16px;color:var(--muted);font-size:14px;line-height:1.8}
+  .welcome h2{color:var(--gold2);font-size:20px;margin-bottom:8px;font-family:Georgia,serif}
+  .chip{display:inline-block;background:var(--card);border:1px solid var(--line);color:var(--txt);padding:8px 12px;border-radius:20px;font-size:13px;margin:4px;cursor:pointer}
+  .chip:active{border-color:var(--gold);color:var(--gold2)}
+  footer{flex-shrink:0;padding:10px 12px calc(10px + env(safe-area-inset-bottom));background:var(--bg2);border-top:1px solid var(--line)}
+  #imgPrev{display:none;margin-bottom:6px;position:relative}
+  #prevThumb{max-height:70px;border-radius:8px;border:1px solid var(--line)}
+  .clear-img{position:absolute;top:-6px;right:-6px;background:var(--red);color:#fff;border:none;border-radius:50%;width:22px;height:22px;font-size:12px;cursor:pointer}
+  .inp{display:flex;gap:6px;align-items:flex-end}
+  textarea{flex:1;background:var(--card);border:1px solid var(--line);color:var(--txt);border-radius:14px;padding:11px 14px;font-size:15px;font-family:inherit;resize:none;max-height:120px;min-height:46px;outline:none;line-height:1.5}
+  textarea:focus{border-color:var(--gold)}
+  .inp-btn{width:42px;height:42px;flex-shrink:0;border:none;border-radius:50%;background:transparent;color:var(--muted);font-size:18px;cursor:pointer;display:flex;align-items:center;justify-content:center}
+  .inp-btn:active{color:var(--gold)}
+  .inp-btn.active{background:linear-gradient(135deg,var(--gold),var(--gold2));color:var(--bg)}
+  .inp-btn.stop{background:var(--red);color:#fff;animation:pulse 1.5s infinite}
+  @keyframes pulse{0%,100%{opacity:1}50%{opacity:.7}}
+  .modal{position:fixed;inset:0;background:rgba(0,0,0,.85);display:none;align-items:center;justify-content:center;z-index:50;padding:18px}
+  .modal.show{display:flex}
+  .sheet{background:var(--bg2);border:1px solid var(--gold);border-radius:16px;padding:22px 18px;max-width:380px;width:100%}
+  .sheet h3{color:var(--gold2);font-size:18px;margin-bottom:6px;font-family:Georgia,serif}
+  .sheet p{color:var(--muted);font-size:13px;line-height:1.6;margin-bottom:14px}
+  .sheet input{width:100%;background:var(--card);border:1px solid var(--line);color:var(--txt);border-radius:10px;padding:12px;font-size:14px;font-family:monospace;outline:none;margin-bottom:12px}
+  .sheet input:focus{border-color:var(--gold)}
+  .sheet button{width:100%;padding:12px;border:none;border-radius:10px;font-weight:700;font-size:15px;cursor:pointer;font-family:inherit}
+  .sheet .go{background:linear-gradient(135deg,var(--green),var(--green2));color:#fff;margin-bottom:8px}
+  .sheet .skip{background:transparent;color:var(--muted);border:1px solid var(--line)}
+  .err{color:var(--red);font-size:12px;margin-top:6px;display:none}
+  .install-banner{position:fixed;bottom:0;left:0;right:0;background:linear-gradient(135deg,var(--green),var(--green2));padding:12px 16px;display:none;align-items:center;gap:12px;z-index:40;box-shadow:0 -4px 20px rgba(0,0,0,.5)}
+  .install-banner.show{display:flex}
+  .install-banner .txt{flex:1;color:#fff;font-size:13px;line-height:1.4}
+  .install-banner .txt b{display:block;font-size:15px;margin-bottom:2px}
+  .install-banner button{background:var(--gold);color:var(--bg);border:none;border-radius:10px;padding:10px 18px;font-weight:800;font-size:14px;cursor:pointer;font-family:inherit;white-space:nowrap}
+  .install-banner .close{background:transparent;color:rgba(255,255,255,.7);border:none;font-size:22px;cursor:pointer;padding:0 4px}
+</style>
+</head>
+<body>
+
+<div class="install-banner" id="installBanner">
+  <div class="txt"><b>📥 Install App</b>Get AZAMI AI on your phone</div>
+  <button id="installBtn">Install</button>
+  <button class="close" id="installClose">×</button>
+</div>
+
+<header>
+  <img src="azami-logo.webp" class="logo" alt="AZAMI AI">
+  <div class="brand">
+    <b>AZAMI AI</b>
+    <small>Moroccan Roots · Global Intelligence</small>
+  </div>
+  <div class="dot" title="online"></div>
+  <span class="free-badge" id="freeBadge">Free</span>
+  <button class="key-btn" onclick="openKey()">🔑 Key</button>
+</header>
+
+<main id="chat">
+  <div class="welcome">
+    <h2>Welcome to AZAMI AI 🇲🇦</h2>
+    <p>Your smart assistant from Morocco to the world.<br>Ask me anything in any language — Arabic, French, English, and more.</p>
+    <div style="margin-top:12px">
+      <div class="chip" onclick="quick('What is AZAMI AI?')">What is AZAMI AI?</div>
+      <div class="chip" onclick="quick('Write a product poster for me')">Write a poster</div>
+      <div class="chip" onclick="quick('Translate: Hello World')">Translate</div>
+      <div class="chip" onclick="quick('Give me a small business idea in Morocco')">Business idea</div>
+    </div>
+  </div>
+</main>
+
+<footer>
+  <div id="imgPrev"><img id="prevThumb"><button class="clear-img" onclick="clearImg()">✕</button></div>
+  <div class="inp">
+    <textarea id="in" rows="1" placeholder="Type your message to AZAMI AI..." onkeydown="if(event.key==='Enter'&&!event.shiftKey){event.preventDefault();send()}"></textarea>
+    <input type="file" id="camInput" accept="image/*" capture="environment" hidden onchange="onImgPick(this)">
+    <button class="inp-btn" onclick="document.getElementById('camInput').click()" title="Camera">📷</button>
+    <button class="inp-btn" id="imgBtn" onclick="toggleImg()" title="Image mode">🎨</button>
+    <button class="inp-btn" id="vidBtn" onclick="toggleVid()" title="Video">🎬</button>
+    <button class="inp-btn" id="micBtn" onclick="toggleMic()" title="Microphone">🎤</button>
+    <button class="inp-btn" id="send" onclick="handleSend()" title="Send">➤</button>
+  </div>
+</footer>
+
+<div class="modal" id="keyModal">
+  <div class="sheet">
+    <h3>🔑 AZAMI AI Key</h3>
+    <p>AZAMI AI works <b style="color:var(--green2)">free without a key</b>! Add a Gemini key (from Google AI Studio) for higher quality + streaming.<br><small style="color:var(--muted);display:block;margin-top:6px">Get a free key: aistudio.google.com → Sign in → Get API Key</small></p>
+    <input id="keyIn" placeholder="AIza..." autocomplete="off" spellcheck="false">
+    <div class="err" id="keyErr">Please enter the key.</div>
+    <button class="go" onclick="saveKey()">Save ✅</button>
+    <button class="skip" onclick="closeKey()">Use free without key 🚀</button>
+  </div>
+</div>
+
+<script>
+const KEY='azami_ai_gemini_key';
+let APIKEY='';
+try{APIKEY=localStorage.getItem(KEY)||''}catch(e){}
+const SYS='You are AZAMI AI, a helpful multilingual AI assistant created in Morocco (From Morocco to the World). Answer in the EXACT language and dialect the user writes in — Arabic, Moroccan Darija, Egyptian, French, English, Spanish, German, Chinese, Japanese, Hindi, or any language. Be clear, friendly and honest. Keep answers concise for mobile. Use simple Markdown when helpful.';
+const chat=document.getElementById('chat');
+let generating=false,abortCtrl=null,imgMode=false,pickedImg=null,pickedType=null;
+
+function openKey(){document.getElementById('keyModal').classList.add('show');document.getElementById('keyIn').value=APIKEY||'';document.getElementById('keyIn').focus()}
+function closeKey(){document.getElementById('keyModal').classList.remove('show')}
+function saveKey(){var v=document.getElementById('keyIn').value.trim();if(!v){document.getElementById('keyErr').style.display='block';return}APIKEY=v;try{localStorage.setItem(KEY,v)}catch(e){}closeKey();document.getElementById('freeBadge').style.display='none';addAi('Great! Key saved. Ask me anything 🚀')}
+if(APIKEY)document.getElementById('freeBadge').style.display='none';
+
+function quick(t){document.getElementById('in').value=t;send()}
+function scrollDown(){chat.scrollTop=chat.scrollHeight}
+function esc(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')}
+function addMe(t){var d=document.createElement('div');d.className='msg me';d.innerHTML='<div class="who">You</div>'+esc(t);chat.appendChild(d);scrollDown()}
+function addAi(t){var d=document.createElement('div');d.className='msg ai';d.innerHTML='<div class="who">AZAMI AI</div>'+esc(t);chat.appendChild(d);scrollDown();return d}
+function addTyping(){var d=document.createElement('div');d.className='msg ai';d.innerHTML='<div class="who">AZAMI AI</div><span class="typing"><i></i><i></i><i></i></span>';chat.appendChild(d);scrollDown();return d}
+function mkBtn(t,fn){var b=document.createElement('button');b.textContent=t;b.onclick=fn;return b}
+
+function onImgPick(input){var f=input.files[0];if(!f)return;var r=new FileReader();r.onload=function(e){pickedImg=e.target.result;pickedType=f.type||'image/jpeg';document.getElementById('prevThumb').src=pickedImg;document.getElementById('imgPrev').style.display='block'};r.readAsDataURL(f);input.value=''}
+function clearImg(){pickedImg=null;pickedType=null;document.getElementById('imgPrev').style.display='none'}
+function toggleImg(){imgMode=!imgMode;var b=document.getElementById('imgBtn');if(imgMode){b.classList.add('active');b.textContent='🎨✓';document.getElementById('in').placeholder='Describe the image...'}else{b.classList.remove('active');b.textContent='🎨';document.getElementById('in').placeholder='Type your message to AZAMI AI...'}}
+let vidMode=false;
+function toggleVid(){vidMode=!vidMode;var b=document.getElementById('vidBtn');if(vidMode){b.classList.add('active');b.textContent='🎬✓';document.getElementById('in').placeholder='Describe the video...'}else{b.classList.remove('active');b.textContent='🎬';document.getElementById('in').placeholder='Type your message to AZAMI AI...'}}
+
+function handleSend(){if(generating){if(abortCtrl){try{abortCtrl.abort()}catch(e){}}return}send()}
+async function send(){
+  var ta=document.getElementById('in');var txt=ta.value.trim();
+  if(!txt&&!pickedImg)return;
+  ta.value='';ta.style.height='auto';
+  addMe(txt);
+  document.getElementById('send').disabled=true;
+  if(vidMode||/(فيديو|video|vidéo|film me|صور فيديو|أنشئ فيديو|اعمل فيديو)/i.test(txt)){await genVideo(txt);return}
+  if(imgMode||/(ارسم|رسم|صوّر|صور|صورة|أنشئ|ولّد|صمم|generate image|create image|draw |paint )/i.test(txt)){await genImage(txt);return}
+  if(pickedImg){if(APIKEY){await visionReq(txt)}else{addAi('⚠️ Image analysis needs a Gemini key. Tap 🔑 Key.')}clearImg();document.getElementById('send').disabled=false;return}
+  if(APIKEY){await geminiChat(txt)}else{await pollinationsChat(txt)}
+}
+
+async function pollinationsChat(txt){
+  var typing=addTyping();generating=true;abortCtrl=new AbortController();
+  try{
+    var msgs=[{role:'system',content:SYS},{role:'user',content:txt}];
+    var res=await fetch('https://text.pollinations.ai/openai',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({messages:msgs,model:'openai'}),signal:abortCtrl.signal});
+    var data=await res.json();
+    if(data.error)throw data.error;
+    var full=(data.choices&&data.choices[0])?data.choices[0].message.content:'';
+    if(!full){var r2=await fetch('https://text.pollinations.ai/'+encodeURIComponent(SYS+'\n\n'+txt),{signal:abortCtrl.signal});full=await r2.text();if(full.startsWith('{'))throw new Error('error')}
+    typing.remove();var d=addAi(full);addBar(d,full);
+  }catch(e){typing.remove();if(e.name!=='AbortError')addAi('⚠️ Free AI is not responding right now. Check your internet or add a Gemini key (🔑) for higher quality.')}
+  generating=false;document.getElementById('send').disabled=false;scrollDown();
+}
+
+async function geminiChat(txt){
+  var typing=addTyping();generating=true;abortCtrl=new AbortController();var full='';
+  try{
+    var res=await fetch('https://generativelanguage.googleapis.com/v1beta/models/gemini-3.5-flash-lite:streamGenerateContent?alt=sse&key='+encodeURIComponent(APIKEY),{
+      method:'POST',headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({systemInstruction:{parts:[{text:SYS}]},contents:[{role:'user',parts:[{text:txt}]}],generationConfig:{maxOutputTokens:1200}}),
+      signal:abortCtrl.signal
+    });
+    if(!res.ok){var ed=await res.json().catch(function(){return{}});typing.remove();var m='An error occurred.';if(ed.error&&ed.error.message)m='Error: '+ed.error.message;addAi('⚠️ '+m+(ed.error&&ed.error.code===400?'\n\nCheck your key (tap 🔑).':''));generating=false;document.getElementById('send').disabled=false;return}
+    typing.querySelector('.typing').remove();
+    var d=document.createElement('div');d.className='msg ai';d.innerHTML='<div class="who">AZAMI AI</div>';var span=document.createElement('span');d.appendChild(span);chat.appendChild(d);scrollDown();
+    var reader=res.body.getReader(),dec=new TextDecoder(),buf='';
+    while(true){var ch=await reader.read();if(ch.done)break;buf+=dec.decode(ch.value,{stream:true});var lines=buf.split('\n');buf=lines.pop();
+      for(var i=0;i<lines.length;i++){var t=lines[i].trim();if(!t.startsWith('data:'))continue;var j=t.slice(5).trim();if(!j||j==='[DONE]')continue;
+        try{var o=JSON.parse(j);if(o.candidates&&o.candidates[0]&&o.candidates[0].content){full+=o.candidates[0].content.parts.map(function(p){return p.text}).join('');span.textContent=full;scrollDown()}}catch(e){}
+      }
+    }
+    span.textContent=full||'Could not generate a response.';if(full)addBar(d,full);
+  }catch(e){if(e.name==='AbortError'){if(full){addAi(full)}else{typing.remove()}}else{typing.remove();addAi('⚠️ Could not reach the AI. Check your internet.')}}
+  generating=false;document.getElementById('send').disabled=false;scrollDown();
+}
+
+async function visionReq(txt){
+  var b64=pickedImg.split(',')[1];var typing=addTyping();generating=true;abortCtrl=new AbortController();
+  try{
+    var parts=[];if(txt)parts.push({text:txt});parts.push({inlineData:{mimeType:pickedType,data:b64}});
+    var res=await fetch('https://generativelanguage.googleapis.com/v1beta/models/gemini-3.5-flash-lite:generateContent?key='+encodeURIComponent(APIKEY),{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({systemInstruction:{parts:[{text:SYS}]},contents:[{role:'user',parts:parts}]}),signal:abortCtrl.signal});
+    var data=await res.json();typing.remove();
+    if(data.candidates&&data.candidates[0]&&data.candidates[0].content){var out=data.candidates[0].content.parts.map(function(p){return p.text}).join('\n')||'Could not generate a response.';var d=addAi(out);addBar(d,out)}
+    else{var m='An error occurred.';if(data.error&&data.error.message)m='Error: '+data.error.message;addAi('⚠️ '+m)}
+  }catch(e){if(e.name!=='AbortError'){typing.remove();addAi('⚠️ Could not reach the AI.')}}
+  generating=false;clearImg();document.getElementById('send').disabled=false;scrollDown();
+}
+
+async function genImage(prompt){
+  var typing=addTyping();generating=true;
+  var clean=prompt.replace(/^(ارسم|صوّر|أنشئ صورة|ولّد صورة|صمم صورة|صورة|صور|draw|paint|generate image|create image)\s*/i,'').trim()||prompt;
+  try{
+    var eng=clean;
+    try{var tRes=await fetch('https://translate.googleapis.com/translate_a/single?client=gtx&sl=auto&tl=en&dt=t&q='+encodeURIComponent(clean));var tData=await tRes.json();if(tData&&tData[0])eng=tData[0].map(function(i){return i[0]||''}).join('').trim()||clean}catch(e){}
+    eng=eng+', ultra detailed, 8K UHD, sharp focus, professional photography, high resolution, crystal clear, vivid colors, cinematic lighting, photorealistic, masterpiece quality, best quality, stunning detail, highly detailed textures, intricate details, professional color grading, dramatic composition, studio quality, award winning, depth of field, fine art, extremely detailed, no blur, no noise, no artifacts, no distortion, no watermark, perfect anatomy, clean lines, sharp edges';
+    var url='https://image.pollinations.ai/prompt/'+encodeURIComponent(eng)+'?width=2048&height=2048&nologo=true&model=flux&enhance=true&safe=false&private=true';
+    var img=new Image();
+    img.onload=function(){typing.remove();var d=document.createElement('div');d.className='msg ai';d.innerHTML='<div class="who">AZAMI AI</div>';var im=document.createElement('img');im.src=url;im.style.maxWidth='100%';im.style.borderRadius='10px';d.appendChild(im);var bar=document.createElement('div');bar.className='msg-bar';var a=document.createElement('a');a.href=url;a.download='azami-ai.jpg';a.textContent='⬇️ Download';bar.appendChild(a);d.appendChild(bar);chat.appendChild(d);scrollDown();generating=false;document.getElementById('send').disabled=false};
+    img.onerror=function(){typing.remove();addAi('⚠️ Could not generate the image.');generating=false;document.getElementById('send').disabled=false};
+    img.src=url;
+  }catch(e){typing.remove();addAi('⚠️ Could not generate the image.');generating=false;document.getElementById('send').disabled=false}
+  scrollDown();
+}
+
+function addBar(d,text){
+  var bar=document.createElement('div');bar.className='msg-bar';
+  bar.appendChild(mkBtn('🔊',function(){speak(text)}));
+  bar.appendChild(mkBtn('📋',function(){navigator.clipboard&&navigator.clipboard.writeText(text);this.textContent='✅';var b=this;setTimeout(function(){b.textContent='📋'},1500)}));
+  d.appendChild(bar);
+}
+
+function speak(text){if(!('speechSynthesis' in window))return;speechSynthesis.cancel();var u=new SpeechSynthesisUtterance(text);u.lang=/[\u0600-\u06FF]/.test(text)?'ar-SA':'en-US';u.rate=0.9;speechSynthesis.speak(u)}
+
+/* === VIDEO GEN (Puter.js + Google Veo, free, no key) === */
+async function genVideo(prompt){
+  var clean=prompt.replace(/^(فيديو|video|vidéo|صور فيديو|أنشئ فيديو|اعمل فيديو)\s*/i,'').trim()||prompt;
+  var typing=addTyping();generating=true;document.getElementById('send').disabled=true;
+  try{
+    var eng=clean;
+    try{var tRes=await fetch('https://translate.googleapis.com/translate_a/single?client=gtx&sl=auto&tl=en&dt=t&q='+encodeURIComponent(clean));var tData=await tRes.json();if(tData&&tData[0])eng=tData[0].map(function(i){return i[0]||''}).join('').trim()||clean}catch(e){}
+    var videoEl=await puter.ai.txt2vid(eng,{model:'google/veo-3.1-lite'});
+    typing.remove();
+    var d=document.createElement('div');d.className='msg ai';
+    d.innerHTML='<div class="who">AZAMI AI</div>';
+    if(videoEl.tagName==='VIDEO'){videoEl.controls=true;videoEl.style.maxWidth='100%';videoEl.style.borderRadius='10px';d.appendChild(videoEl)}
+    else if(videoEl.src){var v=document.createElement('video');v.src=videoEl.src;v.controls=true;v.style.maxWidth='100%';v.style.borderRadius='10px';d.appendChild(v)}
+    else{var span=document.createElement('span');span.textContent='🎬 Video generated!';d.appendChild(span);if(videoEl.appendTo)d.appendChild(videoEl)}
+    chat.appendChild(d);scrollDown();
+  }catch(e){
+    typing.remove();
+    addAi('⚠️ Could not generate the video. '+e.message+'. Please try again.');
+  }
+  generating=false;document.getElementById('send').disabled=false;scrollDown();
+}
+
+let rec,listening=false;
+function toggleMic(){
+  var SR=window.SpeechRecognition||window.webkitSpeechRecognition;if(!SR){addAi('⚠️ Microphone not supported.');return}
+  if(listening){rec.stop();return}
+  rec=new SR();rec.lang='ar-MA';rec.interimResults=true;var ta=document.getElementById('in');
+  rec.onstart=function(){listening=true;document.getElementById('micBtn').classList.add('active');document.getElementById('micBtn').textContent='⏹'};
+  rec.onresult=function(e){var t='';for(var i=0;i<e.results.length;i++)t+=e.results[i][0].transcript;ta.value=t;ta.style.height='auto';ta.style.height=Math.min(ta.scrollHeight,120)+'px'};
+  rec.onerror=function(e){addAi('⚠️ Microphone error: '+e.error)};
+  rec.onend=function(){listening=false;document.getElementById('micBtn').classList.remove('active');document.getElementById('micBtn').textContent='🎤'};
+  rec.start();
+}
+
+var ta=document.getElementById('in');
+ta.addEventListener('input',function(){this.style.height='auto';this.style.height=Math.min(this.scrollHeight,120)+'px'});
+// PWA: register service worker — auto-reload once so SW controls the page
+if('serviceWorker' in navigator){
+  navigator.serviceWorker.register('sw.js').then(function(reg){
+    if(!navigator.serviceWorker.controller && !sessionStorage.getItem('swR')){
+      sessionStorage.setItem('swR','1');
+      window.location.reload();
+    }
+  }).catch(function(){});
+}
+// PWA: install button — show banner after 2s, fallback to manual instructions
+var deferredPrompt=null;
+var banner=document.getElementById('installBanner');
+var btn=document.getElementById('installBtn');
+var bannerText=banner.querySelector('.txt');
+window.addEventListener('beforeinstallprompt',function(e){e.preventDefault();deferredPrompt=e;banner.classList.add('show');bannerText.innerHTML='<b>📥 تثبيت التطبيق</b>نصّب AZAMI AI على التيليفون';});
+btn.addEventListener('click',function(){
+  if(deferredPrompt){deferredPrompt.prompt();deferredPrompt.userChoice.then(function(){deferredPrompt=null;banner.classList.remove('show');});}
+  else{bannerText.innerHTML='<b>📋 كيفاش تنصّب؟</b>كليكي على ⋮ (فوق) ← إضافة إلى الشاشة الرئيسية';btn.style.display='none';}
+});
+document.getElementById('installClose').addEventListener('click',function(){banner.classList.remove('show');});
+window.addEventListener('appinstalled',function(){banner.classList.remove('show');});
+// Fallback: show banner after 3s if beforeinstallprompt didn't fire
+setTimeout(function(){if(!deferredPrompt){banner.classList.add('show');bannerText.innerHTML='<b>📱 ثبّت AZAMI AI</b>كليكي هنا ولا ⋮ ← إضافة للشاشة';}},3000);
+</script>
+</body>
+</html>
