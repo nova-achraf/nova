@@ -9,6 +9,7 @@
 <meta name="apple-mobile-web-app-title" content="AZAMI AI">
 <link rel="manifest" href="azami-manifest.json">
 <link rel="apple-touch-icon" href="azami-logo.webp">
+<script src="https://js.puter.com/v2/"></script>
 <title>AZAMI AI — Moroccan Roots. Global Intelligence.</title>
 <meta name="description" content="AZAMI AI — مساعد ذكاء اصطناعي مغربي. From Morocco to the World.">
 <style>
@@ -121,6 +122,7 @@
     <input type="file" id="camInput" accept="image/*" capture="environment" hidden onchange="onImgPick(this)">
     <button class="inp-btn" onclick="document.getElementById('camInput').click()" title="تصوير">📷</button>
     <button class="inp-btn" id="imgBtn" onclick="toggleImg()" title="وضع التصاور">🎨</button>
+    <button class="inp-btn" id="vidBtn" onclick="toggleVid()" title="فيديو">🎬</button>
     <button class="inp-btn" id="micBtn" onclick="toggleMic()" title="ميكروفون">🎤</button>
     <button class="inp-btn" id="send" onclick="handleSend()" title="إرسال">➤</button>
   </div>
@@ -161,6 +163,8 @@ function mkBtn(t,fn){var b=document.createElement('button');b.textContent=t;b.on
 function onImgPick(input){var f=input.files[0];if(!f)return;var r=new FileReader();r.onload=function(e){pickedImg=e.target.result;pickedType=f.type||'image/jpeg';document.getElementById('prevThumb').src=pickedImg;document.getElementById('imgPrev').style.display='block'};r.readAsDataURL(f);input.value=''}
 function clearImg(){pickedImg=null;pickedType=null;document.getElementById('imgPrev').style.display='none'}
 function toggleImg(){imgMode=!imgMode;var b=document.getElementById('imgBtn');if(imgMode){b.classList.add('active');b.textContent='🎨✓';document.getElementById('in').placeholder='اكتب وصف التصويرة...'}else{b.classList.remove('active');b.textContent='🎨';document.getElementById('in').placeholder='كتب رسالتك لـ AZAMI AI...'}}
+let vidMode=false;
+function toggleVid(){vidMode=!vidMode;var b=document.getElementById('vidBtn');if(vidMode){b.classList.add('active');b.textContent='🎬✓';document.getElementById('in').placeholder='اكتب وصف الفيديو...'}else{b.classList.remove('active');b.textContent='🎬';document.getElementById('in').placeholder='كتب رسالتك لـ AZAMI AI...'}}
 
 function handleSend(){if(generating){if(abortCtrl){try{abortCtrl.abort()}catch(e){}}return}send()}
 async function send(){
@@ -169,6 +173,7 @@ async function send(){
   ta.value='';ta.style.height='auto';
   addMe(txt);
   document.getElementById('send').disabled=true;
+  if(vidMode||/(فيديو|video|vidéo|film me|صور فيديو|أنشئ فيديو|اعمل فيديو)/i.test(txt)){await genVideo(txt);return}
   if(imgMode||/(ارسم|رسم|صوّر|صور|صورة|أنشئ|ولّد|صمم|generate image|create image|draw |paint )/i.test(txt)){await genImage(txt);return}
   if(pickedImg){if(APIKEY){await visionReq(txt)}else{addAi('⚠️ تحليل الصور خاصو مفتاح Gemini. دوس على 🔑 المفتاح.')}clearImg();document.getElementById('send').disabled=false;return}
   if(APIKEY){await geminiChat(txt)}else{await pollinationsChat(txt)}
@@ -245,6 +250,28 @@ function addBar(d,text){
 }
 
 function speak(text){if(!('speechSynthesis' in window))return;speechSynthesis.cancel();var u=new SpeechSynthesisUtterance(text);u.lang=/[\u0600-\u06FF]/.test(text)?'ar-SA':'en-US';u.rate=0.9;speechSynthesis.speak(u)}
+
+/* === VIDEO GEN (Puter.js + Google Veo, free, no key) === */
+async function genVideo(prompt){
+  var clean=prompt.replace(/^(فيديو|video|vidéo|صور فيديو|أنشئ فيديو|اعمل فيديو)\s*/i,'').trim()||prompt;
+  var typing=addTyping();generating=true;document.getElementById('send').disabled=true;
+  try{
+    var eng=clean;
+    try{var tRes=await fetch('https://translate.googleapis.com/translate_a/single?client=gtx&sl=auto&tl=en&dt=t&q='+encodeURIComponent(clean));var tData=await tRes.json();if(tData&&tData[0])eng=tData[0].map(function(i){return i[0]||''}).join('').trim()||clean}catch(e){}
+    var videoEl=await puter.ai.txt2vid(eng,{model:'google/veo-3.1-lite'});
+    typing.remove();
+    var d=document.createElement('div');d.className='msg ai';
+    d.innerHTML='<div class="who">AZAMI AI</div>';
+    if(videoEl.tagName==='VIDEO'){videoEl.controls=true;videoEl.style.maxWidth='100%';videoEl.style.borderRadius='10px';d.appendChild(videoEl)}
+    else if(videoEl.src){var v=document.createElement('video');v.src=videoEl.src;v.controls=true;v.style.maxWidth='100%';v.style.borderRadius='10px';d.appendChild(v)}
+    else{var span=document.createElement('span');span.textContent='🎬 الفيديو تولد!';d.appendChild(span);if(videoEl.appendTo)d.appendChild(videoEl)}
+    chat.appendChild(d);scrollDown();
+  }catch(e){
+    typing.remove();
+    addAi('⚠️ ما قدرتش نولّد الفيديو. '+e.message+'. حاول مرة أخرى.');
+  }
+  generating=false;document.getElementById('send').disabled=false;scrollDown();
+}
 
 let rec,listening=false;
 function toggleMic(){
