@@ -11,10 +11,28 @@
   "dir": "rtl",
   "icons": [
     {
-      "src": "azami-logo.webp",
-      "sizes": "192x192 512x512",
-      "type": "image/webp",
-      "purpose": "any maskable"
+      "src": "azami-icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "azami-icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "azami-icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "maskable"
+    },
+    {
+      "src": "azami-icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
     }
   ]
 }

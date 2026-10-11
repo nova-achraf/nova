@@ -8,7 +8,7 @@
 <meta name="apple-mobile-web-app-status-bar-style" content="black">
 <meta name="apple-mobile-web-app-title" content="AZAMI AI">
 <link rel="manifest" href="azami-manifest.json">
-<link rel="apple-touch-icon" href="azami-logo.webp">
+<link rel="apple-touch-icon" href="azami-apple-icon.png">
 <script src="https://js.puter.com/v2/"></script>
 <title>AZAMI AI — Moroccan Roots. Global Intelligence.</title>
 <meta name="description" content="AZAMI AI — مساعد ذكاء اصطناعي مغربي. From Morocco to the World.">
@@ -30,14 +30,11 @@
     background:linear-gradient(135deg,rgba(14,92,74,.18),rgba(212,175,55,.10));
     border-bottom:1px solid var(--line);flex-shrink:0;
   }
-  .star{
-    width:46px;height:46px;flex-shrink:0;
-    background:radial-gradient(circle,var(--green) 0%,var(--green2) 70%,transparent 100%);
-    border:2px solid var(--gold);transform:rotate(45deg);
-    display:flex;align-items:center;justify-content:center;border-radius:8px;
+  .logo{
+    width:46px;height:46px;flex-shrink:0;border-radius:10px;object-fit:cover;
+    border:2px solid var(--gold);
     box-shadow:0 0 14px rgba(212,175,55,.25);
   }
-  .star span{transform:rotate(-45deg);font-weight:900;color:var(--gold);font-size:22px;font-family:Georgia,serif}
   .brand{display:flex;flex-direction:column;line-height:1.15}
   .brand b{font-size:18px;letter-spacing:.5px;color:var(--gold2)}
   .brand small{font-size:10.5px;color:var(--muted)}
@@ -92,7 +89,7 @@
 <body>
 
 <header>
-  <div class="star"><span>A</span></div>
+  <img src="azami-logo.webp" class="logo" alt="AZAMI AI">
   <div class="brand">
     <b>AZAMI AI</b>
     <small>Moroccan Roots · Global Intelligence</small>

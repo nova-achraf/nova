@@ -4,7 +4,10 @@ const CACHE = 'azami-ai-v1';
 const ASSETS = [
   'azami-global.html',
   'azami-manifest.json',
-  'azami-logo.webp'
+  'azami-logo.webp',
+  'azami-icon-192.png',
+  'azami-icon-512.png',
+  'azami-apple-icon.png'
 ];
 
 // Install: pre-cache core assets
