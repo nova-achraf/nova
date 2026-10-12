@@ -41,6 +41,13 @@
   .dot{width:8px;height:8px;border-radius:50%;background:var(--green2);box-shadow:0 0 8px var(--green2);margin-right:auto;align-self:center}
   .key-btn{background:transparent;border:1px solid var(--line);color:var(--muted);border-radius:8px;padding:6px 10px;font-size:12px;cursor:pointer;white-space:nowrap;font-family:inherit}
   .key-btn:active{border-color:var(--gold);color:var(--gold2)}
+  .lang-btn{background:transparent;border:1px solid var(--line);color:var(--muted);border-radius:8px;padding:6px 10px;font-size:12px;cursor:pointer;white-space:nowrap;font-family:inherit}
+  .lang-btn:active{border-color:var(--gold);color:var(--gold2)}
+  .lang-menu{position:absolute;top:52px;right:12px;background:var(--bg2);border:1px solid var(--gold);border-radius:12px;padding:6px;z-index:30;display:none;min-width:150px}
+  .lang-menu.show{display:block}
+  .lang-menu button{display:block;width:100%;background:transparent;border:none;color:var(--txt);padding:10px 12px;font-size:14px;cursor:pointer;border-radius:8px;text-align:left;font-family:inherit}
+  .lang-menu button:hover{background:var(--card)}
+  .lang-menu button.active{color:var(--gold2);font-weight:700}
   .free-badge{font-size:9px;color:var(--green2);border:1px solid var(--green2);padding:2px 6px;border-radius:6px;margin-left:4px}
   main{flex:1;overflow-y:auto;padding:14px;display:flex;flex-direction:column;gap:12px;-webkit-overflow-scrolling:touch}
   .msg{max-width:88%;padding:11px 14px;border-radius:14px;font-size:15px;line-height:1.6;white-space:pre-wrap;word-wrap:break-word}
@@ -82,6 +89,12 @@
   .sheet input:focus{border-color:var(--gold)}
   .sheet button{width:100%;padding:12px;border:none;border-radius:10px;font-weight:700;font-size:15px;cursor:pointer;font-family:inherit}
   .sheet .go{background:linear-gradient(135deg,var(--green),var(--green2));color:#fff;margin-bottom:8px}
+  .lang-btn{background:var(--card);color:var(--gold2);border:1px solid var(--gold);border-radius:8px;padding:6px 10px;font-size:13px;cursor:pointer;font-family:inherit;font-weight:700;flex-shrink:0}
+  .lang-menu{position:absolute;top:50px;right:14px;background:var(--bg2);border:1px solid var(--gold);border-radius:10px;padding:6px;z-index:60;display:none;box-shadow:0 8px 24px rgba(0,0,0,.5)}
+  .lang-menu.show{display:block}
+  .lang-menu button{display:block;width:100%;background:transparent;border:none;color:var(--txt);padding:8px 12px;border-radius:6px;cursor:pointer;font-family:inherit;font-size:13px;text-align:left}
+  .lang-menu button:hover{background:var(--card)}
+  .lang-menu button.active{color:var(--gold2);font-weight:700}
   .sheet .skip{background:transparent;color:var(--muted);border:1px solid var(--line)}
   .err{color:var(--red);font-size:12px;margin-top:6px;display:none}
   .install-banner{position:fixed;bottom:0;left:0;right:0;background:linear-gradient(135deg,var(--green),var(--green2));padding:12px 16px;display:none;align-items:center;gap:12px;z-index:40;box-shadow:0 -4px 20px rgba(0,0,0,.5)}
@@ -108,8 +121,17 @@
   </div>
   <div class="dot" title="online"></div>
   <span class="free-badge" id="freeBadge">Free</span>
+  <button class="lang-btn" onclick="toggleLang()">🌐</button>
   <button class="key-btn" onclick="openKey()">🔑 Key</button>
 </header>
+
+<div class="lang-menu" id="langMenu">
+  <button onclick="setLang('en')">🇬🇧 English</button>
+  <button onclick="setLang('ar')">🇲🇦 العربية</button>
+  <button onclick="setLang('fr')">🇫🇷 Français</button>
+  <button onclick="setLang('es')">🇪🇸 Español</button>
+  <button onclick="setLang('de')">🇩🇪 Deutsch</button>
+</div>
 
 <main id="chat">
   <div class="welcome">
@@ -152,9 +174,20 @@
 const KEY='azami_ai_gemini_key';
 let APIKEY='';
 try{APIKEY=localStorage.getItem(KEY)||''}catch(e){}
+let LANG='en';try{LANG=localStorage.getItem('azami_lang')||'en'}catch(e){}
 const SYS='You are AZAMI AI, a helpful multilingual AI assistant created in Morocco (From Morocco to the World). Answer in the EXACT language and dialect the user writes in — Arabic, Moroccan Darija, Egyptian, French, English, Spanish, German, Chinese, Japanese, Hindi, or any language. Be clear, friendly and honest. Keep answers concise for mobile. Use simple Markdown when helpful.';
+const LNG={
+  en:{wel:'Welcome to AZAMI AI 🇲🇦',sub:'Your smart assistant from Morocco to the world.<br>Ask me anything in any language.',ph:'Type your message to AZAMI AI...',c1:'What is AZAMI AI?',c2:'Write a poster',c3:'Translate',c4:'Business idea',free:'Free',key:'🔑 Key'},
+  ar:{wel:'أهلاً بك في AZAMI AI 🇲🇦',sub:'مساعدك الذكي من المغرب إلى العالم.<br>سؤلني بأي لغة.',ph:'اكتب رسالتك لـ AZAMI AI...',c1:'شنو هو AZAMI AI؟',c2:'كتب ليا بوستر',c3:'ترجم ليا',c4:'فكرة مشروع',free:'مجاني',key:'🔑 المفتاح'},
+  fr:{wel:'Bienvenue sur AZAMI AI 🇲🇦',sub:'Votre assistant intelligent du Maroc au monde.<br>Demandez dans n\'importe quelle langue.',ph:'Écrivez votre message à AZAMI AI...',c1:'Qu\'est-ce que AZAMI AI ?',c2:'Écrire une affiche',c3:'Traduire',c4:'Idée d\'affaire',free:'Gratuit',key:'🔑 Clé'},
+  es:{wel:'Bienvenido a AZAMI AI 🇲🇦',sub:'Tu asistente inteligente de Marruecos al mundo.<br>Pregunta en cualquier idioma.',ph:'Escribe tu mensaje a AZAMI AI...',c1:'¿Qué es AZAMI AI?',c2:'Escribir un póster',c3:'Traducir',c4:'Idea de negocio',free:'Gratis',key:'🔑 Clave'},
+  de:{wel:'Willkommen bei AZAMI AI 🇲🇦',sub:'Dein smarter Assistent von Marokko in die Welt.<br>Frag in jeder Sprache.',ph:'Schreibe deine Nachricht an AZAMI AI...',c1:'Was ist AZAMI AI?',c2:'Poster schreiben',c3:'Übersetzen',c4:'Geschäftsidee',free:'Kostenlos',key:'🔑 Schlüssel'}
+};
 const chat=document.getElementById('chat');
 let generating=false,abortCtrl=null,imgMode=false,pickedImg=null,pickedType=null;
+function toggleLang(){document.getElementById('langMenu').classList.toggle('show')}
+function setLang(l){LANG=l;try{localStorage.setItem('azami_lang',l)}catch(e){}document.getElementById('langMenu').classList.remove('show');applyLang()}
+function applyLang(){var t=LNG[LANG]||LNG.en;var w=document.querySelector('.welcome h2');if(w)w.innerHTML=t.wel;var p=document.querySelector('.welcome p');if(p)p.innerHTML=t.sub;document.getElementById('in').placeholder=t.ph;document.getElementById('freeBadge').textContent=t.free;var chips=document.querySelectorAll('.chip');if(chips[0])chips[0].textContent=t.c1;if(chips[1])chips[1].textContent=t.c2;if(chips[2])chips[2].textContent=t.c3;if(chips[3])chips[3].textContent=t.c4;document.querySelector('.key-btn').textContent=t.key}
 
 function openKey(){document.getElementById('keyModal').classList.add('show');document.getElementById('keyIn').value=APIKEY||'';document.getElementById('keyIn').focus()}
 function closeKey(){document.getElementById('keyModal').classList.remove('show')}
@@ -297,6 +330,8 @@ function toggleMic(){
 
 var ta=document.getElementById('in');
 ta.addEventListener('input',function(){this.style.height='auto';this.style.height=Math.min(this.scrollHeight,120)+'px'});
+// Apply saved language on load
+applyLang();
 // PWA: register service worker for offline + app install
 if('serviceWorker' in navigator){navigator.serviceWorker.register('sw.js').catch(function(){});}
 // PWA: install button — show banner after 2s, fallback to manual instructions
