@@ -48,6 +48,8 @@
   .lang-menu button{display:block;width:100%;background:transparent;border:none;color:var(--txt);padding:10px 12px;font-size:14px;cursor:pointer;border-radius:8px;text-align:left;font-family:inherit}
   .lang-menu button:hover{background:var(--card)}
   .lang-menu button.active{color:var(--gold2);font-weight:700}
+  .visitors{font-size:9px;color:var(--gold2);border:1px solid var(--line);padding:2px 6px;border-radius:6px;margin-left:4px;display:flex;align-items:center;gap:3px}
+  .visitors b{color:var(--gold);font-size:10px}
   .free-badge{font-size:9px;color:var(--green2);border:1px solid var(--green2);padding:2px 6px;border-radius:6px;margin-left:4px}
   main{flex:1;overflow-y:auto;padding:14px;display:flex;flex-direction:column;gap:12px;-webkit-overflow-scrolling:touch}
   .msg{max-width:88%;padding:11px 14px;border-radius:14px;font-size:15px;line-height:1.6;white-space:pre-wrap;word-wrap:break-word}
@@ -121,6 +123,7 @@
   </div>
   <div class="dot" title="online"></div>
   <span class="free-badge" id="freeBadge">Free</span>
+  <span class="visitors" id="visitors">👥 <b>…</b></span>
   <button class="lang-btn" onclick="toggleLang()">🌐</button>
   <button class="key-btn" onclick="openKey()">🔑 Key</button>
 </header>
@@ -332,6 +335,8 @@ var ta=document.getElementById('in');
 ta.addEventListener('input',function(){this.style.height='auto';this.style.height=Math.min(this.scrollHeight,120)+'px'});
 // Apply saved language on load
 applyLang();
+// Visitor counter — CountAPI (free, no signup)
+fetch('https://api.countapi.xyz/hit/azami-ai/visits').then(function(r){return r.json()}).then(function(d){if(d&&d.value){var v=document.getElementById('visitors');if(v)v.innerHTML='👥 <b>'+d.value+'</b>'}}).catch(function(){});
 // PWA: register service worker for offline + app install
 if('serviceWorker' in navigator){navigator.serviceWorker.register('sw.js').catch(function(){});}
 // PWA: install button — show banner after 2s, fallback to manual instructions
