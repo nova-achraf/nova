@@ -335,8 +335,25 @@ var ta=document.getElementById('in');
 ta.addEventListener('input',function(){this.style.height='auto';this.style.height=Math.min(this.scrollHeight,120)+'px'});
 // Apply saved language on load
 applyLang();
-// Visitor counter — Abacus (free, no signup)
-fetch('https://abacus.jasoncameron.dev/hit/azami-ai/visits').then(function(r){return r.json()}).then(function(d){if(d&&typeof d.value==='number'){var v=document.getElementById('visitors');if(v)v.innerHTML='👥 <b>'+d.value+'</b>'}}).catch(function(){});
+// Visitor counter — Abacus. Count each browser only once (unique visitors).
+(function(){
+  var seen=false;
+  try{seen=localStorage.getItem('azami_visited')==='1';}catch(e){}
+  var url='https://abacus.jasoncameron.dev/'+(seen?'get':'hit')+'/azami-ai/visits';
+  fetch(url).then(function(r){return r.json()}).then(function(d){
+    if(d&&typeof d.value==='number'){
+      var v=document.getElementById('visitors');
+      if(v)v.innerHTML='👥 <b>'+d.value+'</b>';
+      try{localStorage.setItem('azami_visited','1');localStorage.setItem('azami_visits_last',d.value);}catch(e){}
+    }
+  }).catch(function(){
+    // offline / blocked → show last known number
+    try{
+      var last=localStorage.getItem('azami_visits_last');
+      if(last){var v2=document.getElementById('visitors');if(v2)v2.innerHTML='👥 <b>'+last+'</b>';}
+    }catch(e){}
+  });
+})();
 // PWA: register service worker for offline + app install
 if('serviceWorker' in navigator){navigator.serviceWorker.register('sw.js').catch(function(){});}
 // PWA: install button — show banner after 2s, fallback to manual instructions
