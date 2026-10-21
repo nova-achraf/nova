@@ -335,8 +335,8 @@ var ta=document.getElementById('in');
 ta.addEventListener('input',function(){this.style.height='auto';this.style.height=Math.min(this.scrollHeight,120)+'px'});
 // Apply saved language on load
 applyLang();
-// Visitor counter — CountAPI (free, no signup)
-fetch('https://api.countapi.xyz/hit/azami-ai/visits').then(function(r){return r.json()}).then(function(d){if(d&&d.value){var v=document.getElementById('visitors');if(v)v.innerHTML='👥 <b>'+d.value+'</b>'}}).catch(function(){});
+// Visitor counter — Abacus (free, no signup)
+fetch('https://abacus.jasoncameron.dev/hit/azami-ai/visits').then(function(r){return r.json()}).then(function(d){if(d&&typeof d.value==='number'){var v=document.getElementById('visitors');if(v)v.innerHTML='👥 <b>'+d.value+'</b>'}}).catch(function(){});
 // PWA: register service worker for offline + app install
 if('serviceWorker' in navigator){navigator.serviceWorker.register('sw.js').catch(function(){});}
 // PWA: install button — show banner after 2s, fallback to manual instructions
