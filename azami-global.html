@@ -58,6 +58,10 @@
   .who{font-size:11px;color:var(--gold2);margin-bottom:3px;font-weight:700}
   .me .who{color:rgba(255,255,255,.7)}
   .msg img{max-width:100%;border-radius:10px;margin:6px 0}
+  .imw{min-height:40px}
+  .iml{font-size:12px;color:var(--dim);padding:14px;text-align:center;background:rgba(255,255,255,.03);border-radius:10px}
+  .iml.err{color:#F87171;line-height:1.6}
+  .copy-b{background:transparent;border:1px solid var(--line);color:var(--dim);border-radius:8px;font-size:11px;padding:5px 10px;cursor:pointer;margin-left:6px}
   .msg-bar{display:flex;gap:6px;margin-top:6px;flex-wrap:wrap}
   .msg-bar button{background:none;border:none;color:var(--muted);font-size:13px;cursor:pointer;padding:3px 6px;border-radius:6px}
   .msg-bar button:active{background:var(--card);color:var(--gold2)}
@@ -187,7 +191,7 @@ const LNG={
   de:{wel:'Willkommen bei AZAMI AI 🇲🇦',sub:'Dein smarter Assistent von Marokko in die Welt.<br>Frag in jeder Sprache.',ph:'Schreibe deine Nachricht an AZAMI AI...',c1:'Was ist AZAMI AI?',c2:'Poster schreiben',c3:'Übersetzen',c4:'Geschäftsidee',free:'Kostenlos',key:'🔑 Schlüssel'}
 };
 const chat=document.getElementById('chat');
-let generating=false,abortCtrl=null,imgMode=false,pickedImg=null,pickedType=null;
+let generating=false,abortCtrl=null,imgMode=false,pickedImg=null,pickedType=null,lastUserText='';
 function toggleLang(){document.getElementById('langMenu').classList.toggle('show')}
 function setLang(l){LANG=l;try{localStorage.setItem('azami_lang',l)}catch(e){}document.getElementById('langMenu').classList.remove('show');applyLang()}
 function applyLang(){var t=LNG[LANG]||LNG.en;var w=document.querySelector('.welcome h2');if(w)w.innerHTML=t.wel;var p=document.querySelector('.welcome p');if(p)p.innerHTML=t.sub;document.getElementById('in').placeholder=t.ph;document.getElementById('freeBadge').textContent=t.free;var chips=document.querySelectorAll('.chip');if(chips[0])chips[0].textContent=t.c1;if(chips[1])chips[1].textContent=t.c2;if(chips[2])chips[2].textContent=t.c3;if(chips[3])chips[3].textContent=t.c4;document.querySelector('.key-btn').textContent=t.key}
@@ -217,6 +221,7 @@ async function send(){
   if(!txt&&!pickedImg)return;
   ta.value='';ta.style.height='auto';
   addMe(txt);
+  if(txt) lastUserText=txt;
   document.getElementById('send').disabled=true;
   if(vidMode||/(فيديو|video|vidéo|film me|صور فيديو|أنشئ فيديو|اعمل فيديو)/i.test(txt)){await genVideo(txt);return}
   if(imgMode||/(ارسم|رسم|صوّر|صور|صورة|أنشئ|ولّد|صمم|generate image|create image|draw |paint )/i.test(txt)){await genImage(txt);return}
@@ -274,18 +279,46 @@ async function visionReq(txt){
 
 async function genImage(prompt){
   var typing=addTyping();generating=true;
-  var clean=prompt.replace(/^(ارسم|صوّر|أنشئ صورة|ولّد صورة|صمم صورة|صورة|صور|draw|paint|generate image|create image)\s*/i,'').trim()||prompt;
+  var clean=prompt.replace(/^(اعطني|أعطني|عطيني|ارسم|صوّر|صور|أنشئ صورة|ولّد صورة|صمم صورة|صورة|صور|draw|paint|generate image|create image|show me|give me)\s*/gi,'').trim();
+  if(clean.split(/\s+/).filter(Boolean).length<3&&lastUserText&&lastUserText!==prompt){clean=lastUserText.replace(/^.*?(?=[A-Za-z\u0600-\u06FF])/,'')+' — '+clean}
+  if(!clean)clean=prompt;
+  var hd=/hd|2048|4k|جودة عالية/i.test(prompt);
+  var size=hd?1536:1024;
   try{
     var eng=clean;
     try{var tRes=await fetch('https://translate.googleapis.com/translate_a/single?client=gtx&sl=auto&tl=en&dt=t&q='+encodeURIComponent(clean));var tData=await tRes.json();if(tData&&tData[0])eng=tData[0].map(function(i){return i[0]||''}).join('').trim()||clean}catch(e){}
-    eng=eng+', ultra detailed, 8K UHD, sharp focus, professional photography, high resolution, crystal clear, vivid colors, cinematic lighting, photorealistic, masterpiece quality, best quality, stunning detail, highly detailed textures, intricate details, professional color grading, dramatic composition, studio quality, award winning, depth of field, fine art, extremely detailed, no blur, no noise, no artifacts, no distortion, no watermark, perfect anatomy, clean lines, sharp edges';
-    var url='https://image.pollinations.ai/prompt/'+encodeURIComponent(eng)+'?width=2048&height=2048&nologo=true&model=flux&enhance=true&safe=false&private=true';
-    var img=new Image();
-    img.onload=function(){typing.remove();var d=document.createElement('div');d.className='msg ai';d.innerHTML='<div class="who">AZAMI AI</div>';var im=document.createElement('img');im.src=url;im.style.maxWidth='100%';im.style.borderRadius='10px';d.appendChild(im);var bar=document.createElement('div');bar.className='msg-bar';var a=document.createElement('a');a.href=url;a.download='azami-ai.jpg';a.textContent='⬇️ Download';bar.appendChild(a);d.appendChild(bar);chat.appendChild(d);scrollDown();generating=false;document.getElementById('send').disabled=false};
-    img.onerror=function(){typing.remove();addAi('⚠️ Could not generate the image.');generating=false;document.getElementById('send').disabled=false};
-    img.src=url;
-  }catch(e){typing.remove();addAi('⚠️ Could not generate the image.');generating=false;document.getElementById('send').disabled=false}
-  scrollDown();
+    eng=eng+', high quality, sharp focus, detailed, clean composition, professional';
+    var url='https://image.pollinations.ai/prompt/'+encodeURIComponent(eng)+'?width='+size+'&height='+size+'&nologo=true&model=flux&seed='+Math.floor(Math.random()*999999)+'&safe=false&private=true&referrer=azami-ai';
+    typing.remove();
+    var d=document.createElement('div');d.className='msg ai';
+    d.innerHTML='<div class="who">AZAMI AI</div><div class="imw"><div class="iml">🎨 Generating… 0s</div></div>';
+    chat.appendChild(d);scrollDown();
+    var ph=d.querySelector('.imw');
+    var t0=Date.now();
+    var timer=setInterval(function(){var l=d.querySelector('.iml');if(l)l.textContent='🎨 Generating… '+Math.round((Date.now()-t0)/1000)+'s'},1000);
+    var ok=false;
+    for(var attempt=0;attempt<2&&!ok;attempt++){
+      try{
+        if(attempt===1){url=url.replace('model=flux','model=turbo').replace('width='+size,'width=1024').replace('height='+size,'height=1024')}
+        var ctrl=new AbortController();var to=setTimeout(function(){try{ctrl.abort()}catch(e){}},95000);
+        var res=await fetch(url,{signal:ctrl.signal});clearTimeout(to);
+        if(!res.ok)throw new Error('http '+res.status);
+        var blob=await res.blob();if(!blob.size)throw new Error('empty');
+        var obj=URL.createObjectURL(blob);
+        ph.innerHTML='';
+        var im=document.createElement('img');im.src=obj;im.style.maxWidth='100%';im.style.borderRadius='10px';im.style.display='block';
+        ph.appendChild(im);
+        var bar=document.createElement('div');bar.className='msg-bar';
+        var a=document.createElement('a');a.href=obj;a.download='azami-ai.png';a.textContent='⬇️ Download';
+        var b2=document.createElement('button');b2.className='copy-b';b2.textContent='🔁 Again';
+        b2.onclick=function(){genImage(clean)};
+        bar.appendChild(a);bar.appendChild(b2);ph.appendChild(bar);
+        ok=true;scrollDown();
+      }catch(e){if(attempt===1){ph.innerHTML='<div class="iml err">⚠️ Could not generate the image.<br>Try again or describe it differently.</div>'}}
+    }
+    clearInterval(timer);
+  }catch(e){typing.remove();addAi('⚠️ Could not generate the image.')}
+  generating=false;document.getElementById('send').disabled=false;scrollDown();
 }
 
 function addBar(d,text){
