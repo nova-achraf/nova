@@ -7,6 +7,13 @@
 <title>Free Image &amp; PDF Tools — Compress, Resize, Convert, Crop, Merge</title>
 <meta name="description" content="Ten free browser-based tools: compress, resize, convert WebP, crop, rotate images, image to PDF, merge PDF, PDF to JPG, passport photos and favicons. No upload, no sign-up.">
 <meta name="robots" content="index,follow">
+<link rel="manifest" href="tools-manifest.json">
+<link rel="icon" type="image/png" sizes="192x192" href="pixshrink-icon-192.png">
+<link rel="apple-touch-icon" href="pixshrink-apple-icon.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="PixShrink">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="mobile-web-app-capable" content="yes">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
@@ -21,7 +28,8 @@ a{color:var(--accent);text-decoration:none}
 header{border-bottom:1px solid var(--line);padding:14px 0}
 .brand{display:flex;align-items:center;gap:9px}
 .brand .ic{width:34px;height:34px;border-radius:10px;background:linear-gradient(145deg,#FFE3D1,#FFD0B5);
-  border:1px solid #FFC4A3;display:flex;align-items:center;justify-content:center;font-size:16px}
+  border:1px solid #FFC4A3;display:flex;align-items:center;justify-content:center;font-size:16px;overflow:hidden}
+.brand .ic img{width:100%;height:100%;object-fit:cover;display:block}
 .brand b{font-size:15px;letter-spacing:-.2px}
 .brand span{font-size:10px;color:var(--dim);display:block;margin-top:1px;font-weight:500}
 .hero{text-align:center;padding:38px 0 26px}
@@ -53,7 +61,7 @@ footer{border-top:1px solid var(--line);margin-top:32px;padding:20px 0 30px;text
 <header>
   <div class="wrap">
     <div class="brand">
-      <div class="ic">🗜</div>
+      <div class="ic"><img src="pixshrink-icon-192.png" alt="PixShrink"></div>
       <div>
         <b>PixShrink</b>
         <span>Free online image tools</span>
@@ -170,5 +178,12 @@ footer{border-top:1px solid var(--line);margin-top:32px;padding:20px 0 30px;text
   </footer>
 </div>
 
+<script>
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', function () {
+    navigator.serviceWorker.register('tools-sw.js').catch(function () {});
+  });
+}
+</script>
 </body>
 </html>

@@ -1,0 +1,47 @@
+{
+  "name": "PixShrink — Image & PDF Tools",
+  "short_name": "PixShrink",
+  "description": "Ten free browser-based tools: compress, resize, convert, crop, merge. No uploads, no accounts.",
+  "start_url": "tools.html?source=pwa",
+  "scope": ".",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#FFFBF6",
+  "theme_color": "#FF6B4A",
+  "lang": "en",
+  "categories": ["photo", "productivity", "utilities"],
+  "icons": [
+    {
+      "src": "pixshrink-icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "pixshrink-icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "pixshrink-maskable-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "Compress image",
+      "short_name": "Compress",
+      "url": "compress.html",
+      "icons": [{ "src": "pixshrink-icon-192.png", "sizes": "192x192" }]
+    },
+    {
+      "name": "Image to PDF",
+      "short_name": "To PDF",
+      "url": "image-to-pdf.html",
+      "icons": [{ "src": "pixshrink-icon-192.png", "sizes": "192x192" }]
+    }
+  ]
+}
