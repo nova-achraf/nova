@@ -1,0 +1,429 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
+<meta name="theme-color" content="#2B1A13">
+<title>Elastic Blob — Drag me, I'm squishy</title>
+<meta name="description" content="A squishy elastic blob you can grab, stretch and fling. Real soft-body physics, made in your browser.">
+<meta name="robots" content="index,follow">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Elastic Blob">
+<link rel="canonical" href="https://nova-achraf.github.io/nova/elastic.html">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="AZAMI">
+<meta property="og:title" content="Elastic Blob — drag me, I'm squishy">
+<meta property="og:description" content="Grab it, stretch it, fling it. Soft-body physics in the browser.">
+<meta property="og:url" content="https://nova-achraf.github.io/nova/elastic.html">
+<meta property="og:image" content="https://nova-achraf.github.io/nova/pixshrink-icon-512.png">
+<meta name="twitter:card" content="summary_large_image">
+<style>
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0;height:100%;overflow:hidden;background:#2B1A13;
+  font-family:'Inter',system-ui,-apple-system,sans-serif;color:#F5E9DC;touch-action:none}
+canvas{display:block;width:100%;height:100%;cursor:grab}
+canvas.grabbing{cursor:grabbing}
+.hud{position:fixed;top:0;left:0;right:0;padding:14px 16px;display:flex;align-items:center;
+  justify-content:space-between;pointer-events:none;z-index:5}
+.hud .t{font-size:12px;font-weight:700;letter-spacing:.2px;opacity:.85}
+.hud .t small{display:block;font-weight:500;opacity:.55;font-size:10px;margin-top:2px}
+.btn{pointer-events:auto;background:rgba(255,255,255,.10);border:1px solid rgba(255,255,255,.18);
+  color:#F5E9DC;border-radius:11px;padding:8px 13px;font-size:11.5px;font-weight:600;
+  font-family:inherit;cursor:pointer;backdrop-filter:blur(6px)}
+.btn:active{transform:scale(.96)}
+.hint{position:fixed;bottom:26px;left:0;right:0;text-align:center;font-size:11.5px;
+  color:rgba(245,233,220,.55);pointer-events:none;z-index:5;transition:opacity .5s}
+.hint.hide{opacity:0}
+</style>
+</head>
+<body>
+<canvas id="c"></canvas>
+<div class="hud">
+  <div class="t">Elastic Blob<small>drag · stretch · release</small></div>
+  <button class="btn" id="reset">Reset</button>
+</div>
+<div class="hint" id="hint">Hold the blob and pull it anywhere 👆</div>
+
+<script>
+(function () {
+  'use strict';
+
+  var cv = document.getElementById('c');
+  var ctx = cv.getContext('2d');
+  var W = 0, H = 0, DPR = 1;
+
+  var RINGS = 11;          // concentric rings of the mesh
+  var SEG = 34;            // points per ring
+  var SUB = 3;             // physics substeps per frame
+  var ITER = 5;            // constraint iterations
+  var DAMP = 0.992;
+  var GRAV = 0.16;
+
+  var nodes = [];
+  var springs = [];
+  var R = 150;             // rest radius in px
+  var dragged = -1;
+  var pointer = { x: 0, y: 0, down: false };
+  var t = 0;
+  var running = true;
+
+  function resize() {
+    DPR = Math.min(window.devicePixelRatio || 1, 2);
+    W = cv.clientWidth || window.innerWidth;
+    H = cv.clientHeight || window.innerHeight;
+    cv.width = Math.round(W * DPR);
+    cv.height = Math.round(H * DPR);
+    ctx.setTransform(DPR, 0, 0, DPR, 0, 0);
+    R = Math.min(W, H) * 0.27;
+  }
+
+  function mk(x, y) {
+    return { x: x, y: y, px: x, py: y };
+  }
+
+  function build() {
+    nodes = [];
+    springs = [];
+    var cx = W / 2;
+    var cy = H / 2;
+
+    // index 0 = centre
+    nodes.push(mk(cx, cy));
+
+    var ringStart = [];       // ringStart[r] = index of first node of ring r
+    for (var r = 1; r <= RINGS; r++) {
+      var rad = R * (r / RINGS);
+      ringStart[r] = nodes.length;
+      var count = SEG;
+      for (var i = 0; i < count; i++) {
+        var a = (i / count) * Math.PI * 2;
+        nodes.push(mk(cx + Math.cos(a) * rad, cy + Math.sin(a) * rad));
+      }
+    }
+
+    function idx(r, i) {
+      return ringStart[r] + ((i % SEG) + SEG) % SEG;
+    }
+
+    // centre -> ring 1
+    for (var i1 = 0; i1 < SEG; i1++) {
+      springs.push({ a: 0, b: idx(1, i1), len: R / RINGS, k: 1 });
+    }
+
+    for (var rr = 1; rr <= RINGS; rr++) {
+      var rad2 = R * (rr / RINGS);
+      for (var ii = 0; ii < SEG; ii++) {
+        var a1 = idx(rr, ii), a2 = idx(rr, ii + 1);
+        // tangential (same ring)
+        var chord = 2 * rad2 * Math.sin(Math.PI / SEG);
+        springs.push({ a: a1, b: a2, len: Math.max(chord, 1), k: 1 });
+        // radial (outward)
+        if (rr < RINGS) {
+          springs.push({ a: idx(rr, ii), b: idx(rr + 1, ii), len: R / RINGS, k: 1 });
+          // shear / diagonal for volume
+          springs.push({ a: idx(rr, ii), b: idx(rr + 1, ii + 1), len: Math.hypot(R / RINGS, 2 * rad2 * Math.sin(Math.PI / SEG)), k: 0.55 });
+          springs.push({ a: idx(rr, ii + 1), b: idx(rr + 1, ii), len: Math.hypot(R / RINGS, 2 * rad2 * Math.sin(Math.PI / SEG)), k: 0.55 });
+        }
+      }
+    }
+  }
+
+  function nearest(x, y) {
+    var best = -1, bd = 1e9;
+    for (var i = 0; i < nodes.length; i++) {
+      var dx = nodes[i].x - x, dy = nodes[i].y - y;
+      var d = dx * dx + dy * dy;
+      if (d < bd) { bd = d; best = i; }
+    }
+    return best;
+  }
+
+  function step() {
+    t += 1;
+
+    // breathing: rest lengths pulse a tiny bit
+    var breath = 1 + Math.sin(t * 0.02) * 0.012;
+
+    for (var s = 0; s < SUB; s++) {
+      // integrate
+      for (var i = 0; i < nodes.length; i++) {
+        if (i === dragged) continue;
+        var n = nodes[i];
+        var vx = (n.x - n.px) * DAMP;
+        var vy = (n.y - n.py) * DAMP;
+        n.px = n.x;
+        n.py = n.y;
+        n.x += vx;
+        n.y += vy + GRAV;
+      }
+
+      if (dragged >= 0) {
+        var dn = nodes[dragged];
+        dn.px = dn.x;
+        dn.py = dn.y;
+        dn.x = pointer.x;
+        dn.y = pointer.y;
+      }
+
+      // constraints
+      for (var it = 0; it < ITER; it++) {
+        for (var q = 0; q < springs.length; q++) {
+          var sp = springs[q];
+          var a = nodes[sp.a], b = nodes[sp.b];
+          var dx = b.x - a.x, dy = b.y - a.y;
+          var d = Math.sqrt(dx * dx + dy * dy) || 0.0001;
+          var target = sp.len * breath;
+          var diff = (d - target) / d * 0.5 * sp.k;
+          var ox = dx * diff, oy = dy * diff;
+
+          if (sp.a !== dragged) { a.x += ox; a.y += oy; }
+          if (sp.b !== dragged) { b.x -= ox; b.y -= oy; }
+        }
+        // keep inside the screen
+        for (var j = 0; j < nodes.length; j++) {
+          var m = nodes[j];
+          var pad = 6;
+          if (m.x < pad) m.x = pad;
+          if (m.x > W - pad) m.x = W - pad;
+          if (m.y < pad) m.y = H - pad;
+          if (m.y > H - pad) m.y = H - pad;
+        }
+      }
+    }
+
+    if (dragged >= 0) {
+      nodes[dragged].x = pointer.x;
+      nodes[dragged].y = pointer.y;
+    }
+  }
+
+  // basis vectors of the deformation, used to place the face
+  function basis() {
+    var c = nodes[0];
+    var right = nodes[1 * SEG ? 1 : 1];      // ring 1, angle 0
+    var up = nodes[1 + Math.round(SEG * 0.75)]; // ring 1, angle -90deg
+    return { c: c, u: { x: right.x - c.x, y: right.y - c.y }, v: { x: up.x - c.x, y: up.y - c.y }, r: R / RINGS };
+  }
+
+  function outer() {
+    // outermost ring indices
+    var start = nodes.length - SEG;
+    var pts = [];
+    for (var i = 0; i < SEG; i++) pts.push(nodes[start + i]);
+    return pts;
+  }
+
+  function draw() {
+    // background
+    var bg = ctx.createLinearGradient(0, 0, 0, H);
+    bg.addColorStop(0, '#33201A');
+    bg.addColorStop(0.55, '#2B1A13');
+    bg.addColorStop(1, '#1E110C');
+    ctx.fillStyle = bg;
+    ctx.fillRect(0, 0, W, H);
+
+    // soft light behind the blob
+    var c0 = nodes[0];
+    var glow = ctx.createRadialGradient(c0.x, c0.y, 0, c0.x, c0.y, R * 2.2);
+    glow.addColorStop(0, 'rgba(120,220,120,0.13)');
+    glow.addColorStop(1, 'rgba(120,220,120,0)');
+    ctx.fillStyle = glow;
+    ctx.fillRect(0, 0, W, H);
+
+    var pts = outer();
+
+    // body shadow
+    ctx.save();
+    ctx.beginPath();
+    ctx.ellipse(c0.x, c0.y + R * 1.15, R * 0.85, R * 0.2, 0, 0, Math.PI * 2);
+    ctx.fillStyle = 'rgba(0,0,0,0.28)';
+    ctx.fill();
+    ctx.restore();
+
+    // body
+    ctx.beginPath();
+    ctx.moveTo(pts[0].x, pts[0].y);
+    for (var i = 1; i < pts.length; i++) {
+      var p = pts[i], prev = pts[i - 1];
+      ctx.quadraticCurveTo(prev.x, prev.y, (prev.x + p.x) / 2, (prev.y + p.y) / 2);
+    }
+    ctx.closePath();
+
+    var body = ctx.createRadialGradient(
+      c0.x - R * 0.3, c0.y - R * 0.4, R * 0.1,
+      c0.x, c0.y, R * 1.35
+    );
+    body.addColorStop(0, '#B6F07A');
+    body.addColorStop(0.45, '#7FD64E');
+    body.addColorStop(1, '#3E8F2C');
+    ctx.fillStyle = body;
+    ctx.fill();
+
+    ctx.lineWidth = 2;
+    ctx.strokeStyle = 'rgba(30,80,20,0.45)';
+    ctx.stroke();
+
+    // glossy highlight
+    var b = basis();
+    function P(lx, ly) {
+      return {
+        x: b.c.x + b.u.x * lx + b.v.x * ly,
+        y: b.c.y + b.u.y * lx + b.v.y * ly
+      };
+    }
+
+    ctx.save();
+    ctx.beginPath();
+    var h1 = P(-0.42, -0.62), h2 = P(-0.02, -0.72), h3 = P(-0.16, -0.30), h4 = P(-0.52, -0.22);
+    ctx.moveTo(h1.x, h1.y);
+    ctx.quadraticCurveTo(h2.x, h2.y, h3.x, h3.y);
+    ctx.quadraticCurveTo(h4.x, h4.y, h1.x, h1.y);
+    ctx.fillStyle = 'rgba(255,255,255,0.28)';
+    ctx.fill();
+    ctx.restore();
+
+    // eyes: look toward the pointer
+    var look = { x: 0, y: 0 };
+    var mdx = pointer.x - c0.x, mdy = pointer.y - c0.y;
+    var md = Math.hypot(mdx, mdy) || 1;
+    look.x = (mdx / md) * 0.055;
+    look.y = (mdy / md) * 0.055;
+
+    function eye(sign) {
+      var e = P(sign * 0.30, -0.14);
+      var pr = R * 0.155;
+      ctx.beginPath();
+      ctx.ellipse(e.x, e.y, pr, pr * 1.02, 0, 0, Math.PI * 2);
+      ctx.fillStyle = '#FBFFFA';
+      ctx.fill();
+      ctx.lineWidth = 1.5;
+      ctx.strokeStyle = 'rgba(40,90,30,0.25)';
+      ctx.stroke();
+
+      var pu = P(sign * 0.30 + look.x, -0.14 + look.y);
+      ctx.beginPath();
+      ctx.ellipse(pu.x, pu.y, pr * 0.46, pr * 0.46, 0, 0, Math.PI * 2);
+      ctx.fillStyle = '#20301C';
+      ctx.fill();
+
+      ctx.beginPath();
+      ctx.ellipse(pu.x - pr * 0.14, pu.y - pr * 0.18, pr * 0.14, pr * 0.14, 0, 0, Math.PI * 2);
+      ctx.fillStyle = 'rgba(255,255,255,0.9)';
+      ctx.fill();
+    }
+    eye(-1);
+    eye(1);
+
+    // mouth
+    var m1 = P(-0.20, 0.30), m2 = P(0, 0.40), m3 = P(0.20, 0.30);
+    ctx.beginPath();
+    ctx.moveTo(m1.x, m1.y);
+    ctx.quadraticCurveTo(m2.x, m2.y, m3.x, m3.y);
+    ctx.lineWidth = R * 0.035;
+    ctx.lineCap = 'round';
+    ctx.strokeStyle = 'rgba(30,70,20,0.65)';
+    ctx.stroke();
+
+    // cheeks
+    [-1, 1].forEach(function (s) {
+      var ch = P(s * 0.46, 0.12);
+      ctx.beginPath();
+      ctx.ellipse(ch.x, ch.y, R * 0.09, R * 0.06, 0, 0, Math.PI * 2);
+      ctx.fillStyle = 'rgba(255,120,110,0.20)';
+      ctx.fill();
+    });
+  }
+
+  function loop() {
+    if (!running) return;
+    step();
+    draw();
+    requestAnimationFrame(loop);
+  }
+
+  /* ---------------- input ---------------- */
+  function pos(e) {
+    var r = cv.getBoundingClientRect();
+    var p = e.touches ? e.touches[0] : e;
+    return { x: p.clientX - r.left, y: p.clientY - r.top };
+  }
+
+  function onDown(e) {
+    e.preventDefault();
+    var p = pos(e);
+    pointer.x = p.x; pointer.y = p.y; pointer.down = true;
+    var n = nearest(p.x, p.y);
+    if (n >= 0) {
+      var dx = nodes[n].x - p.x, dy = nodes[n].y - p.y;
+      if (Math.hypot(dx, dy) < Math.max(70, R * 0.9)) {
+        dragged = n;
+        cv.classList.add('grabbing');
+        var hint = document.getElementById('hint');
+        if (hint) hint.classList.add('hide');
+      }
+    }
+  }
+
+  function onMove(e) {
+    var p = pos(e);
+    pointer.x = p.x; pointer.y = p.y;
+    if (dragged < 0) return;
+    e.preventDefault();
+  }
+
+  function onUp() {
+    if (dragged >= 0) {
+      // give it a little fling velocity
+      var n = nodes[dragged];
+      n.px = n.x;
+      n.py = n.y;
+    }
+    dragged = -1;
+    pointer.down = false;
+    cv.classList.remove('grabbing');
+  }
+
+  cv.addEventListener('pointerdown', onDown);
+  cv.addEventListener('pointermove', onMove);
+  window.addEventListener('pointerup', onUp);
+  window.addEventListener('pointercancel', onUp);
+  cv.addEventListener('touchstart', onDown, { passive: false });
+  cv.addEventListener('touchmove', onMove, { passive: false });
+  cv.addEventListener('touchend', onUp);
+
+  var resetBtn = document.getElementById('reset');
+  if (resetBtn) {
+    resetBtn.onclick = function () {
+      resize();
+      build();
+      dragged = -1;
+    };
+  }
+
+  window.addEventListener('resize', function () {
+    resize();
+    build();
+  });
+
+  // expose a tiny API for automated checks
+  window.__blob = {
+    frames: 0,
+    test: function (n) {
+      for (var i = 0; i < n; i++) { step(); draw(); }
+      return {
+        nodes: nodes.length,
+        springs: springs.length,
+        maxX: Math.max.apply(null, nodes.map(function (q) { return Math.abs(q.x); })),
+        nan: nodes.some(function (q) { return !isFinite(q.x) || !isFinite(q.y); })
+      };
+    },
+    drag: function (i, x, y) { dragged = i; pointer.x = x; pointer.y = y; }
+  };
+
+  resize();
+  build();
+  requestAnimationFrame(loop);
+})();
+</script>
+</body>
+</html>

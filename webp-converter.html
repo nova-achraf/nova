@@ -77,6 +77,13 @@ input:focus{border-color:var(--accent)}
   border:0;border-radius:13px;padding:15px;font-size:14px;font-weight:800;cursor:pointer;
   margin-top:6px;font-family:inherit}
 .allbtn:disabled{opacity:.5}
+.allbtn.ghost{background:#FFFFFF;border:1px solid var(--accent);color:var(--accent);margin-top:8px}
+.allbtn.ghost:disabled{opacity:.45}
+.total{font-size:11.5px;color:var(--dim);font-weight:600;margin:0 0 9px 2px}
+.total b{color:var(--green)}
+input[type=number]{width:100%;background:var(--card2);border:1px solid var(--line);border-radius:10px;
+  padding:11px 13px;font-size:14px;font-weight:600;color:var(--txt);font-family:inherit;outline:none}
+input[type=number]:focus{border-color:var(--accent)}
 .preview{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:12px;
   margin-top:14px;text-align:center;display:none}
 .preview.show{display:block}
@@ -143,13 +150,26 @@ footer{border-top:1px solid var(--line);margin-top:34px;padding:20px 0 30px;text
       </div>
     </div>
     <div class="opt">
+      <div class="lbl"><span>Target file size</span><span class="val" id="tVal">Off</span></div>
+      <div class="chips" id="targets">
+        <button class="chip on" data-t="0">Off</button>
+        <button class="chip" data-t="100">100 KB</button>
+        <button class="chip" data-t="200">200 KB</button>
+        <button class="chip" data-t="500">500 KB</button>
+        <button class="chip" data-t="1024">1 MB</button>
+      </div>
+    </div>
+    <div class="opt">
       <div class="lbl"><span>Quality</span><span class="val" id="qVal">90%</span></div>
       <input type="range" id="quality" min="50" max="100" value="90" step="5">
     </div>
   </div>
 
-  <div class="res" id="res"><div id="items"></div>
+  <div class="res" id="res">
+    <div class="total" id="total"></div>
+    <div id="items"></div>
     <button class="allbtn" id="all" disabled>⬇ Download all</button>
+    <button class="allbtn ghost" id="zip" disabled>🗜 Download all as ZIP</button>
   </div>
 
 
@@ -186,11 +206,11 @@ function toast(m){
   toastEl.textContent = m;
   toastEl.classList.add('show');
   clearTimeout(toast._t);
-  toast._t = setTimeout(function(){ toastEl.classList.remove('show'); }, 2000);
+  toast._t = setTimeout(function(){ toastEl.classList.remove('show'); }, 2200);
 }
 function fmtSize(b){
   if (b < 1024) return b + ' B';
-  if (b < 1024 * 1024) return (b / 1024).toFixed(0) + ' KB';
+  if (b < 1024 * 1024) return Math.round(b / 1024) + ' KB';
   return (b / 1024 / 1024).toFixed(2) + ' MB';
 }
 function esc(s){ return String(s).replace(/[<>&"]/g, ''); }
@@ -214,11 +234,44 @@ function canvasBlob(cv, mime, q){
   });
 }
 
-var S = { files: [], out: [], mime: 'image/jpeg', q: 0.9 };
+var S = { files: [], out: [], mime: 'image/jpeg', q: 0.9, target: 0 };
 var drop = document.getElementById('drop'), fileIn = document.getElementById('file');
 var resBox = document.getElementById('res'), items = document.getElementById('items');
-var allBtn = document.getElementById('all');
+var allBtn = document.getElementById('all'), zipBtn = document.getElementById('zip');
+var totalEl = document.getElementById('total');
 
+/* ---------- إعدادات محفوظة ---------- */
+var PREFS = 'pixshrink_webp_prefs_v1';
+function savePrefs(){
+  try { localStorage.setItem(PREFS, JSON.stringify({ m: S.mime, q: S.q, t: S.target })); } catch(e){}
+}
+function loadPrefs(){
+  try {
+    var p = JSON.parse(localStorage.getItem(PREFS) || 'null');
+    if (!p) return;
+    if (p.m) S.mime = p.m;
+    if (p.q) S.q = p.q;
+    if (p.t) S.target = p.t;
+    document.getElementById('quality').value = Math.round(S.q * 100);
+    document.getElementById('qVal').textContent = Math.round(S.q * 100) + '%';
+    document.getElementById('fVal').textContent = S.mime === 'image/png' ? 'PNG' : (S.mime === 'image/webp' ? 'WebP' : 'JPG');
+    document.getElementById('tVal').textContent = !S.target ? 'Off' : (S.target >= 1024 * 1024 ? '1 MB' : Math.round(S.target / 1024) + ' KB');
+    syncChips();
+  } catch(e){}
+}
+function syncChips(){
+  ['formats', 'targets'].forEach(function(id){
+    var box = document.getElementById(id);
+    if (!box) return;
+    Array.prototype.forEach.call(box.children, function(c){ c.classList.remove('on'); });
+  });
+  var f = document.querySelector('#formats .chip[data-f="' + S.mime + '"]');
+  if (f) f.classList.add('on');
+  var t = document.querySelector('#targets .chip[data-t="' + (S.target ? Math.round(S.target / 1024) : 0) + '"]');
+  if (t) t.classList.add('on');
+}
+
+/* ---------- الملفات ---------- */
 drop.onclick = function(){ fileIn.click(); };
 fileIn.onchange = function(e){ add(e.target.files); e.target.value = ''; };
 ['dragover','dragenter'].forEach(function(t){ drop.addEventListener(t, function(e){ e.preventDefault(); drop.classList.add('over'); }); });
@@ -231,14 +284,19 @@ function add(list){
   S.files = a.slice(0, 20); run();
 }
 
+/* ---------- المعالجة ---------- */
 function run(){
   if (!S.files.length) return;
-  S.out = []; items.innerHTML = ''; resBox.classList.add('show'); allBtn.disabled = true;
-  var done = 0;
+  S.out = []; items.innerHTML = ''; resBox.classList.add('show');
+  allBtn.disabled = true; if (zipBtn) zipBtn.disabled = true;
+  if (totalEl) totalEl.textContent = 'Converting…';
+  var done = 0, totOrig = 0, totNew = 0;
+
   S.files.forEach(function(f, i){
     var box = document.createElement('div'); box.className = 'item';
     box.innerHTML = '<div class="inf"><div class="nm">' + esc(f.name) + '</div><div class="sz">converting…</div></div>';
     items.appendChild(box);
+
     loadImg(f).then(function(o){
       var cv = document.createElement('canvas');
       cv.width = o.img.naturalWidth; cv.height = o.img.naturalHeight;
@@ -246,40 +304,116 @@ function run(){
       if (S.mime === 'image/jpeg'){ ctx.fillStyle = '#fff'; ctx.fillRect(0, 0, cv.width, cv.height); }
       ctx.drawImage(o.img, 0, 0);
       URL.revokeObjectURL(o.url);
-      return canvasBlob(cv, S.mime, S.q);
-    }).then(function(b){
+      return searchSize(cv, S.mime, S.target, S.q);
+    }).then(function(r){
       var ext = S.mime === 'image/png' ? 'png' : (S.mime === 'image/webp' ? 'webp' : 'jpg');
       var name = f.name.replace(/\.[^.]+$/, '') + '.' + ext;
-      var url = URL.createObjectURL(b);
-      S.out[i] = { url: url, name: name };
+      var url = URL.createObjectURL(r.blob);
+      S.out[i] = { url: url, name: name, blob: r.blob };
+      totOrig += f.size; totNew += r.blob.size;
+
       box.innerHTML = '';
       var im = document.createElement('img'); im.src = url;
       var inf = document.createElement('div'); inf.className = 'inf';
-      inf.innerHTML = '<div class="nm">' + esc(f.name) + '</div><div class="sz">' + fmtSize(f.size) + ' → <b>' + fmtSize(b.size) + '</b> · ' + ext.toUpperCase() + '</div>';
+      var diff = Math.round((1 - r.blob.size / f.size) * 100);
+      var note = S.target && S.mime !== 'image/png'
+        ? (r.met ? ' <span style="color:#10B981">✓ under target</span>' : ' <span style="color:#EF4444">couldn\'t reach target</span>')
+        : (diff > 0 ? ' <span style="color:#10B981">−' + diff + '%</span>' : '');
+      inf.innerHTML = '<div class="nm">' + esc(f.name) + '</div><div class="sz">' + fmtSize(f.size) + ' → <b>' + fmtSize(r.blob.size) + '</b> · ' + ext.toUpperCase() + note + '</div>';
       var btn = document.createElement('button'); btn.className = 'dl'; btn.textContent = '⬇ Save';
       btn.onclick = function(){ dlUrl(url, name); };
       box.appendChild(im); box.appendChild(inf); box.appendChild(btn);
-      if (++done === S.files.length) allBtn.disabled = false;
     }).catch(function(){
       box.innerHTML = '<div class="inf"><div class="nm">' + esc(f.name) + '</div><div class="sz" style="color:#EF4444">failed (unsupported format?)</div></div>';
-      if (++done === S.files.length) allBtn.disabled = false;
+    }).then(function(){
+      if (++done === S.files.length){
+        allBtn.disabled = false; if (zipBtn) zipBtn.disabled = false;
+        if (totalEl && totOrig > 0){
+          var save = Math.round((1 - totNew / totOrig) * 100);
+          totalEl.innerHTML = fmtSize(totOrig) + ' → <b>' + fmtSize(totNew) + '</b>' + (save > 0 ? ' · saved ' + save + '%' : '');
+        }
+      }
     });
   });
 }
 
+/* كتقلب على أعلى جودة كتخلي الملف تحت الهدف */
+function searchSize(cv, mime, target, startQ){
+  return canvasBlob(cv, mime, startQ).then(function(base){
+    if (!target || mime === 'image/png' || base.size <= target) return { blob: base, met: !target || base.size <= target };
+    var lo = 0.2, hi = startQ, best = null;
+    var chain = Promise.resolve();
+    for (var k = 0; k < 6; k++){
+      chain = chain.then(function(){
+        var mid = (lo + hi) / 2;
+        return canvasBlob(cv, mime, mid).then(function(b){
+          if (b.size <= target){ best = b; lo = mid; } else { hi = mid; }
+        });
+      });
+    }
+    return chain.then(function(){
+      if (!best) return canvasBlob(cv, mime, 0.2).then(function(b){ return { blob: b, met: b.size <= target }; });
+      return { blob: best, met: true };
+    });
+  });
+}
+
+/* ---------- ZIP ---------- */
+function loadJSZip(){
+  return new Promise(function(res, rej){
+    if (window.JSZip) return res(window.JSZip);
+    var s = document.createElement('script');
+    s.src = 'https://cdn.jsdelivr.net/npm/jszip@3.10.1/dist/jszip.min.js';
+    s.onload = function(){ res(window.JSZip); };
+    s.onerror = function(){ rej(new Error('cdn')); };
+    document.head.appendChild(s);
+  });
+}
+if (zipBtn) zipBtn.onclick = function(){
+  var ready = S.out.filter(Boolean);
+  if (!ready.length) return;
+  if (ready.length === 1){ dlUrl(ready[0].url, ready[0].name); return; }
+  zipBtn.disabled = true;
+  var old = zipBtn.textContent;
+  zipBtn.textContent = 'Zipping…';
+  loadJSZip().then(function(JSZip){
+    var z = new JSZip();
+    ready.forEach(function(r){ z.file(r.name, r.blob); });
+    return z.generateAsync({ type: 'blob' });
+  }).then(function(out){
+    var u = URL.createObjectURL(out);
+    var a = document.createElement('a');
+    a.href = u; a.download = 'pixshrink-' + ready.length + '-converted.zip';
+    document.body.appendChild(a); a.click(); a.remove();
+    setTimeout(function(){ URL.revokeObjectURL(u); }, 4000);
+    toast('ZIP ready (' + fmtSize(out.size) + ')');
+  }).catch(function(){ toast('ZIP failed — use Download all'); }).then(function(){
+    zipBtn.textContent = old; zipBtn.disabled = false;
+  });
+};
+
+/* ---------- التحكم ---------- */
 document.getElementById('formats').onclick = function(e){
   var b = e.target.closest('.chip'); if (!b) return;
-  Array.prototype.forEach.call(this.children, function(c){ c.classList.remove('on'); });
-  b.classList.add('on');
   S.mime = b.getAttribute('data-f');
   document.getElementById('fVal').textContent = b.textContent;
-  run();
+  syncChips(); savePrefs(); run();
 };
 document.getElementById('quality').oninput = function(){
   S.q = parseInt(this.value, 10) / 100;
   document.getElementById('qVal').textContent = this.value + '%';
+  savePrefs();
 };
 document.getElementById('quality').onchange = run;
+
+var tgt = document.getElementById('targets');
+if (tgt) tgt.onclick = function(e){
+  var b = e.target.closest('.chip'); if (!b) return;
+  var kb = parseInt(b.getAttribute('data-t'), 10);
+  S.target = kb ? kb * 1024 : 0;
+  document.getElementById('tVal').textContent = !kb ? 'Off' : (kb >= 1024 ? '1 MB' : kb + ' KB');
+  syncChips(); savePrefs(); run();
+};
 
 allBtn.onclick = function(){
   var i = 0;
@@ -290,6 +424,7 @@ allBtn.onclick = function(){
   })();
 };
 
+loadPrefs();
 </script>
 </body>
 </html>

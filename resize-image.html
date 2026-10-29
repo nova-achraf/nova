@@ -77,6 +77,13 @@ input:focus{border-color:var(--accent)}
   border:0;border-radius:13px;padding:15px;font-size:14px;font-weight:800;cursor:pointer;
   margin-top:6px;font-family:inherit}
 .allbtn:disabled{opacity:.5}
+.allbtn.ghost{background:#FFFFFF;border:1px solid var(--accent);color:var(--accent);margin-top:8px}
+.allbtn.ghost:disabled{opacity:.45}
+.total{font-size:11.5px;color:var(--dim);font-weight:600;margin:0 0 9px 2px}
+.total b{color:var(--green)}
+input[type=number]{width:100%;background:var(--card2);border:1px solid var(--line);border-radius:10px;
+  padding:11px 13px;font-size:14px;font-weight:600;color:var(--txt);font-family:inherit;outline:none}
+input[type=number]:focus{border-color:var(--accent)}
 .preview{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:12px;
   margin-top:14px;text-align:center;display:none}
 .preview.show{display:block}
@@ -134,7 +141,20 @@ footer{border-top:1px solid var(--line);margin-top:34px;padding:20px 0 30px;text
   <input type="file" id="file" accept="image/*" multiple hidden>
 
   <div class="opts">
+    
     <div class="opt">
+      <div class="lbl"><span>Presets</span><span class="val">templates</span></div>
+      <div class="chips" id="presets">
+        <button class="chip on" data-w="0" data-h="0">Free</button>
+        <button class="chip" data-w="1080" data-h="1080">IG square</button>
+        <button class="chip" data-w="1080" data-h="1350">IG portrait</button>
+        <button class="chip" data-w="1080" data-h="1920">Story</button>
+        <button class="chip" data-w="1280" data-h="720">YouTube</button>
+        <button class="chip" data-w="400" data-h="400">Profile</button>
+        <button class="chip" data-w="2480" data-h="3508">A4 300dpi</button>
+      </div>
+    </div>
+<div class="opt">
       <div class="lbl"><span>Width (px)</span><span class="val" id="wLive">—</span></div>
       <input type="number" id="rw" placeholder="e.g. 1200" min="16" max="10000">
     </div>
@@ -162,10 +182,23 @@ footer{border-top:1px solid var(--line);margin-top:34px;padding:20px 0 30px;text
         <button class="chip" data-f="image/png">PNG</button>
       </div>
     </div>
+    <div class="opt">
+      <div class="lbl"><span>Target file size</span><span class="val" id="tVal">Off</span></div>
+      <div class="chips" id="targets">
+        <button class="chip on" data-t="0">Off</button>
+        <button class="chip" data-t="100">100 KB</button>
+        <button class="chip" data-t="200">200 KB</button>
+        <button class="chip" data-t="500">500 KB</button>
+        <button class="chip" data-t="1024">1 MB</button>
+      </div>
+    </div>
   </div>
 
-  <div class="res" id="res"><div id="items"></div>
+  <div class="res" id="res">
+    <div class="total" id="total"></div>
+    <div id="items"></div>
     <button class="allbtn" id="all" disabled>⬇ Download all</button>
+    <button class="allbtn ghost" id="zip" disabled>🗜 Download all as ZIP</button>
   </div>
 
 
@@ -208,11 +241,11 @@ function toast(m){
   toastEl.textContent = m;
   toastEl.classList.add('show');
   clearTimeout(toast._t);
-  toast._t = setTimeout(function(){ toastEl.classList.remove('show'); }, 2000);
+  toast._t = setTimeout(function(){ toastEl.classList.remove('show'); }, 2200);
 }
 function fmtSize(b){
   if (b < 1024) return b + ' B';
-  if (b < 1024 * 1024) return (b / 1024).toFixed(0) + ' KB';
+  if (b < 1024 * 1024) return Math.round(b / 1024) + ' KB';
   return (b / 1024 / 1024).toFixed(2) + ' MB';
 }
 function esc(s){ return String(s).replace(/[<>&"]/g, ''); }
@@ -236,11 +269,52 @@ function canvasBlob(cv, mime, q){
   });
 }
 
-var S = { files: [], out: [], method: 'fit', pct: 50, mime: 'image/jpeg', W: 0, H: 0 };
+var S = { files: [], out: [], method: 'fit', pct: 50, mime: 'image/jpeg', W: 0, H: 0, target: 0, q: 0.92 };
 var drop = document.getElementById('drop'), fileIn = document.getElementById('file');
 var resBox = document.getElementById('res'), items = document.getElementById('items');
-var allBtn = document.getElementById('all');
+var allBtn = document.getElementById('all'), zipBtn = document.getElementById('zip');
+var totalEl = document.getElementById('total');
 
+/* ---------- إعدادات محفوظة ---------- */
+var PREFS = 'pixshrink_resize_prefs_v1';
+function savePrefs(){
+  try { localStorage.setItem(PREFS, JSON.stringify({ w: S.W, h: S.H, m: S.method, mime: S.mime, t: S.target, p: S.pct })); } catch(e){}
+}
+function loadPrefs(){
+  try {
+    var p = JSON.parse(localStorage.getItem(PREFS) || 'null');
+    if (!p) return;
+    S.W = p.w || 0; S.H = p.h || 0; S.method = p.m || 'fit';
+    S.mime = p.mime || 'image/jpeg'; S.target = p.t || 0; S.pct = p.p || 50;
+    document.getElementById('rw').value = S.W || '';
+    document.getElementById('rh').value = S.H || '';
+    document.getElementById('wLive').textContent = S.W ? S.W + 'px' : '—';
+    document.getElementById('hLive').textContent = S.H ? S.H + 'px' : '—';
+    document.getElementById('pct').value = S.pct;
+    document.getElementById('pVal').textContent = S.pct + '%';
+    document.getElementById('pctWrap').style.display = S.method === 'scale' ? 'block' : 'none';
+    document.getElementById('fVal').textContent = S.mime === 'image/png' ? 'PNG' : (S.mime === 'image/webp' ? 'WebP' : 'JPG');
+    document.getElementById('tVal').textContent = !S.target ? 'Off' : (S.target >= 1024 * 1024 ? '1 MB' : Math.round(S.target / 1024) + ' KB');
+    syncChips();
+  } catch(e){}
+}
+function syncChips(){
+  ['methods', 'formats', 'targets', 'presets'].forEach(function(id){
+    var box = document.getElementById(id);
+    if (!box) return;
+    Array.prototype.forEach.call(box.children, function(c){ c.classList.remove('on'); });
+  });
+  var m = document.querySelector('#methods .chip[data-m="' + S.method + '"]');
+  if (m) m.classList.add('on');
+  var f = document.querySelector('#formats .chip[data-f="' + S.mime + '"]');
+  if (f) f.classList.add('on');
+  var t = document.querySelector('#targets .chip[data-t="' + (S.target ? Math.round(S.target / 1024) : 0) + '"]');
+  if (t) t.classList.add('on');
+  var p = document.querySelector('#presets .chip[data-w="' + S.W + '"][data-h="' + S.H + '"]');
+  if (p) p.classList.add('on');
+}
+
+/* ---------- الملفات ---------- */
 drop.onclick = function(){ fileIn.click(); };
 fileIn.onchange = function(e){ add(e.target.files); e.target.value = ''; };
 ['dragover','dragenter'].forEach(function(t){ drop.addEventListener(t, function(e){ e.preventDefault(); drop.classList.add('over'); }); });
@@ -261,72 +335,162 @@ function dims(w, h){
   return [Math.round(w * r), Math.round(h * r)];
 }
 
+/* ---------- المعالجة ---------- */
 function run(){
   if (!S.files.length) return;
-  S.out = []; items.innerHTML = ''; resBox.classList.add('show'); allBtn.disabled = true;
-  var done = 0;
+  S.out = []; items.innerHTML = ''; resBox.classList.add('show');
+  allBtn.disabled = true; if (zipBtn) zipBtn.disabled = true;
+  if (totalEl) totalEl.textContent = 'Working…';
+  var done = 0, totOrig = 0, totNew = 0;
+
   S.files.forEach(function(f, i){
     var box = document.createElement('div');
     box.className = 'item';
     box.innerHTML = '<div class="inf"><div class="nm">' + esc(f.name) + '</div><div class="sz">working…</div></div>';
     items.appendChild(box);
+
     loadImg(f).then(function(o){
       var d = dims(o.img.naturalWidth, o.img.naturalHeight);
-      if (!d[0] || !d[1] || S.method === 'fit' && !S.W && !S.H) d = [o.img.naturalWidth, o.img.naturalHeight];
+      if (!d[0] || !d[1]) d = [o.img.naturalWidth, o.img.naturalHeight];
       var cv = document.createElement('canvas');
       cv.width = d[0]; cv.height = d[1];
       var ctx = cv.getContext('2d');
       if (S.mime === 'image/jpeg'){ ctx.fillStyle = '#fff'; ctx.fillRect(0, 0, d[0], d[1]); }
       ctx.drawImage(o.img, 0, 0, d[0], d[1]);
       URL.revokeObjectURL(o.url);
-      return canvasBlob(cv, S.mime, 0.92).then(function(b){ return { b: b, w: d[0], h: d[1] }; });
+      return searchSize(cv, S.mime, S.target, S.q).then(function(r){ return { b: r.blob, w: d[0], h: d[1], met: r.met }; });
     }).then(function(r){
       var ext = S.mime === 'image/png' ? 'png' : (S.mime === 'image/webp' ? 'webp' : 'jpg');
       var name = f.name.replace(/\.[^.]+$/, '') + '-' + r.w + 'x' + r.h + '.' + ext;
       var url = URL.createObjectURL(r.b);
-      S.out[i] = { url: url, name: name };
+      S.out[i] = { url: url, name: name, blob: r.b };
+      totOrig += f.size; totNew += r.b.size;
+
       box.innerHTML = '';
       var im = document.createElement('img'); im.src = url;
       var inf = document.createElement('div'); inf.className = 'inf';
-      inf.innerHTML = '<div class="nm">' + esc(f.name) + '</div><div class="sz">' + r.w + ' × ' + r.h + 'px · <b>' + fmtSize(r.b.size) + '</b></div>';
+      var note = S.target ? (r.met ? ' <span style="color:#10B981">✓ under target</span>' : ' <span style="color:#EF4444">couldn\'t reach target</span>') : '';
+      inf.innerHTML = '<div class="nm">' + esc(name) + '</div><div class="sz">' + r.w + ' × ' + r.h + 'px · ' + fmtSize(r.b.size) + note + '</div>';
       var b = document.createElement('button'); b.className = 'dl'; b.textContent = '⬇ Save';
       b.onclick = function(){ dlUrl(url, name); };
       box.appendChild(im); box.appendChild(inf); box.appendChild(b);
-      if (++done === S.files.length) allBtn.disabled = false;
     }).catch(function(){
       box.innerHTML = '<div class="inf"><div class="nm">' + esc(f.name) + '</div><div class="sz" style="color:#EF4444">failed</div></div>';
-      if (++done === S.files.length) allBtn.disabled = false;
+    }).then(function(){
+      if (++done === S.files.length){
+        allBtn.disabled = false; if (zipBtn) zipBtn.disabled = false;
+        if (totalEl && totOrig > 0){
+          totalEl.innerHTML = fmtSize(totOrig) + ' → <b>' + fmtSize(totNew) + '</b> · saved ' + Math.round((1 - totNew / totOrig) * 100) + '%';
+        }
+      }
     });
   });
 }
 
-document.getElementById('rw').oninput = function(){ S.W = parseInt(this.value, 10) || 0; document.getElementById('wLive').textContent = S.W ? S.W + 'px' : '—'; };
-document.getElementById('rh').oninput = function(){ S.H = parseInt(this.value, 10) || 0; document.getElementById('hLive').textContent = S.H ? S.H + 'px' : '—'; };
+/* كتقلب على أعلى جودة كتخلي الملف تحت الهدف */
+function searchSize(cv, mime, target, startQ){
+  return canvasBlob(cv, mime, startQ).then(function(base){
+    if (!target || mime === 'image/png' || base.size <= target) return { blob: base, met: !target || base.size <= target };
+    var lo = 0.2, hi = startQ, best = null;
+    var chain = Promise.resolve();
+    for (var k = 0; k < 6; k++){
+      chain = chain.then(function(){
+        var mid = (lo + hi) / 2;
+        return canvasBlob(cv, mime, mid).then(function(b){
+          if (b.size <= target){ best = b; lo = mid; } else { hi = mid; }
+        });
+      });
+    }
+    return chain.then(function(){
+      if (!best) return canvasBlob(cv, mime, 0.2).then(function(b){ return { blob: b, met: b.size <= target }; });
+      return { blob: best, met: true };
+    });
+  });
+}
+
+/* ---------- ZIP ---------- */
+function loadJSZip(){
+  return new Promise(function(res, rej){
+    if (window.JSZip) return res(window.JSZip);
+    var s = document.createElement('script');
+    s.src = 'https://cdn.jsdelivr.net/npm/jszip@3.10.1/dist/jszip.min.js';
+    s.onload = function(){ res(window.JSZip); };
+    s.onerror = function(){ rej(new Error('cdn')); };
+    document.head.appendChild(s);
+  });
+}
+if (zipBtn) zipBtn.onclick = function(){
+  var ready = S.out.filter(Boolean);
+  if (!ready.length) return;
+  if (ready.length === 1){ dlUrl(ready[0].url, ready[0].name); return; }
+  zipBtn.disabled = true;
+  var old = zipBtn.textContent;
+  zipBtn.textContent = 'Zipping…';
+  loadJSZip().then(function(JSZip){
+    var z = new JSZip();
+    ready.forEach(function(r){ z.file(r.name, r.blob); });
+    return z.generateAsync({ type: 'blob' });
+  }).then(function(out){
+    var u = URL.createObjectURL(out);
+    var a = document.createElement('a');
+    a.href = u; a.download = 'pixshrink-' + ready.length + '-resized.zip';
+    document.body.appendChild(a); a.click(); a.remove();
+    setTimeout(function(){ URL.revokeObjectURL(u); }, 4000);
+    toast('ZIP ready (' + fmtSize(out.size) + ')');
+  }).catch(function(){ toast('ZIP failed — use Download all'); }).then(function(){
+    zipBtn.textContent = old; zipBtn.disabled = false;
+  });
+};
+
+/* ---------- التحكم ---------- */
+document.getElementById('rw').oninput = function(){ S.W = parseInt(this.value, 10) || 0; document.getElementById('wLive').textContent = S.W ? S.W + 'px' : '—'; syncChips(); savePrefs(); };
+document.getElementById('rh').oninput = function(){ S.H = parseInt(this.value, 10) || 0; document.getElementById('hLive').textContent = S.H ? S.H + 'px' : '—'; syncChips(); savePrefs(); };
 document.getElementById('rw').onchange = run;
 document.getElementById('rh').onchange = run;
 
 document.getElementById('methods').onclick = function(e){
   var b = e.target.closest('.chip'); if (!b) return;
-  Array.prototype.forEach.call(this.children, function(c){ c.classList.remove('on'); });
-  b.classList.add('on');
   S.method = b.getAttribute('data-m');
   document.getElementById('mVal').textContent = b.textContent;
   document.getElementById('pctWrap').style.display = S.method === 'scale' ? 'block' : 'none';
-  run();
+  syncChips(); savePrefs(); run();
 };
 document.getElementById('pct').oninput = function(){
   S.pct = parseInt(this.value, 10);
   document.getElementById('pVal').textContent = S.pct + '%';
+  savePrefs();
 };
 document.getElementById('pct').onchange = run;
 
 document.getElementById('formats').onclick = function(e){
   var b = e.target.closest('.chip'); if (!b) return;
-  Array.prototype.forEach.call(this.children, function(c){ c.classList.remove('on'); });
-  b.classList.add('on');
   S.mime = b.getAttribute('data-f');
   document.getElementById('fVal').textContent = b.textContent;
-  run();
+  syncChips(); savePrefs(); run();
+};
+
+var tgt = document.getElementById('targets');
+if (tgt) tgt.onclick = function(e){
+  var b = e.target.closest('.chip'); if (!b) return;
+  var kb = parseInt(b.getAttribute('data-t'), 10);
+  S.target = kb ? kb * 1024 : 0;
+  document.getElementById('tVal').textContent = !kb ? 'Off' : (kb >= 1024 ? '1 MB' : kb + ' KB');
+  syncChips(); savePrefs(); run();
+};
+
+var prs = document.getElementById('presets');
+if (prs) prs.onclick = function(e){
+  var b = e.target.closest('.chip'); if (!b) return;
+  S.W = parseInt(b.getAttribute('data-w'), 10) || 0;
+  S.H = parseInt(b.getAttribute('data-h'), 10) || 0;
+  S.method = 'fit';
+  document.getElementById('rw').value = S.W || '';
+  document.getElementById('rh').value = S.H || '';
+  document.getElementById('wLive').textContent = S.W ? S.W + 'px' : '—';
+  document.getElementById('hLive').textContent = S.H ? S.H + 'px' : '—';
+  document.getElementById('mVal').textContent = 'Fit inside';
+  document.getElementById('pctWrap').style.display = 'none';
+  syncChips(); savePrefs(); run();
 };
 
 allBtn.onclick = function(){
@@ -338,6 +502,7 @@ allBtn.onclick = function(){
   })();
 };
 
+loadPrefs();
 </script>
 </body>
 </html>
