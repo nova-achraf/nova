@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Generate the PixelSqueeze tool pages (shared template, per-tool logic)."""
+"""Generate the PixShrink tool pages (shared template, per-tool logic)."""
 import os, textwrap
 
 OUT = "/home/user/workspace/nova-achraf"
@@ -103,8 +103,17 @@ TOOLS = [
 ]
 
 
+EXTRA_NAV = [
+    ("merge-pdf.html", "Merge PDF", "merge"),
+    ("pdf-to-jpg.html", "PDF to JPG", "pdf2jpg"),
+    ("passport-photo.html", "Passport Photo", "passport"),
+    ("favicon-maker.html", "Favicon", "fav"),
+]
+
+
 def nav(active):
-    order = [("compress.html", "Compress", "compress")] + [(t[1], t[2], t[0]) for t in TOOLS]
+    order = ([("compress.html", "Compress", "compress")]
+             + [(t[1], t[2], t[0]) for t in TOOLS] + EXTRA_NAV)
     out = []
     for href, label, key in order:
         cls = " class=\"on\"" if key == active else ""
@@ -137,7 +146,7 @@ __EXTRA_HEAD__
       <a href="tools.html">
         <div class="ic">🗜</div>
         <div>
-          <b>PixelSqueeze</b>
+          <b>PixShrink</b>
           <span>Free online image tools</span>
         </div>
       </a>
@@ -164,7 +173,7 @@ __TOOL__
 __CONTENT__
 
   <footer>
-    PixelSqueeze — free browser-based image tools. No uploads, no accounts, no tracking pixels.
+    PixShrink — free browser-based image tools. No uploads, no accounts, no tracking pixels.
   </footer>
 </div>
 
@@ -944,12 +953,13 @@ CONTENT["pdf"] = """
 """
 
 # ---------------------------------------------------------------- WRITE
-for key, filename, label, title, desc in TOOLS:
-    tool_html = {"resize": resize_tool, "webp": webp_tool, "crop": crop_tool,
-                 "rotate": rotate_tool, "pdf": pdf_tool}[key]
-    tool_js = {"resize": resize_js, "webp": webp_js, "crop": crop_js,
-               "rotate": rotate_js, "pdf": pdf_js}[key]
-    lib = '<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>' if key == "pdf" else ""
-    page(key, filename, title, label, desc, tool_html, tool_js, CONTENT[key], extra_js_lib=lib)
+if __name__ == "__main__":
+    for key, filename, label, title, desc in TOOLS:
+        tool_html = {"resize": resize_tool, "webp": webp_tool, "crop": crop_tool,
+                     "rotate": rotate_tool, "pdf": pdf_tool}[key]
+        tool_js = {"resize": resize_js, "webp": webp_js, "crop": crop_js,
+                   "rotate": rotate_js, "pdf": pdf_js}[key]
+        lib = '<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>' if key == "pdf" else ""
+        page(key, filename, title, label, desc, tool_html, tool_js, CONTENT[key], extra_js_lib=lib)
 
-print("done")
+    print("done")

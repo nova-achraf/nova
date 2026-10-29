@@ -1,0 +1,375 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<script>/* KILL OLD SERVICE WORKERS */if('serviceWorker'in navigator){navigator.serviceWorker.getRegistrations().then(function(r){r.forEach(function(s){s.unregister()})})}if('caches'in window){caches.keys().then(function(k){k.forEach(function(c){caches.delete(c)})})}</script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+<meta name="theme-color" content="#0A0A0F">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black">
+<meta name="apple-mobile-web-app-title" content="AZAMI AI">
+<link rel="manifest" href="azami-manifest.json">
+<link rel="apple-touch-icon" href="azami-logo.webp">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700&display=swap" rel="stylesheet">
+<title>AZAMI AI — Moroccan Roots. Global Intelligence.</title>
+<meta name="description" content="AZAMI AI — مساعد ذكاء اصطناعي مغربي. From Morocco to the World.">
+<!-- Markdown + Code Highlight (async = no blocking) -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github-dark.min.css">
+<script src="https://cdn.jsdelivr.net/npm/marked@4.3.0/marked.min.js" async></script>
+<script src="https://cdn.jsdelivr.net/npm/dompurify@3.0.11/dist/purify.min.js" async></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js" async></script>
+<style>
+  :root{
+    --gold:#D4AF37; --gold2:#E8C66B; --green:#0E5C4A; --green2:#1B7A5A;
+    --bg:#0A0A0F; --bg2:#12121A; --card:#181822; --line:#2A2A38;
+    --txt:#F4F1E8; --muted:#8A8A9A; --red:#C4342B;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html,body{height:100%}
+  body{
+    font-family:'Cairo','Segoe UI',system-ui,-apple-system,'Noto Sans Arabic',sans-serif;
+    background:radial-gradient(circle at 50% 0%,#15151f 0%,var(--bg) 60%);
+    color:var(--txt);display:flex;flex-direction:column;height:100dvh;overflow:hidden;
+  }
+  /* Header */
+  header{
+    display:flex;align-items:center;gap:12px;padding:12px 14px;
+    background:linear-gradient(135deg,rgba(14,92,74,.18),rgba(212,175,55,.10));
+    border-bottom:1px solid var(--line);flex-shrink:0;
+  }
+  .star{
+    width:46px;height:46px;flex-shrink:0;
+    background:radial-gradient(circle,var(--green) 0%,var(--green2) 70%,transparent 100%);
+    border:2px solid var(--gold);transform:rotate(45deg);
+    display:flex;align-items:center;justify-content:center;border-radius:8px;
+    box-shadow:0 0 14px rgba(212,175,55,.25);
+  }
+  .star span{transform:rotate(-45deg);font-weight:900;color:var(--gold);font-size:22px;font-family:Georgia,serif}
+  .brand{display:flex;flex-direction:column;line-height:1.15}
+  .brand b{font-size:18px;letter-spacing:.5px;color:var(--gold2)}
+  .brand small{font-size:10.5px;color:var(--muted)}
+  .dot{width:8px;height:8px;border-radius:50%;background:var(--green2);box-shadow:0 0 8px var(--green2);margin-right:auto;align-self:center}
+  .key-btn{
+    background:transparent;border:1px solid var(--line);color:var(--muted);
+    border-radius:8px;padding:6px 10px;font-size:12px;cursor:pointer;white-space:nowrap;font-family:inherit;
+  }
+  .key-btn:active{border-color:var(--gold);color:var(--gold2)}
+  /* Chat area */
+  main{flex:1;overflow-y:auto;padding:14px;display:flex;flex-direction:column;gap:12px;-webkit-overflow-scrolling:touch}
+  .msg{max-width:88%;padding:11px 14px;border-radius:14px;font-size:15px;line-height:1.7;word-wrap:break-word}
+  .ai{background:var(--card);border:1px solid var(--line);align-self:flex-start;border-bottom-left-radius:4px}
+  .me{background:linear-gradient(135deg,var(--green),var(--green2));color:#fff;align-self:flex-end;border-bottom-right-radius:4px}
+  .who{font-size:11px;color:var(--gold2);margin-bottom:3px;font-weight:700}
+  .me .who{color:rgba(255,255,255,.7)}
+  .msg p{margin:0 0 8px}.msg p:last-child{margin-bottom:0}
+  .msg h1{font-size:19px;margin:10px 0 5px;color:var(--gold2)}
+  .msg h2{font-size:17px;margin:10px 0 5px;color:var(--gold2)}
+  .msg h3{font-size:15px;margin:10px 0 5px;color:var(--gold2)}
+  .msg ul,.msg ol{margin:5px 0;padding-right:20px}
+  .msg li{margin:2px 0}
+  .msg a{color:var(--gold2);text-decoration:underline}
+  .msg strong{color:var(--gold2)}
+  .msg blockquote{border-right:3px solid var(--gold);padding-right:10px;margin:6px 0;color:var(--muted)}
+  .msg code{background:var(--bg2);padding:2px 6px;border-radius:4px;font-family:monospace;font-size:13px;color:var(--gold2)}
+  .msg pre{background:var(--bg2);border:1px solid var(--line);border-radius:10px;padding:10px;overflow-x:auto;margin:6px 0}
+  .msg pre code{background:none;padding:0;color:var(--txt);font-size:13px}
+  .msg table{border-collapse:collapse;width:100%;margin:6px 0;font-size:13px}
+  .msg th,.msg td{border:1px solid var(--line);padding:5px 8px;text-align:right}
+  .msg th{background:var(--card);color:var(--gold2)}
+  .code-block{position:relative;margin:6px 0}
+  .code-copy{position:absolute;top:5px;left:5px;background:var(--card);border:1px solid var(--line);color:var(--muted);border-radius:6px;padding:2px 7px;font-size:11px;cursor:pointer;z-index:1}
+  .code-copy:active{color:var(--gold2);border-color:var(--gold)}
+  .msg-img{max-width:100%;border-radius:10px;margin:6px 0}
+  .msg-bar{display:flex;gap:4px;margin-top:5px;flex-wrap:wrap}
+  .msg-bar button{background:none;border:none;color:var(--muted);font-size:13px;cursor:pointer;padding:2px 6px;border-radius:6px}
+  .msg-bar button:active{background:var(--card);color:var(--gold2)}
+  .dl-link{font-size:13px;color:var(--gold2);text-decoration:none;padding:2px 6px}
+  .typing{display:inline-flex;gap:4px;align-items:center;color:var(--muted)}
+  .typing i{width:7px;height:7px;border-radius:50%;background:var(--gold);opacity:.4;animation:bnc 1s infinite}
+  .typing i:nth-child(2){animation-delay:.2s}.typing i:nth-child(3){animation-delay:.4s}
+  @keyframes bnc{0%,100%{transform:translateY(0);opacity:.4}50%{transform:translateY(-5px);opacity:1}}
+  /* Welcome */
+  .welcome{text-align:center;padding:40px 16px;color:var(--muted);font-size:14px;line-height:1.8}
+  .welcome h2{color:var(--gold2);font-size:20px;margin-bottom:8px;font-family:Georgia,serif}
+  .welcome img{width:64px;height:64px;border-radius:14px;margin-bottom:12px}
+  .chip{
+    display:inline-block;background:var(--card);border:1px solid var(--line);
+    color:var(--txt);padding:8px 12px;border-radius:20px;font-size:13px;margin:4px;cursor:pointer;
+  }
+  .chip:active{border-color:var(--gold);color:var(--gold2)}
+  /* Input bar */
+  footer{flex-shrink:0;padding:10px 12px calc(10px + env(safe-area-inset-bottom));background:var(--bg2);border-top:1px solid var(--line)}
+  #imgPrev{display:none;margin-bottom:6px;position:relative}
+  #prevThumb{max-height:70px;border-radius:8px;border:1px solid var(--line)}
+  .clear-img{position:absolute;top:-6px;right:-6px;background:var(--red);color:#fff;border:none;border-radius:50%;width:22px;height:22px;font-size:12px;cursor:pointer}
+  .inp{display:flex;gap:6px;align-items:flex-end}
+  textarea{
+    flex:1;background:var(--card);border:1px solid var(--line);color:var(--txt);
+    border-radius:14px;padding:11px 14px;font-size:15px;font-family:inherit;resize:none;
+    max-height:120px;min-height:46px;outline:none;line-height:1.5;
+  }
+  textarea:focus{border-color:var(--gold)}
+  .inp-btn{
+    width:42px;height:42px;flex-shrink:0;border:none;border-radius:50%;
+    background:var(--card);border:1px solid var(--line);color:var(--muted);
+    font-size:18px;cursor:pointer;display:flex;align-items:center;justify-content:center;
+  }
+  .inp-btn:active{color:var(--gold);border-color:var(--gold)}
+  .inp-btn.active{background:linear-gradient(135deg,var(--gold),var(--gold2));color:var(--bg)}
+  button.send{
+    width:46px;height:46px;flex-shrink:0;border:none;border-radius:50%;
+    background:linear-gradient(135deg,var(--gold),var(--gold2));color:var(--bg);
+    font-size:20px;cursor:pointer;display:flex;align-items:center;justify-content:center;
+    box-shadow:0 0 12px rgba(212,175,55,.3);
+  }
+  button.send:disabled{opacity:.4;cursor:not-allowed}
+  button.send.stop{background:var(--red);color:#fff;animation:pulse 1.5s infinite}
+  @keyframes pulse{0%,100%{opacity:1}50%{opacity:.7}}
+  /* Key modal */
+  .modal{position:fixed;inset:0;background:rgba(0,0,0,.85);display:flex;align-items:center;justify-content:center;z-index:50;padding:18px}
+  .sheet{background:var(--bg2);border:1px solid var(--gold);border-radius:16px;padding:22px 18px;max-width:380px;width:100%}
+  .sheet h3{color:var(--gold2);font-size:18px;margin-bottom:6px;font-family:Georgia,serif}
+  .sheet p{color:var(--muted);font-size:13px;line-height:1.6;margin-bottom:14px}
+  .sheet input{
+    width:100%;background:var(--card);border:1px solid var(--line);color:var(--txt);
+    border-radius:10px;padding:12px;font-size:14px;font-family:monospace;outline:none;margin-bottom:12px;
+  }
+  .sheet input:focus{border-color:var(--gold)}
+  .sheet button{width:100%;padding:12px;border:none;border-radius:10px;font-weight:700;font-size:15px;cursor:pointer}
+  .sheet .go{background:linear-gradient(135deg,var(--green),var(--green2));color:#fff;margin-bottom:8px}
+  .sheet .skip{background:transparent;color:var(--muted);border:1px solid var(--line)}
+  .err{color:var(--red);font-size:12px;margin-top:6px;display:none}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="star"><span>A</span></div>
+  <div class="brand">
+    <b>AZAMI AI</b>
+    <small>Moroccan Roots · Global Intelligence</small>
+  </div>
+  <div class="dot" title="online"></div>
+  <button class="key-btn" onclick="openKey()">🔑 المفتاح</button>
+</header>
+
+<main id="chat">
+  <div class="welcome">
+    <img src="azami-logo.webp" onerror="this.style.display='none'">
+    <h2>أهلاً بك في AZAMI AI 🇲🇦</h2>
+    <p>مساعدك الذكي من المغرب إلى العالم.<br>سؤلني بأي لغة — العربية، الدارجة، الفرنسية، الإنجليزية.</p>
+    <div style="margin-top:12px">
+      <div class="chip" onclick="quick('شنو هو AZAMI AI؟')">شنو هو AZAMI AI؟</div>
+      <div class="chip" onclick="quick('كتب ليا بوستر للمنتج ديالي')">كتب ليا بوستر</div>
+      <div class="chip" onclick="quick('Translate: مرحبا بالعالم')">ترجم ليا</div>
+      <div class="chip" onclick="quick('عطاني فكرة مشروع صغير فالمغرب')">فكرة مشروع</div>
+    </div>
+  </div>
+</main>
+
+<footer>
+  <div id="imgPrev"><img id="prevThumb"><button class="clear-img" onclick="clearImg()">✕</button></div>
+  <div class="inp">
+    <textarea id="in" rows="1" placeholder="كتب رسالتك لـ AZAMI AI..." onkeydown="if(event.key==='Enter'&&!event.shiftKey){event.preventDefault();handleSend()}"></textarea>
+    <input type="file" id="camInput" accept="image/*" capture="environment" hidden onchange="onImgPick(this)">
+    <button class="inp-btn" onclick="document.getElementById('camInput').click()" title="تصوير">📷</button>
+    <button class="inp-btn" id="imgBtn" onclick="toggleImg()" title="وضع التصاور">🎨</button>
+    <button class="inp-btn" id="mic" onclick="toggleMic()" title="ميكروفون">🎤</button>
+    <button class="send" id="send" onclick="handleSend()" title="إرسال">➤</button>
+  </div>
+</footer>
+
+<!-- Key modal -->
+<div class="modal" id="keyModal" style="display:none">
+  <div class="sheet">
+    <h3>🔑 مفتاح AZAMI AI</h3>
+    <p>حط هنا المفتاح ديال Gemini (اللي لقيتي فـ Google AI Studio). كيبقى عندك فالمتصفح، ما كيتسيفطش لشي حد.<br><small style="color:var(--gold2);display:block;margin-top:6px">📊 aistudio.google.com → Sign in → Get API Key (مجاني)</small></p>
+    <input id="keyIn" placeholder="AIza..." autocomplete="off" spellcheck="false">
+    <div class="err" id="keyErr">حط المفتاح من فضلك.</div>
+    <button class="go" onclick="saveKey()">حفظ وبدأ ✅</button>
+    <button class="skip" onclick="closeKey()">لحظة، نرجع من بعد</button>
+  </div>
+</div>
+
+<script>
+const KEY='azami_ai_gemini_key';
+let APIKEY='';
+try{APIKEY=localStorage.getItem(KEY)||''}catch(e){}
+const SYS='You are AZAMI AI, a multilingual assistant from Morocco. Answer in the exact language and dialect the user writes in. Support all Arabic dialects (Moroccan Darija, Egyptian, Gulf, Levantine, etc.) and all world languages. Be concise, friendly and helpful. Use Markdown formatting when appropriate: **bold**, *italic*, lists, code blocks with language tags, tables, and links.';
+const chat=document.getElementById('chat');
+let abortCtrl=null,generating=false,imgMode=false,pickedImg=null,pickedType=null,lastRender=0;
+
+/* === KEY === */
+function openKey(){document.getElementById('keyModal').style.display='flex';document.getElementById('keyIn').value=APIKEY||'';document.getElementById('keyIn').focus()}
+function closeKey(){document.getElementById('keyModal').style.display='none'}
+function saveKey(){const v=document.getElementById('keyIn').value.trim();if(!v){document.getElementById('keyErr').style.display='block';return}APIKEY=v;try{localStorage.setItem(KEY,v)}catch(e){}closeKey();addAi('مزيان! المفتاح تحفظ. سؤلني أي حاجة 🚀')}
+
+/* === MARKDOWN === */
+function renderMd(text){
+  if(window.marked){try{var raw=marked.parse(text);if(window.DOMPurify)return DOMPurify.sanitize(raw,{ADD_ATTR:['target','rel']});return raw}catch(e){}}
+  return esc(text).replace(/\n/g,'<br>');
+}
+function esc(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')}
+function addCodeCopy(container){
+  container.querySelectorAll('pre').forEach(function(pre){
+    if(pre.parentNode.classList.contains('code-block'))return;
+    var w=document.createElement('div');w.className='code-block';
+    pre.parentNode.insertBefore(w,pre);w.appendChild(pre);
+    var b=document.createElement('button');b.className='code-copy';b.textContent='📋 نسخ';
+    b.onclick=function(){navigator.clipboard&&navigator.clipboard.writeText(pre.textContent);b.textContent='✅';setTimeout(function(){b.textContent='📋 نسخ'},1500)};
+    w.appendChild(b);
+  });
+}
+
+/* === MESSAGES === */
+function quick(t){document.getElementById('in').value=t;handleSend()}
+function scrollDown(){chat.scrollTop=chat.scrollHeight}
+function addMe(t,img){
+  var d=document.createElement('div');d.className='msg me';
+  var s='<div class="who">أنا</div>';
+  if(img){s+='<img class="msg-img" src="'+img+'">'}
+  if(t){s+=renderMd(t)}
+  d.innerHTML=s;chat.appendChild(d);scrollDown();return d;
+}
+function addAi(t){
+  var d=document.createElement('div');d.className='msg ai';
+  d.innerHTML='<div class="who">AZAMI AI</div>'+renderMd(t);
+  chat.appendChild(d);scrollDown();addCodeCopy(d);return d;
+}
+function addTyping(){
+  var d=document.createElement('div');d.className='msg ai';
+  d.innerHTML='<div class="who">AZAMI AI</div><span class="typing"><i></i><i></i><i></i></span>';
+  chat.appendChild(d);scrollDown();return d;
+}
+function speak(text){
+  if(!('speechSynthesis' in window))return;
+  speechSynthesis.cancel();
+  var u=new SpeechSynthesisUtterance(text);
+  u.lang=/[\u0600-\u06FF]/.test(text)?'ar-SA':'en-US';u.rate=0.9;
+  speechSynthesis.speak(u);
+}
+function mkBtn(t,fn){var b=document.createElement('button');b.textContent=t;b.onclick=fn;return b}
+
+/* === GENERATING STATE === */
+function setGenerating(state){
+  generating=state;var btn=document.getElementById('send');
+  if(state){btn.textContent='⏹';btn.classList.add('stop');btn.title='إيقاف'}
+  else{btn.textContent='➤';btn.classList.remove('stop');btn.title='إرسال'}
+}
+function handleSend(){if(generating){if(abortCtrl){try{abortCtrl.abort()}catch(e){}}return}send()}
+
+/* === IMAGE PICK === */
+function onImgPick(input){var f=input.files[0];if(!f)return;var r=new FileReader();r.onload=function(e){pickedImg=e.target.result;pickedType=f.type||'image/jpeg';document.getElementById('prevThumb').src=pickedImg;document.getElementById('imgPrev').style.display='block'};r.readAsDataURL(f);input.value=''}
+function clearImg(){pickedImg=null;pickedType=null;document.getElementById('imgPrev').style.display='none'}
+function toggleImg(){imgMode=!imgMode;var b=document.getElementById('imgBtn');if(imgMode){b.classList.add('active');b.textContent='🎨✓';document.getElementById('in').placeholder='اكتب وصف التصويرة...'}else{b.classList.remove('active');b.textContent='🎨';document.getElementById('in').placeholder='كتب رسالتك لـ AZAMI AI...'}}
+
+/* === SEND === */
+async function send(){
+  var ta=document.getElementById('in');var txt=ta.value.trim();
+  if(!txt&&!pickedImg)return;
+  if(!APIKEY){openKey();return}
+  ta.value='';ta.style.height='auto';
+  addMe(txt,pickedImg);
+  // VISION (image attached)
+  if(pickedImg){await visionReq(txt);return}
+  // IMAGE GEN
+  if(imgMode||/(ارسم|رسم|صوّر|صور|صورة|أنشئ|ولّد|صمم|generate image|create image|draw |paint )/i.test(txt)){await genImage(txt);return}
+  // TEXT STREAM
+  await streamResp(txt);
+}
+
+/* === STREAM RESPONSE (Gemini) === */
+async function streamResp(txt){
+  var typing=addTyping();setGenerating(true);abortCtrl=new AbortController();var full='';
+  var hist=[];
+  // Build context from chat messages
+  var msgs=chat.querySelectorAll('.msg');
+  // Just send current message + system instruction
+  try{
+    var res=await fetch('https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:streamGenerateContent?alt=sse&key='+encodeURIComponent(APIKEY),{
+      method:'POST',headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({
+        systemInstruction:{parts:[{text:SYS}]},
+        contents:[{role:'user',parts:[{text:txt}]}],
+        generationConfig:{maxOutputTokens:1200,temperature:0.7}
+      }),
+      signal:abortCtrl.signal
+    });
+    if(!res.ok){var ed=await res.json().catch(function(){return{}});typing.remove();setGenerating(false);var m='وقع مشلم.';if(ed.error&&ed.error.message)m='خطأ: '+ed.error.message;addAi('⚠️ '+m+(ed.error&&ed.error.code===400?'\n\nتحقق من المفتاح (دوس 🔑).':''));return}
+    typing.querySelector('.typing').remove();
+    var span=document.createElement('div');typing.appendChild(span);
+    var reader=res.body.getReader(),dec=new TextDecoder(),buf='';
+    while(true){var ch=await reader.read();if(ch.done)break;buf+=dec.decode(ch.value,{stream:true});var lines=buf.split('\n');buf=lines.pop();
+      for(var i=0;i<lines.length;i++){var t=lines[i].trim();if(!t.startsWith('data:'))continue;var j=t.slice(5).trim();if(!j||j==='[DONE]')continue;
+        try{var o=JSON.parse(j);if(o.candidates&&o.candidates[0]&&o.candidates[0].content){full+=o.candidates[0].content.parts.map(function(p){return p.text}).join('');if(Date.now()-lastRender>100){span.innerHTML=renderMd(full);scrollDown();lastRender=Date.now()}}}catch(e){}
+      }
+    }
+    span.innerHTML=renderMd(full||'ما قدرتش نولّد جواب، حاول مرة أخرى.');addCodeCopy(span);scrollDown();
+    if(full){
+      var bar=document.createElement('div');bar.className='msg-bar';
+      bar.appendChild(mkBtn('🔊',function(){speak(full)}));
+      bar.appendChild(mkBtn('📋',function(){navigator.clipboard&&navigator.clipboard.writeText(full);this.textContent='✅';var b=this;setTimeout(function(){b.textContent='📋'},1500)}));
+      typing.appendChild(bar);
+    }
+  }catch(e){
+    if(e.name==='AbortError'){if(full){span.innerHTML=renderMd(full);addCodeCopy(span);var bar=document.createElement('div');bar.className='msg-bar';bar.appendChild(mkBtn('🔊',function(){speak(full)}));bar.appendChild(mkBtn('📋',function(){navigator.clipboard&&navigator.clipboard.writeText(full);this.textContent='✅';var b=this;setTimeout(function(){b.textContent='📋'},1500)}));typing.appendChild(bar);scrollDown()}else{typing.remove()}}
+    else{typing.remove();addAi('⚠️ ما قدرش نوصل للـAI. تأكد من الإنترنت وحاول مرة أخرى.')}
+  }
+  setGenerating(false);scrollDown();
+}
+
+/* === VISION === */
+async function visionReq(txt){
+  var b64=pickedImg.split(',')[1],typing=addTyping();setGenerating(true);abortCtrl=new AbortController();
+  try{
+    var parts=[];if(txt)parts.push({text:txt});parts.push({inlineData:{mimeType:pickedType,data:b64}});
+    var res=await fetch('https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key='+encodeURIComponent(APIKEY),{
+      method:'POST',headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({systemInstruction:{parts:[{text:SYS}]},contents:[{role:'user',parts:parts}],generationConfig:{maxOutputTokens:1200}})
+    });
+    var data=await res.json();typing.remove();setGenerating(false);
+    if(data.candidates&&data.candidates[0]&&data.candidates[0].content){addAi(data.candidates[0].content.parts.map(function(p){return p.text}).join('\n')||'ما قدرش نولّد جواب.')}
+    else{var m='وقع مشلم.';if(data.error&&data.error.message)m='خطأ: '+data.error.message;addAi('⚠️ '+m+(data.error&&data.error.code===400?'\n\nتحقق من المفتاح (دوس 🔑).':''))}
+  }catch(e){if(e.name!=='AbortError'){typing.remove();addAi('⚠️ ما قدرش نوصل للـAI. تأكد من الإنترنت.')}setGenerating(false)}
+  clearImg();document.getElementById('send').disabled=false;scrollDown();
+}
+
+/* === IMAGE GEN === */
+async function genImage(prompt){
+  var typing=addTyping();setGenerating(true);
+  var clean=prompt.replace(/^(ارسم|صوّر|أنشئ صورة|ولّد صورة|صمم صورة|صورة|صور|draw|paint|generate image|create image)\s*/i,'').trim()||prompt;
+  try{
+    var eng=clean;
+    try{var tRes=await fetch('https://translate.googleapis.com/translate_a/single?client=gtx&sl=auto&tl=en&dt=t&q='+encodeURIComponent(clean));var tData=await tRes.json();if(tData&&tData[0])eng=tData[0].map(function(i){return i[0]||''}).join('').trim()||clean}catch(e){}
+    var url='https://image.pollinations.ai/prompt/'+encodeURIComponent(eng+', ultra detailed, 4K, sharp focus, professional photography, high resolution')+'?width=1024&height=1024&nologo=true&model=flux&enhance=true';
+    var img=new Image();
+    img.onload=function(){typing.remove();var d=document.createElement('div');d.className='msg ai';d.innerHTML='<div class="who">AZAMI AI</div><img class="msg-img" src="'+url+'"><div class="msg-bar"><a class="dl-link" href="'+url+'" download="azami-ai.jpg">⬇️ تحميل</a></div>';chat.appendChild(d);scrollDown();setGenerating(false)};
+    img.onerror=function(){typing.remove();addAi('⚠️ ما قدرتش نولّد التصويرة. حاول مرة أخرى.');setGenerating(false)};
+    img.src=url;
+  }catch(e){typing.remove();addAi('⚠️ ما قدرتش نولّد التصويرة. تأكد من الإنترنت.');setGenerating(false)}
+  scrollDown();
+}
+
+/* === MIC === */
+let rec,listening=false;
+function toggleMic(){
+  var SR=window.SpeechRecognition||window.webkitSpeechRecognition;if(!SR){addAi('⚠️ الميكروفون ما مدعومش.');return}
+  if(listening){rec.stop();return}
+  rec=new SR();rec.lang='ar-MA';rec.interimResults=true;var ta=document.getElementById('in');
+  rec.onstart=function(){listening=true;document.getElementById('mic').classList.add('active');document.getElementById('mic').textContent='⏹'};
+  rec.onresult=function(e){var t='';for(var i=0;i<e.results.length;i++)t+=e.results[i][0].transcript;ta.value=t;ta.style.height='auto';ta.style.height=Math.min(ta.scrollHeight,120)+'px'};
+  rec.onerror=function(e){addAi('⚠️ مشكل فالميكروفون: '+e.error)};
+  rec.onend=function(){listening=false;document.getElementById('mic').classList.remove('active');document.getElementById('mic').textContent='🎤'};
+  rec.start();
+}
+
+/* === INIT === */
+if(!APIKEY)openKey();
+var ta=document.getElementById('in');
+ta.addEventListener('input',function(){this.style.height='auto';this.style.height=Math.min(this.scrollHeight,120)+'px'});
+</script>
+</body>
+</html>
