@@ -1,0 +1,387 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#0B0F14">
+<title>Compress Image Online — Free, Fast &amp; 100% Private (No Upload)</title>
+<meta name="description" content="Compress JPG, PNG and WebP images online for free. Reduce file size by up to 90% without losing quality. Works entirely in your browser — your photos never leave your device.">
+<meta name="robots" content="index,follow">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#0B0F14; --card:#121820; --card2:#161E28; --line:#222E3C;
+  --txt:#E9EFF6; --dim:#8496A9; --accent:#38BDF8; --accent2:#0EA5E9;
+  --green:#34D399; --red:#F87171;
+}
+*{box-sizing:border-box}
+html,body{margin:0;padding:0;background:var(--bg);color:var(--txt);
+  font-family:'Inter',system-ui,-apple-system,sans-serif;-webkit-font-smoothing:antialiased}
+a{color:var(--accent);text-decoration:none}
+.wrap{max-width:760px;margin:0 auto;padding:0 18px}
+
+header{border-bottom:1px solid var(--line);padding:14px 0}
+.brand{display:flex;align-items:center;gap:9px}
+.brand .ic{width:34px;height:34px;border-radius:10px;background:linear-gradient(145deg,#1E3A4F,#0F202E);
+  border:1px solid #27455C;display:flex;align-items:center;justify-content:center;font-size:16px}
+.brand b{font-size:15px;letter-spacing:-.2px}
+.brand span{font-size:10px;color:var(--dim);display:block;margin-top:1px;font-weight:500}
+
+.hero{text-align:center;padding:30px 0 22px}
+.hero h1{font-size:27px;line-height:1.22;margin:0 0 10px;letter-spacing:-.6px;font-weight:800}
+.hero p{margin:0;color:var(--dim);font-size:13.5px;line-height:1.65;max-width:560px;margin:0 auto}
+.badges{display:flex;gap:7px;justify-content:center;flex-wrap:wrap;margin-top:14px}
+.badge{font-size:10.5px;color:var(--green);background:rgba(52,211,153,.1);
+  border:1px solid rgba(52,211,153,.25);border-radius:20px;padding:4px 11px;font-weight:600}
+
+/* dropzone */
+.drop{
+  margin-top:6px;border:2px dashed var(--line);border-radius:18px;background:var(--card);
+  padding:38px 20px;text-align:center;cursor:pointer;transition:.2s;
+}
+.drop:hover,.drop.over{border-color:var(--accent);background:rgba(56,189,248,.05)}
+.drop .e{font-size:36px;margin-bottom:8px}
+.drop .t{font-size:14px;font-weight:700}
+.drop .s{font-size:11.5px;color:var(--dim);margin-top:5px}
+
+/* options */
+.opts{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:16px;margin-top:14px}
+.opt{margin-bottom:16px}
+.opt:last-child{margin-bottom:0}
+.opt .lbl{display:flex;justify-content:space-between;font-size:11.5px;color:var(--dim);
+  font-weight:600;margin-bottom:7px}
+.opt .val{color:var(--accent);font-weight:700}
+input[type=range]{width:100%;accent-color:var(--accent);height:5px}
+.chips{display:flex;gap:6px;flex-wrap:wrap}
+.chip{background:var(--card2);border:1px solid var(--line);color:var(--dim);border-radius:9px;
+  padding:7px 13px;font-size:11.5px;font-weight:600;cursor:pointer;font-family:inherit}
+.chip.on{background:rgba(56,189,248,.14);border-color:var(--accent);color:var(--accent)}
+.chip:active{transform:scale(.96)}
+
+/* results */
+.res{margin-top:14px;display:none}
+.res.show{display:block}
+.item{display:flex;align-items:center;gap:12px;background:var(--card);border:1px solid var(--line);
+  border-radius:14px;padding:11px;margin-bottom:9px}
+.item img{width:46px;height:46px;border-radius:9px;object-fit:cover;background:#0A0E13;flex-shrink:0}
+.item .inf{flex:1;min-width:0}
+.item .nm{font-size:12px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.item .sz{font-size:10.5px;color:var(--dim);margin-top:3px}
+.item .sz b{color:var(--green);font-weight:700}
+.item .dl{background:rgba(56,189,248,.14);border:1px solid var(--accent);color:var(--accent);
+  border-radius:9px;padding:8px 13px;font-size:11.5px;font-weight:700;cursor:pointer;font-family:inherit;
+  white-space:nowrap}
+.item .dl:active{transform:scale(.96)}
+
+.allbtn{width:100%;background:linear-gradient(145deg,var(--accent),var(--accent2));color:#05202B;
+  border:0;border-radius:13px;padding:15px;font-size:14px;font-weight:800;cursor:pointer;
+  margin-top:6px;font-family:inherit}
+.allbtn:active{transform:scale(.99)}
+.allbtn:disabled{opacity:.5}
+
+/* content */
+.content{margin:34px 0 0}
+.content h2{font-size:17px;margin:24px 0 9px;letter-spacing:-.3px}
+.content p{font-size:13px;line-height:1.75;color:#AEBECF;margin:0 0 10px}
+.content li{font-size:13px;line-height:1.75;color:#AEBECF;margin-bottom:6px}
+.adslot{border:1px dashed var(--line);border-radius:12px;padding:22px;text-align:center;
+  color:#3D4D5E;font-size:10.5px;margin:26px 0}
+footer{border-top:1px solid var(--line);margin-top:34px;padding:20px 0 30px;text-align:center;
+  font-size:11px;color:#4E5E70}
+.toast{position:fixed;bottom:22px;left:50%;transform:translate(-50%,14px);opacity:0;transition:.25s;
+  background:#12303F;border:1px solid #1E4E63;color:#BFE9F7;border-radius:11px;padding:10px 16px;
+  font-size:12px;z-index:50;pointer-events:none}
+.toast.show{opacity:1;transform:translate(-50%,0)}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="wrap">
+    <div class="brand">
+      <div class="ic">🗜</div>
+      <div>
+        <b>PixelSqueeze</b>
+        <span>Free online image tools</span>
+      </div>
+    </div>
+  </div>
+</header>
+
+<div class="wrap">
+
+  <div class="hero">
+    <h1>Compress Images Without Losing Quality</h1>
+    <p>Reduce JPG, PNG and WebP file sizes by up to 90%. Everything runs inside your browser — your photos are never uploaded, stored or seen by anyone.</p>
+    <div class="badges">
+      <span class="badge">✓ 100% private</span>
+      <span class="badge">✓ No sign-up</span>
+      <span class="badge">✓ No watermarks</span>
+      <span class="badge">✓ Unlimited</span>
+    </div>
+  </div>
+
+  <div class="drop" id="drop">
+    <div class="e">📁</div>
+    <div class="t">Drop your images here</div>
+    <div class="s">or tap to choose · JPG, PNG, WebP · up to 20 images</div>
+  </div>
+  <input type="file" id="file" accept="image/*" multiple hidden>
+
+  <div class="opts">
+    <div class="opt">
+      <div class="lbl"><span>Quality</span><span class="val" id="qVal">75%</span></div>
+      <input type="range" id="quality" min="30" max="95" value="75" step="5">
+    </div>
+
+    <div class="opt">
+      <div class="lbl"><span>Max width</span><span class="val" id="wVal">Original</span></div>
+      <div class="chips" id="widths">
+        <button class="chip on" data-w="0">Original</button>
+        <button class="chip" data-w="2560">2560px</button>
+        <button class="chip" data-w="1920">1920px</button>
+        <button class="chip" data-w="1280">1280px</button>
+        <button class="chip" data-w="800">800px</button>
+      </div>
+    </div>
+
+    <div class="opt">
+      <div class="lbl"><span>Output format</span><span class="val" id="fVal">JPG</span></div>
+      <div class="chips" id="formats">
+        <button class="chip on" data-f="image/jpeg">JPG</button>
+        <button class="chip" data-f="image/webp">WebP</button>
+        <button class="chip" data-f="image/png">PNG</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="res" id="res">
+    <div id="items"></div>
+    <button class="allbtn" id="all">⬇ Download all</button>
+  </div>
+
+  <div class="adslot">Ad space</div>
+
+  <div class="content">
+    <h2>How to compress an image</h2>
+    <ol>
+      <li>Drop your images or tap the box to select them.</li>
+      <li>Pick a quality level — 70–80% is visually identical to the original for most photos.</li>
+      <li>Optionally limit the width (great for websites and email).</li>
+      <li>Download each file, or press “Download all”.</li>
+    </ol>
+
+    <h2>Why compress images?</h2>
+    <p>A 12-megapixel phone photo is often 4–6 MB. That slows down websites, fills up email inboxes and gets rejected by upload forms with size limits. Compressing to 300–500 KB usually keeps the image indistinguishable to the eye while cutting the size by 80–90%.</p>
+
+    <h2>Is my data safe?</h2>
+    <p>Yes. This tool uses the HTML5 Canvas API inside your browser. Your images are read locally and are never sent to a server — there is no upload step at all. You can even disconnect from the internet after the page loads and it will still work.</p>
+
+    <h2>Which format should I choose?</h2>
+    <ul>
+      <li><b>JPG</b> — best for photos, smallest files.</li>
+      <li><b>WebP</b> — 25–35% smaller than JPG at the same quality; supported by all modern browsers.</li>
+      <li><b>PNG</b> — use only for logos, screenshots and images that need transparency.</li>
+    </ul>
+
+    <h2>Common questions</h2>
+    <p><b>Will compressing ruin my photo?</b> At 70–85% quality, no. Below 50% you may notice artefacts in gradients and fine detail.</p>
+    <p><b>What is the maximum file size?</b> There is no server, so it depends on your device memory. Photos up to ~40 MB normally work fine on a phone.</p>
+    <p><b>Can I compress HEIC photos from iPhone?</b> Most browsers cannot decode HEIC directly. Export them as JPG from the Photos app first.</p>
+  </div>
+
+  <footer>
+    PixelSqueeze — free browser-based image tools. No uploads, no accounts, no tracking pixels.
+  </footer>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+var state = { files: [], out: [], quality: 0.75, maxW: 0, mime: 'image/jpeg' };
+
+var el = {
+  drop: document.getElementById('drop'),
+  file: document.getElementById('file'),
+  quality: document.getElementById('quality'),
+  qVal: document.getElementById('qVal'),
+  wVal: document.getElementById('wVal'),
+  fVal: document.getElementById('fVal'),
+  res: document.getElementById('res'),
+  items: document.getElementById('items'),
+  all: document.getElementById('all'),
+  toast: document.getElementById('toast')
+};
+
+function toast(m){
+  el.toast.textContent = m;
+  el.toast.classList.add('show');
+  clearTimeout(toast._t);
+  toast._t = setTimeout(function(){ el.toast.classList.remove('show'); }, 2000);
+}
+
+function fmtSize(b){
+  if (b < 1024) return b + ' B';
+  if (b < 1024*1024) return (b/1024).toFixed(0) + ' KB';
+  return (b/1024/1024).toFixed(2) + ' MB';
+}
+
+/* ============ اختيار الملفات ============ */
+el.drop.onclick = function(){ el.file.click(); };
+el.file.onchange = function(e){ addFiles(e.target.files); e.target.value = ''; };
+
+['dragenter','dragover'].forEach(function(ev){
+  el.drop.addEventListener(ev, function(e){ e.preventDefault(); el.drop.classList.add('over'); });
+});
+['dragleave','drop'].forEach(function(ev){
+  el.drop.addEventListener(ev, function(e){ e.preventDefault(); el.drop.classList.remove('over'); });
+});
+el.drop.addEventListener('drop', function(e){
+  if (e.dataTransfer && e.dataTransfer.files) addFiles(e.dataTransfer.files);
+});
+
+function addFiles(list){
+  var arr = Array.prototype.slice.call(list).filter(function(f){
+    return f.type.indexOf('image/') === 0;
+  }).slice(0, 20);
+  if (!arr.length){ toast('Please choose image files'); return; }
+  state.files = arr;
+  process();
+}
+
+/* ============ المعالجة ============ */
+function process(){
+  if (!state.files.length) return;
+  state.out = [];
+  el.items.innerHTML = '';
+  el.res.classList.add('show');
+  el.all.disabled = true;
+
+  var done = 0;
+  state.files.forEach(function(f, i){
+    var box = document.createElement('div');
+    box.className = 'item';
+    box.innerHTML = '<div style="width:46px;height:46px;border-radius:9px;background:#0A0E13;'+
+      'display:flex;align-items:center;justify-content:center;font-size:11px;color:#4E5E70">…</div>' +
+      '<div class="inf"><div class="nm">'+f.name.replace(/[<>&"]/g,'')+'</div>' +
+      '<div class="sz">compressing…</div></div>';
+    el.items.appendChild(box);
+
+    compress(f).then(function(r){
+      state.out[i] = r;
+      box.innerHTML = '';
+      var im = document.createElement('img');
+      im.src = r.url;
+      var inf = document.createElement('div');
+      inf.className = 'inf';
+      var pct = Math.round((1 - r.size / r.orig) * 100);
+      inf.innerHTML = '<div class="nm">'+f.name.replace(/[<>&"]/g,'')+'</div>' +
+        '<div class="sz">'+fmtSize(r.orig)+' → <b>'+fmtSize(r.size)+'</b> (−'+pct+'%)</div>';
+      var b = document.createElement('button');
+      b.className = 'dl';
+      b.textContent = '⬇ Save';
+      b.onclick = function(){ download(r); };
+      box.appendChild(im); box.appendChild(inf); box.appendChild(b);
+
+      done++;
+      if (done === state.files.length) el.all.disabled = false;
+    }).catch(function(){
+      box.innerHTML = '<div class="inf"><div class="nm">'+f.name+'</div>' +
+        '<div class="sz" style="color:#F87171">could not be processed</div></div>';
+      done++;
+      if (done === state.files.length) el.all.disabled = false;
+    });
+  });
+}
+
+function compress(file){
+  return new Promise(function(resolve, reject){
+    var url = URL.createObjectURL(file);
+    var img = new Image();
+    img.onload = function(){
+      var w = img.naturalWidth, h = img.naturalHeight;
+      if (state.maxW && w > state.maxW){
+        h = Math.round(h * (state.maxW / w));
+        w = state.maxW;
+      }
+      var cv = document.createElement('canvas');
+      cv.width = w; cv.height = h;
+      var ctx = cv.getContext('2d');
+      if (state.mime === 'image/jpeg'){
+        ctx.fillStyle = '#FFFFFF';
+        ctx.fillRect(0, 0, w, h);
+      }
+      ctx.drawImage(img, 0, 0, w, h);
+      cv.toBlob(function(blob){
+        URL.revokeObjectURL(url);
+        if (!blob) { reject(new Error('blob')); return; }
+        var ext = state.mime === 'image/png' ? 'png' : (state.mime === 'image/webp' ? 'webp' : 'jpg');
+        var base = file.name.replace(/\.[^.]+$/, '');
+        resolve({
+          blob: blob,
+          url: URL.createObjectURL(blob),
+          size: blob.size,
+          orig: file.size,
+          name: base + '-min.' + ext
+        });
+      }, state.mime, state.quality);
+    };
+    img.onerror = function(){ URL.revokeObjectURL(url); reject(new Error('decode')); };
+    img.src = url;
+  });
+}
+
+function download(r){
+  var a = document.createElement('a');
+  a.href = r.url;
+  a.download = r.name;
+  document.body.appendChild(a);
+  a.click();
+  a.remove();
+}
+
+el.all.onclick = function(){
+  var i = 0;
+  function next(){
+    if (i >= state.out.length) return;
+    var r = state.out[i++];
+    if (r) download(r);
+    setTimeout(next, 320);
+  }
+  next();
+};
+
+/* ============ الإعدادات ============ */
+el.quality.oninput = function(){
+  state.quality = parseInt(this.value, 10) / 100;
+  el.qVal.textContent = this.value + '%';
+};
+el.quality.onchange = function(){ process(); };
+
+document.getElementById('widths').onclick = function(e){
+  var b = e.target.closest('.chip');
+  if (!b) return;
+  Array.prototype.forEach.call(this.children, function(c){ c.classList.remove('on'); });
+  b.classList.add('on');
+  state.maxW = parseInt(b.getAttribute('data-w'), 10);
+  el.wVal.textContent = state.maxW ? state.maxW + 'px' : 'Original';
+  process();
+};
+
+document.getElementById('formats').onclick = function(e){
+  var b = e.target.closest('.chip');
+  if (!b) return;
+  Array.prototype.forEach.call(this.children, function(c){ c.classList.remove('on'); });
+  b.classList.add('on');
+  state.mime = b.getAttribute('data-f');
+  el.fVal.textContent = b.textContent;
+  process();
+};
+
+el.quality.oninput();
+state.quality = 0.75;
+</script>
+</body>
+</html>
