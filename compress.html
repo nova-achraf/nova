@@ -80,6 +80,10 @@ input[type=range]{width:100%;accent-color:var(--accent);height:5px}
   margin-top:6px;font-family:inherit}
 .allbtn:active{transform:scale(.99)}
 .allbtn:disabled{opacity:.5}
+.allbtn.ghost{background:#FFFFFF;border:1px solid var(--accent);color:var(--accent);margin-top:8px}
+.allbtn.ghost:disabled{opacity:.45}
+.total{font-size:11.5px;color:var(--dim);font-weight:600;margin:0 0 9px 2px}
+.total b{color:var(--green)}
 
 /* content */
 .content{margin:34px 0 0}
@@ -148,6 +152,17 @@ footer{border-top:1px solid var(--line);margin-top:34px;padding:20px 0 30px;text
     </div>
 
     <div class="opt">
+      <div class="lbl"><span>Target file size</span><span class="val" id="tVal">Off</span></div>
+      <div class="chips" id="targets">
+        <button class="chip on" data-t="0">Off</button>
+        <button class="chip" data-t="100">100 KB</button>
+        <button class="chip" data-t="200">200 KB</button>
+        <button class="chip" data-t="500">500 KB</button>
+        <button class="chip" data-t="1024">1 MB</button>
+      </div>
+    </div>
+
+    <div class="opt">
       <div class="lbl"><span>Max width</span><span class="val" id="wVal">Original</span></div>
       <div class="chips" id="widths">
         <button class="chip on" data-w="0">Original</button>
@@ -169,8 +184,10 @@ footer{border-top:1px solid var(--line);margin-top:34px;padding:20px 0 30px;text
   </div>
 
   <div class="res" id="res">
+    <div class="total" id="total"></div>
     <div id="items"></div>
     <button class="allbtn" id="all">⬇ Download all</button>
+    <button class="allbtn ghost" id="zip">🗜 Download all as ZIP</button>
   </div>
 
   <div class="adslot">Ad space</div>
@@ -211,7 +228,7 @@ footer{border-top:1px solid var(--line);margin-top:34px;padding:20px 0 30px;text
 <div class="toast" id="toast"></div>
 
 <script>
-var state = { files: [], out: [], quality: 0.75, maxW: 0, mime: 'image/jpeg' };
+var state = { files: [], out: [], quality: 0.75, maxW: 0, mime: 'image/jpeg', target: 0 };
 
 var el = {
   drop: document.getElementById('drop'),
@@ -220,131 +237,223 @@ var el = {
   qVal: document.getElementById('qVal'),
   wVal: document.getElementById('wVal'),
   fVal: document.getElementById('fVal'),
+  tVal: document.getElementById('tVal'),
   res: document.getElementById('res'),
   items: document.getElementById('items'),
+  total: document.getElementById('total'),
   all: document.getElementById('all'),
+  zip: document.getElementById('zip'),
   toast: document.getElementById('toast')
 };
 
-function toast(m){
+/* ---------- إعدادات محفوظة ---------- */
+var PREFS = 'pixshrink_prefs_v1';
+function savePrefs() {
+  try {
+    localStorage.setItem(PREFS, JSON.stringify({ q: state.quality, w: state.maxW, m: state.mime, t: state.target }));
+  } catch (e) {}
+}
+
+function loadPrefs() {
+  try {
+    var p = JSON.parse(localStorage.getItem(PREFS) || 'null');
+    if (!p) return;
+    if (p.q) { state.quality = p.q; el.quality.value = Math.round(p.q * 100); el.qVal.textContent = el.quality.value + '%'; }
+    if (p.w !== undefined) { state.maxW = p.w; el.wVal.textContent = p.w ? p.w + 'px' : 'Original'; }
+    if (p.m) { state.mime = p.m; el.fVal.textContent = p.m === 'image/png' ? 'PNG' : (p.m === 'image/webp' ? 'WebP' : 'JPG'); }
+    if (p.t) { state.target = p.t * 1024; el.tVal.textContent = p.t >= 1024 ? '1 MB' : p.t + ' KB'; }
+    syncChips();
+  } catch (e) {}
+}
+
+function syncChips() {
+  var sets = [
+    ['widths', 'data-w', String(state.maxW)],
+    ['formats', 'data-f', state.mime],
+    ['targets', 'data-t', String(state.target ? Math.round(state.target / 1024) : 0)]
+  ];
+  sets.forEach(function (s) {
+    var box = document.getElementById(s[0]);
+    if (!box) return;
+    Array.prototype.forEach.call(box.children, function (c) {
+      c.classList.toggle('on', c.getAttribute(s[1]) === s[2]);
+    });
+  });
+}
+
+/* ---------- helpers ---------- */
+function toast(m) {
   el.toast.textContent = m;
   el.toast.classList.add('show');
   clearTimeout(toast._t);
-  toast._t = setTimeout(function(){ el.toast.classList.remove('show'); }, 2000);
+  toast._t = setTimeout(function () { el.toast.classList.remove('show'); }, 2200);
 }
 
-function fmtSize(b){
+function fmtSize(b) {
   if (b < 1024) return b + ' B';
-  if (b < 1024*1024) return (b/1024).toFixed(0) + ' KB';
-  return (b/1024/1024).toFixed(2) + ' MB';
+  if (b < 1024 * 1024) return Math.round(b / 1024) + ' KB';
+  return (b / 1024 / 1024).toFixed(2) + ' MB';
 }
 
-/* ============ اختيار الملفات ============ */
-el.drop.onclick = function(){ el.file.click(); };
-el.file.onchange = function(e){ addFiles(e.target.files); e.target.value = ''; };
+function esc(s) { return String(s).replace(/[<>&"]/g, ''); }
 
-['dragenter','dragover'].forEach(function(ev){
-  el.drop.addEventListener(ev, function(e){ e.preventDefault(); el.drop.classList.add('over'); });
+/* ---------- اختيار الملفات ---------- */
+el.drop.onclick = function () { el.file.click(); };
+el.file.onchange = function (e) { addFiles(e.target.files); e.target.value = ''; };
+
+['dragenter', 'dragover'].forEach(function (ev) {
+  el.drop.addEventListener(ev, function (e) { e.preventDefault(); el.drop.classList.add('over'); });
 });
-['dragleave','drop'].forEach(function(ev){
-  el.drop.addEventListener(ev, function(e){ e.preventDefault(); el.drop.classList.remove('over'); });
+['dragleave', 'drop'].forEach(function (ev) {
+  el.drop.addEventListener(ev, function (e) { e.preventDefault(); el.drop.classList.remove('over'); });
 });
-el.drop.addEventListener('drop', function(e){
+el.drop.addEventListener('drop', function (e) {
   if (e.dataTransfer && e.dataTransfer.files) addFiles(e.dataTransfer.files);
 });
 
-function addFiles(list){
-  var arr = Array.prototype.slice.call(list).filter(function(f){
+function addFiles(list) {
+  var arr = Array.prototype.slice.call(list).filter(function (f) {
     return f.type.indexOf('image/') === 0;
   }).slice(0, 20);
-  if (!arr.length){ toast('Please choose image files'); return; }
+  if (!arr.length) { toast('Please choose image files'); return; }
   state.files = arr;
   process();
 }
 
-/* ============ المعالجة ============ */
-function process(){
+/* ---------- المعالجة ---------- */
+function process() {
   if (!state.files.length) return;
   state.out = [];
   el.items.innerHTML = '';
   el.res.classList.add('show');
   el.all.disabled = true;
+  el.zip.disabled = true;
+  el.total.textContent = 'Working…';
 
   var done = 0;
-  state.files.forEach(function(f, i){
+  var totalOrig = 0, totalNew = 0;
+
+  state.files.forEach(function (f, i) {
     var box = document.createElement('div');
     box.className = 'item';
-    box.innerHTML = '<div style="width:46px;height:46px;border-radius:9px;background:#FBF3EA;'+
+    box.innerHTML = '<div style="width:46px;height:46px;border-radius:9px;background:#FBF3EA;' +
       'display:flex;align-items:center;justify-content:center;font-size:11px;color:#A8917F">…</div>' +
-      '<div class="inf"><div class="nm">'+f.name.replace(/[<>&"]/g,'')+'</div>' +
+      '<div class="inf"><div class="nm">' + esc(f.name) + '</div>' +
       '<div class="sz">compressing…</div></div>';
     el.items.appendChild(box);
 
-    compress(f).then(function(r){
+    compress(f).then(function (r) {
       state.out[i] = r;
+      totalOrig += r.orig;
+      totalNew += r.size;
+
       box.innerHTML = '';
       var im = document.createElement('img');
       im.src = r.url;
+      im.alt = f.name;
       var inf = document.createElement('div');
       inf.className = 'inf';
       var pct = Math.round((1 - r.size / r.orig) * 100);
-      inf.innerHTML = '<div class="nm">'+f.name.replace(/[<>&"]/g,'')+'</div>' +
-        '<div class="sz">'+fmtSize(r.orig)+' → <b>'+fmtSize(r.size)+'</b> (−'+pct+'%)</div>';
+      var note = '';
+      if (state.target) {
+        note = r.met
+          ? ' <span style="color:#10B981">✓ under target</span>'
+          : ' <span style="color:#EF4444">couldn\'t reach target</span>';
+      }
+      inf.innerHTML = '<div class="nm">' + esc(r.name) + '</div>' +
+        '<div class="sz">' + fmtSize(r.orig) + ' → <b>' + fmtSize(r.size) + '</b> (−' + pct + '%)' + note + '</div>';
       var b = document.createElement('button');
       b.className = 'dl';
       b.textContent = '⬇ Save';
-      b.onclick = function(){ download(r); };
+      b.onclick = function () { download(r); };
       box.appendChild(im); box.appendChild(inf); box.appendChild(b);
-
-      done++;
-      if (done === state.files.length) el.all.disabled = false;
-    }).catch(function(){
-      box.innerHTML = '<div class="inf"><div class="nm">'+f.name+'</div>' +
+    }).catch(function () {
+      box.innerHTML = '<div class="inf"><div class="nm">' + esc(f.name) + '</div>' +
         '<div class="sz" style="color:#EF4444">could not be processed</div></div>';
+    }).then(function () {
       done++;
-      if (done === state.files.length) el.all.disabled = false;
+      if (done === state.files.length) {
+        el.all.disabled = false;
+        el.zip.disabled = false;
+        if (totalOrig > 0) {
+          var save = Math.round((1 - totalNew / totalOrig) * 100);
+          el.total.innerHTML = fmtSize(totalOrig) + ' → <b>' + fmtSize(totalNew) + '</b> · saved ' + save + '%';
+        } else {
+          el.total.textContent = '';
+        }
+      }
     });
   });
 }
 
-function compress(file){
-  return new Promise(function(resolve, reject){
+function loadImage(file) {
+  return new Promise(function (resolve, reject) {
     var url = URL.createObjectURL(file);
     var img = new Image();
-    img.onload = function(){
-      var w = img.naturalWidth, h = img.naturalHeight;
-      if (state.maxW && w > state.maxW){
-        h = Math.round(h * (state.maxW / w));
-        w = state.maxW;
-      }
-      var cv = document.createElement('canvas');
-      cv.width = w; cv.height = h;
-      var ctx = cv.getContext('2d');
-      if (state.mime === 'image/jpeg'){
-        ctx.fillStyle = '#FFFFFF';
-        ctx.fillRect(0, 0, w, h);
-      }
-      ctx.drawImage(img, 0, 0, w, h);
-      cv.toBlob(function(blob){
-        URL.revokeObjectURL(url);
-        if (!blob) { reject(new Error('blob')); return; }
-        var ext = state.mime === 'image/png' ? 'png' : (state.mime === 'image/webp' ? 'webp' : 'jpg');
-        var base = file.name.replace(/\.[^.]+$/, '');
-        resolve({
-          blob: blob,
-          url: URL.createObjectURL(blob),
-          size: blob.size,
-          orig: file.size,
-          name: base + '-min.' + ext
-        });
-      }, state.mime, state.quality);
-    };
-    img.onerror = function(){ URL.revokeObjectURL(url); reject(new Error('decode')); };
+    img.onload = function () { URL.revokeObjectURL(url); resolve(img); };
+    img.onerror = function () { URL.revokeObjectURL(url); reject(new Error('decode')); };
     img.src = url;
   });
 }
 
-function download(r){
+function dims(img) {
+  var w = img.naturalWidth, h = img.naturalHeight;
+  if (state.maxW && w > state.maxW) {
+    h = Math.round(h * (state.maxW / w));
+    w = state.maxW;
+  }
+  return { w: w, h: h };
+}
+
+function encode(img, d, quality) {
+  return new Promise(function (resolve, reject) {
+    var cv = document.createElement('canvas');
+    cv.width = d.w; cv.height = d.h;
+    var ctx = cv.getContext('2d');
+    if (state.mime === 'image/jpeg') {
+      ctx.fillStyle = '#FFFFFF';
+      ctx.fillRect(0, 0, d.w, d.h);
+    }
+    ctx.drawImage(img, 0, 0, d.w, d.h);
+    cv.toBlob(function (blob) {
+      if (!blob) { reject(new Error('blob')); return; }
+      resolve(blob);
+    }, state.mime, quality);
+  });
+}
+
+/* ضغط ذكي: كتقلب على أعلى جودة كتخلي الملف تحت الهدف */
+async function compress(file) {
+  var img = await loadImage(file);
+  var d = dims(img);
+  var blob = await encode(img, d, state.quality);
+  var met = true;
+
+  if (state.target && blob.size > state.target) {
+    var lo = 0.2, hi = state.quality, best = null;
+    for (var k = 0; k < 6; k++) {
+      var mid = (lo + hi) / 2;
+      var b = await encode(img, d, mid);
+      if (b.size <= state.target) { best = b; lo = mid; } else { hi = mid; }
+    }
+    if (!best) best = await encode(img, d, 0.2);
+    blob = best;
+    met = blob.size <= state.target;
+  }
+
+  var ext = state.mime === 'image/png' ? 'png' : (state.mime === 'image/webp' ? 'webp' : 'jpg');
+  var base = file.name.replace(/\.[^.]+$/, '');
+  return {
+    blob: blob,
+    url: URL.createObjectURL(blob),
+    size: blob.size,
+    orig: file.size,
+    met: met,
+    name: base + '-min.' + ext
+  };
+}
+
+function download(r) {
   var a = document.createElement('a');
   a.href = r.url;
   a.download = r.name;
@@ -353,9 +462,9 @@ function download(r){
   a.remove();
 }
 
-el.all.onclick = function(){
+el.all.onclick = function () {
   var i = 0;
-  function next(){
+  function next() {
     if (i >= state.out.length) return;
     var r = state.out[i++];
     if (r) download(r);
@@ -364,35 +473,88 @@ el.all.onclick = function(){
   next();
 };
 
-/* ============ الإعدادات ============ */
-el.quality.oninput = function(){
+/* ---------- ZIP ---------- */
+function loadJSZip() {
+  return new Promise(function (resolve, reject) {
+    if (window.JSZip) return resolve(window.JSZip);
+    var s = document.createElement('script');
+    s.src = 'https://cdn.jsdelivr.net/npm/jszip@3.10.1/dist/jszip.min.js';
+    s.onload = function () { resolve(window.JSZip); };
+    s.onerror = function () { reject(new Error('cdn')); };
+    document.head.appendChild(s);
+  });
+}
+
+el.zip.onclick = async function () {
+  var ready = state.out.filter(Boolean);
+  if (!ready.length) return;
+  if (ready.length === 1) { download(ready[0]); return; }
+  el.zip.disabled = true;
+  var old = el.zip.textContent;
+  el.zip.textContent = 'Zipping…';
+  try {
+    var JSZip = await loadJSZip();
+    var zip = new JSZip();
+    ready.forEach(function (r) { zip.file(r.name, r.blob); });
+    var out = await zip.generateAsync({ type: 'blob' });
+    var url = URL.createObjectURL(out);
+    var a = document.createElement('a');
+    a.href = url;
+    a.download = 'pixshrink-' + ready.length + '-images.zip';
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+    setTimeout(function () { URL.revokeObjectURL(url); }, 4000);
+    toast('ZIP ready (' + fmtSize(out.size) + ')');
+  } catch (e) {
+    toast('ZIP failed — use Download all');
+  } finally {
+    el.zip.textContent = old;
+    el.zip.disabled = false;
+  }
+};
+
+/* ---------- الإعدادات ---------- */
+el.quality.oninput = function () {
   state.quality = parseInt(this.value, 10) / 100;
   el.qVal.textContent = this.value + '%';
+  savePrefs();
 };
-el.quality.onchange = function(){ process(); };
+el.quality.onchange = function () { process(); };
 
-document.getElementById('widths').onclick = function(e){
+document.getElementById('widths').onclick = function (e) {
   var b = e.target.closest('.chip');
   if (!b) return;
-  Array.prototype.forEach.call(this.children, function(c){ c.classList.remove('on'); });
-  b.classList.add('on');
   state.maxW = parseInt(b.getAttribute('data-w'), 10);
   el.wVal.textContent = state.maxW ? state.maxW + 'px' : 'Original';
+  syncChips();
+  savePrefs();
   process();
 };
 
-document.getElementById('formats').onclick = function(e){
+document.getElementById('formats').onclick = function (e) {
   var b = e.target.closest('.chip');
   if (!b) return;
-  Array.prototype.forEach.call(this.children, function(c){ c.classList.remove('on'); });
-  b.classList.add('on');
   state.mime = b.getAttribute('data-f');
   el.fVal.textContent = b.textContent;
+  syncChips();
+  savePrefs();
   process();
 };
 
+document.getElementById('targets').onclick = function (e) {
+  var b = e.target.closest('.chip');
+  if (!b) return;
+  var kb = parseInt(b.getAttribute('data-t'), 10);
+  state.target = kb ? kb * 1024 : 0;
+  el.tVal.textContent = !kb ? 'Off' : (kb >= 1024 ? '1 MB' : kb + ' KB');
+  syncChips();
+  savePrefs();
+  process();
+};
+
+loadPrefs();
 el.quality.oninput();
-state.quality = 0.75;
 </script>
 </body>
 </html>
