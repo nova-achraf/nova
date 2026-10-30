@@ -64,6 +64,7 @@ canvas{display:block;touch-action:none}
   var W = 0, H = 0, DPR = 1;
   var N = 10, M = 10;            // mesh resolution
   var pts = [];                  // {x,y,px,py,pin}
+  var cons = [];                 // springs {a,b,len,stiff}
   var rest = 0, base = 0;
   var grabs = new Map();
   var pokes = 0;
@@ -83,20 +84,39 @@ canvas{display:block;touch-action:none}
   }
 
   function build() {
-    base = Math.min(W, H) * 0.52;
+    base = Math.min(W, H) * 0.62;
     rest = base / (N - 1);
-    var ox = W / 2 - base / 2;
-    var oy = H / 2 - base / 2;
+    var cx = W / 2, cy = H * 0.47;
     pts = [];
     for (var j = 0; j < M; j++) {
       var row = [];
       for (var i = 0; i < N; i++) {
-        var x = ox + i * rest;
-        var y = oy + j * rest;
+        var u = (i / (N - 1)) * 2 - 1;
+        var v = (j / (M - 1)) * 2 - 1;
+        // square -> disk mapping, so the mesh is round like a pumpkin
+        var dx = u * Math.sqrt(1 - (v * v) / 2);
+        var dy = v * Math.sqrt(1 - (u * u) / 2);
+        var x = cx + dx * base / 2;
+        var y = cy + dy * base / 2;
         row.push({ x: x, y: y, px: x, py: y, pin: false, i: i, j: j });
       }
       pts.push(row);
     }
+    cons = [];
+    for (var jj = 0; jj < M; jj++) {
+      for (var ii = 0; ii < N; ii++) {
+        if (ii < N - 1) addCon(pts[jj][ii], pts[jj][ii + 1], 1);
+        if (jj < M - 1) addCon(pts[jj][ii], pts[jj + 1][ii], 1);
+        if (ii < N - 1 && jj < M - 1) addCon(pts[jj][ii], pts[jj + 1][ii + 1], 0.8);
+        if (ii > 0 && jj < M - 1) addCon(pts[jj][ii], pts[jj + 1][ii - 1], 0.8);
+        if (ii < N - 2) addCon(pts[jj][ii], pts[jj][ii + 2], 0.35);
+        if (jj < M - 2) addCon(pts[jj][ii], pts[jj + 2][ii], 0.35);
+      }
+    }
+  }
+
+  function addCon(a, b, stiff) {
+    cons.push({ a: a, b: b, len: dist(a, b), stiff: stiff });
   }
 
   function integrate(dt) {
@@ -115,17 +135,10 @@ canvas{display:block;touch-action:none}
   }
 
   function solve() {
-    var iters = 4;
-    for (var k = 0; k < iters; k++) {
-      for (var j = 0; j < M; j++) {
-        for (var i = 0; i < N; i++) {
-          if (i < N - 1) spring(pts[j][i], pts[j][i + 1], rest);
-          if (j < M - 1) spring(pts[j][i], pts[j + 1][i], rest);
-          if (i < N - 1 && j < M - 1) spring(pts[j][i], pts[j + 1][i + 1], rest * 1.414);
-          if (i > 0 && j < M - 1) spring(pts[j][i], pts[j + 1][i - 1], rest * 1.414);
-          if (i < N - 2) spring(pts[j][i], pts[j][i + 2], rest * 2, 0.35);
-          if (j < M - 2) spring(pts[j][i], pts[j + 2][i], rest * 2, 0.35);
-        }
+    for (var k = 0; k < 4; k++) {
+      for (var c = 0; c < cons.length; c++) {
+        var sp = cons[c];
+        spring(sp.a, sp.b, sp.len, sp.stiff);
       }
       bounds();
     }
@@ -221,6 +234,38 @@ canvas{display:block;touch-action:none}
     var list = perimeter();
     var top = pts[0][0], bot = pts[M - 1][0];
 
+    // stem (behind the head, on top)
+    var st = at(0.5, 0.0);
+    ctx.save();
+    ctx.fillStyle = '#7A9440';
+    ctx.strokeStyle = '#4E6A28';
+    ctx.lineWidth = 2;
+    ctx.beginPath();
+    ctx.moveTo(st.x - rest * 0.17, st.y + rest * 0.10);
+    ctx.quadraticCurveTo(st.x - rest * 0.22, st.y - rest * 0.40, st.x - rest * 0.02, st.y - rest * 0.44);
+    ctx.quadraticCurveTo(st.x + rest * 0.20, st.y - rest * 0.48, st.x + rest * 0.17, st.y + rest * 0.10);
+    ctx.closePath();
+    ctx.fill();
+    ctx.stroke();
+    ctx.restore();
+
+    // pumpkin ridges (vertical curves across the body)
+    ctx.save();
+    ctx.lineCap = 'round';
+    ctx.strokeStyle = 'rgba(150,60,15,.16)';
+    ctx.lineWidth = rest * 0.11;
+    [2, 4, 6, 8].forEach(function (col) {
+      ctx.beginPath();
+      for (var jr = 1; jr < M - 1; jr++) {
+        var q1 = pts[jr][col], q2 = pts[jr + 1][col];
+        var mx = (q1.x + q2.x) / 2, my = (q1.y + q2.y) / 2;
+        if (jr === 1) ctx.moveTo(q1.x, q1.y);
+        ctx.quadraticCurveTo(q1.x, q1.y, mx, my);
+      }
+      ctx.stroke();
+    });
+    ctx.restore();
+
     // ears (behind the head)
     [[0.012, 0.52], [0.988, 0.52]].forEach(function (e) {
       var p = at(e[0], e[1]);
@@ -253,21 +298,6 @@ canvas{display:block;touch-action:none}
     blobPath(list);
     ctx.strokeStyle = 'rgba(190,74,40,.25)';
     ctx.lineWidth = 2;
-    ctx.stroke();
-    ctx.restore();
-
-    // hair band along the top
-    ctx.save();
-    ctx.strokeStyle = '#4A2A18';
-    ctx.lineWidth = rest * 0.30;
-    ctx.lineCap = 'round';
-    ctx.lineJoin = 'round';
-    ctx.beginPath();
-    [0.14, 0.24, 0.34, 0.44, 0.54, 0.64, 0.74, 0.86].forEach(function (u, k) {
-      var p = at(u, 0.06);
-      var y = p.y - rest * 0.17;
-      if (!k) ctx.moveTo(p.x, y); else ctx.lineTo(p.x, y);
-    });
     ctx.stroke();
     ctx.restore();
 
@@ -366,7 +396,7 @@ canvas{display:block;touch-action:none}
     ctx.fill();
 
     // grain dots
-    ctx.fillStyle = 'rgba(255,255,255,.13)';
+    ctx.fillStyle = "rgba(190,80,20,.10)";
     for (var j = 2; j < M - 1; j += 3) {
       for (var i = 2; i < N - 1; i += 3) {
         var q = pts[j][i];
@@ -469,16 +499,14 @@ canvas{display:block;touch-action:none}
     integrate(dt);
     solve();
 
-    // stress = how far the mesh deviates from rest shape
-    var s = 0, c = 0;
-    for (var j = 0; j < M; j++) {
-      for (var i = 0; i < N; i++) {
-        if (i < N - 1) { s += Math.abs(dist(pts[j][i], pts[j][i + 1]) - rest); c++; }
-        if (j < M - 1) { s += Math.abs(dist(pts[j][i], pts[j + 1][i]) - rest); c++; }
-      }
+    // stress = how far the springs are stretched from rest
+    var s = 0;
+    for (var c = 0; c < cons.length; c++) {
+      var sc = cons[c];
+      s += Math.abs(dist(sc.a, sc.b) - sc.len) / sc.len;
     }
-    var avg = c ? s / c / rest : 0;
-    stress += ((Math.min(1, avg * 3)) - stress) * 0.08;
+    var avg = cons.length ? s / cons.length : 0;
+    stress += ((Math.min(1, avg * 7)) - stress) * 0.08;
 
     draw();
     requestAnimationFrame(frame);
