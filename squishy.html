@@ -221,6 +221,20 @@ canvas{display:block;touch-action:none}
     var list = perimeter();
     var top = pts[0][0], bot = pts[M - 1][0];
 
+    // ears (behind the head)
+    [[0.012, 0.52], [0.988, 0.52]].forEach(function (e) {
+      var p = at(e[0], e[1]);
+      var s = localScale(e[0], e[1]);
+      ctx.fillStyle = '#F2915F';
+      ctx.beginPath();
+      ctx.ellipse(p.x, p.y, rest * 0.14 * s, rest * 0.20 * s, 0, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.fillStyle = 'rgba(200,90,50,.30)';
+      ctx.beginPath();
+      ctx.ellipse(p.x, p.y, rest * 0.06 * s, rest * 0.10 * s, 0, 0, Math.PI * 2);
+      ctx.fill();
+    });
+
     ctx.save();
     ctx.shadowColor = 'rgba(190,90,30,.30)';
     ctx.shadowBlur = 28;
@@ -242,6 +256,21 @@ canvas{display:block;touch-action:none}
     ctx.stroke();
     ctx.restore();
 
+    // hair band along the top
+    ctx.save();
+    ctx.strokeStyle = '#4A2A18';
+    ctx.lineWidth = rest * 0.30;
+    ctx.lineCap = 'round';
+    ctx.lineJoin = 'round';
+    ctx.beginPath();
+    [0.14, 0.24, 0.34, 0.44, 0.54, 0.64, 0.74, 0.86].forEach(function (u, k) {
+      var p = at(u, 0.06);
+      var y = p.y - rest * 0.17;
+      if (!k) ctx.moveTo(p.x, y); else ctx.lineTo(p.x, y);
+    });
+    ctx.stroke();
+    ctx.restore();
+
     // cheeks
     var cheeks = [[0.26, 0.63], [0.74, 0.63]];
     cheeks.forEach(function (c) {
@@ -255,6 +284,20 @@ canvas{display:block;touch-action:none}
       ctx.beginPath();
       ctx.arc(p.x, p.y, r, 0, Math.PI * 2);
       ctx.fill();
+    });
+
+    // eyebrows
+    ctx.strokeStyle = '#4A2A18';
+    ctx.lineCap = 'round';
+    [[0.24, 0.60], [0.76, 0.60]].forEach(function (b) {
+      var s = localScale(b[0], 0.26);
+      var inner = at(b[0] + (b[1] > 0.5 ? -0.075 : 0.075), 0.265);
+      var outer = at(b[0], 0.245);
+      ctx.lineWidth = rest * 0.075 * s;
+      ctx.beginPath();
+      ctx.moveTo(inner.x, inner.y);
+      ctx.quadraticCurveTo((inner.x + outer.x) / 2, outer.y - rest * 0.05 * s, outer.x, outer.y);
+      ctx.stroke();
     });
 
     // eyes
@@ -283,15 +326,44 @@ canvas{display:block;touch-action:none}
       ctx.fill();
     });
 
-    // mouth
-    var m1 = at(0.36, 0.66), m2 = at(0.5, 0.72 + stress * 0.03), m3 = at(0.64, 0.66);
-    ctx.strokeStyle = 'rgba(70,30,15,.75)';
-    ctx.lineWidth = Math.max(2, rest * 0.055);
-    ctx.lineCap = 'round';
+    // nose
+    var n1 = at(0.50, 0.47), n2 = at(0.545, 0.565);
+    ctx.strokeStyle = 'rgba(120,55,25,.55)';
+    ctx.lineWidth = Math.max(1.6, rest * 0.05);
+    ctx.beginPath();
+    ctx.moveTo(n1.x, n1.y);
+    ctx.quadraticCurveTo(n2.x + rest * 0.06, n2.y - rest * 0.05, n2.x, n2.y);
+    ctx.stroke();
+
+    // smiling mouth (dark inside + teeth + tongue)
+    var m1 = at(0.34, 0.635), m3 = at(0.66, 0.635);
+    var mTop = at(0.50, 0.655);
+    var mBot = at(0.50, 0.735 + stress * 0.045);
+    ctx.fillStyle = '#59261A';
     ctx.beginPath();
     ctx.moveTo(m1.x, m1.y);
-    ctx.quadraticCurveTo(m2.x, m2.y, m3.x, m3.y);
-    ctx.stroke();
+    ctx.quadraticCurveTo(mTop.x, mTop.y + rest * 0.02, m3.x, m3.y);
+    ctx.quadraticCurveTo(mBot.x, mBot.y, m1.x, m1.y);
+    ctx.closePath();
+    ctx.fill();
+
+    // teeth
+    var t1 = at(0.375, 0.652), t3 = at(0.625, 0.652);
+    ctx.fillStyle = '#FFF8F0';
+    ctx.beginPath();
+    ctx.moveTo(t1.x, t1.y);
+    ctx.quadraticCurveTo(at(0.50, 0.665).x, at(0.50, 0.665).y, t3.x, t3.y);
+    ctx.quadraticCurveTo(at(0.50, 0.690).x, at(0.50, 0.690).y, t1.x, t1.y);
+    ctx.closePath();
+    ctx.fill();
+
+    // tongue
+    var tg = at(0.50, 0.705 + stress * 0.02);
+    var ts = localScale(0.5, 0.70);
+    ctx.fillStyle = '#F0665C';
+    ctx.beginPath();
+    ctx.ellipse(tg.x, tg.y, rest * 0.13 * ts, rest * 0.06 * ts, 0, 0, Math.PI * 2);
+    ctx.fill();
 
     // grain dots
     ctx.fillStyle = 'rgba(255,255,255,.13)';
