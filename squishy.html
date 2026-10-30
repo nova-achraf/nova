@@ -52,6 +52,7 @@ canvas{display:block;touch-action:none}
 <div id="bar">
   <button id="reset">إعادة</button>
   <button id="jelly">جرباه يرجف</button>
+  <button id="mute">🔊 الصوت</button>
 </div>
 
 <script>
@@ -440,7 +441,10 @@ canvas{display:block;touch-action:none}
 
   /* ---------- squish sound ---------- */
   var actx = null;
+  var muted = false;
+  try { muted = localStorage.getItem('squishy_muted') === '1'; } catch (e) {}
   function squishSound(amount, from) {
+    if (muted) return;
     try {
       var AC = window.AudioContext || window.webkitAudioContext;
       if (!AC) return;
@@ -453,7 +457,7 @@ canvas{display:block;touch-action:none}
       o.frequency.setValueAtTime((from || 430) + Math.random() * 90, t);
       o.frequency.exponentialRampToValueAtTime(110 + Math.random() * 40, t + 0.24);
       g.gain.setValueAtTime(0.0001, t);
-      g.gain.exponentialRampToValueAtTime(0.16 * (amount || 1), t + 0.025);
+      g.gain.exponentialRampToValueAtTime(0.34 * (amount || 1), t + 0.022);
       g.gain.exponentialRampToValueAtTime(0.0001, t + 0.3);
       o.connect(g);
       g.connect(actx.destination);
@@ -528,6 +532,20 @@ canvas{display:block;touch-action:none}
   };
 
   document.getElementById('jelly').onclick = function () { wobble(2.4); squishSound(1.1, 220); };
+
+  var muteBtn = document.getElementById('mute');
+  function paintMute() {
+    if (muteBtn) muteBtn.textContent = muted ? '🔇 صامت' : '🔊 الصوت';
+  }
+  if (muteBtn) {
+    paintMute();
+    muteBtn.onclick = function () {
+      muted = !muted;
+      try { localStorage.setItem('squishy_muted', muted ? '1' : '0'); } catch (e) {}
+      paintMute();
+      if (!muted) squishSound(0.8, 420);
+    };
+  }
 
   function wobble(power) {
     for (var j = 0; j < M; j++) {
