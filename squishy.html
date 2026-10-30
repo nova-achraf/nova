@@ -48,7 +48,7 @@ canvas{display:block;touch-action:none}
   <div id="brand"><i></i> Squishy</div>
   <div id="score">0 ضغطة</div>
 </div>
-<div id="hint">اسحب الوجه ولا اضغط عليه 👆</div>
+<div id="hint">اسحب الوجه بعيد وخليه يرجع 👆</div>
 <div id="bar">
   <button id="reset">إعادة</button>
   <button id="jelly">جرباه يرجف</button>
@@ -125,20 +125,20 @@ canvas{display:block;touch-action:none}
       for (var i = 0; i < N; i++) {
         var p = pts[j][i];
         if (p.pin) { p.px = p.x; p.py = p.y; continue; }
-        var vx = (p.x - p.px) * 0.985;
-        var vy = (p.y - p.py) * 0.985;
+        var vx = (p.x - p.px) * 0.992;
+        var vy = (p.y - p.py) * 0.992;
         p.px = p.x; p.py = p.y;
         p.x += vx;
-        p.y += vy + g * dt * 55;
+        p.y += vy + g * dt * 45;
       }
     }
   }
 
   function solve() {
-    for (var k = 0; k < 4; k++) {
+    for (var k = 0; k < 6; k++) {
       for (var c = 0; c < cons.length; c++) {
         var sp = cons[c];
-        spring(sp.a, sp.b, sp.len, sp.stiff);
+        spring(sp.a, sp.b, sp.len, sp.stiff * 0.55);
       }
       bounds();
     }
@@ -294,6 +294,24 @@ canvas{display:block;touch-action:none}
     ctx.fill();
     ctx.restore();
 
+    // soft 3D shading (highlight top-left, shadow bottom-right)
+    ctx.save();
+    blobPath(list);
+    ctx.clip();
+    var hg = ctx.createRadialGradient(gx - base * 0.16, gy - base * 0.22, base * 0.02, gx - base * 0.16, gy - base * 0.22, base * 0.85);
+    hg.addColorStop(0, 'rgba(255,255,255,.45)');
+    hg.addColorStop(0.55, 'rgba(255,255,255,.10)');
+    hg.addColorStop(1, 'rgba(255,255,255,0)');
+    ctx.fillStyle = hg;
+    ctx.fillRect(gx - base, gy - base, base * 2, base * 2);
+
+    var sg = ctx.createLinearGradient(0, gy - base * 0.15, 0, gy + base * 0.75);
+    sg.addColorStop(0, 'rgba(170,60,15,0)');
+    sg.addColorStop(1, 'rgba(150,50,10,.26)');
+    ctx.fillStyle = sg;
+    ctx.fillRect(gx - base, gy - base, base * 2, base * 2);
+    ctx.restore();
+
     ctx.save();
     blobPath(list);
     ctx.strokeStyle = 'rgba(190,74,40,.25)';
@@ -345,14 +363,19 @@ canvas{display:block;touch-action:none}
       ctx.fill();
 
       var look = lookAt(p);
-      ctx.fillStyle = '#2E2118';
+      var ex = p.x + look.x * rx * 0.30, ey = p.y + look.y * ry * 0.30;
+      ctx.fillStyle = '#8E5C33';
       ctx.beginPath();
-      ctx.ellipse(p.x + look.x * rx * 0.32, p.y + look.y * ry * 0.32, rx * 0.46, ry * 0.50, 0, 0, Math.PI * 2);
+      ctx.ellipse(ex, ey, rx * 0.60, ry * 0.62, 0, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.fillStyle = '#3A2213';
+      ctx.beginPath();
+      ctx.ellipse(ex, ey, rx * 0.32, ry * 0.36, 0, 0, Math.PI * 2);
       ctx.fill();
 
       ctx.fillStyle = 'rgba(255,255,255,.85)';
       ctx.beginPath();
-      ctx.arc(p.x + look.x * rx * 0.32 - rx * 0.14, p.y + look.y * ry * 0.32 - ry * 0.18, rx * 0.13, 0, Math.PI * 2);
+      ctx.arc(ex - rx * 0.15, ey - ry * 0.20, rx * 0.14, 0, Math.PI * 2);
       ctx.fill();
     });
 
@@ -415,6 +438,30 @@ canvas{display:block;touch-action:none}
     return { x: dx / d, y: dy / d };
   }
 
+  /* ---------- squish sound ---------- */
+  var actx = null;
+  function squishSound(amount, from) {
+    try {
+      var AC = window.AudioContext || window.webkitAudioContext;
+      if (!AC) return;
+      if (!actx) actx = new AC();
+      if (actx.state === 'suspended') actx.resume();
+      var t = actx.currentTime;
+      var o = actx.createOscillator();
+      var g = actx.createGain();
+      o.type = 'sine';
+      o.frequency.setValueAtTime((from || 430) + Math.random() * 90, t);
+      o.frequency.exponentialRampToValueAtTime(110 + Math.random() * 40, t + 0.24);
+      g.gain.setValueAtTime(0.0001, t);
+      g.gain.exponentialRampToValueAtTime(0.16 * (amount || 1), t + 0.025);
+      g.gain.exponentialRampToValueAtTime(0.0001, t + 0.3);
+      o.connect(g);
+      g.connect(actx.destination);
+      o.start(t);
+      o.stop(t + 0.32);
+    } catch (e) {}
+  }
+
   /* ---------- interaction ---------- */
   function nearestPoint(x, y) {
     var best = null, bd = 1e9;
@@ -437,7 +484,7 @@ canvas{display:block;touch-action:none}
     var pos = localXY(e);
     pointer.x = pos.x; pointer.y = pos.y; pointer.active = true;
     var near = nearestPoint(pos.x, pos.y);
-    if (near.p && near.d < rest * 1.6) {
+    if (near.p && near.d < rest * 4.5) {
       near.p.pin = true;
       near.p.x = pos.x;
       near.p.y = pos.y;
@@ -447,6 +494,7 @@ canvas{display:block;touch-action:none}
     scoreEl.textContent = pokes + ' ضغطة';
     hintEl.classList.add('gone');
     wobble(0.9);
+    squishSound(1, 470);
     e.preventDefault();
   }
 
@@ -462,6 +510,7 @@ canvas{display:block;touch-action:none}
     if (g) { g.pin = false; grabs.delete(e.pointerId); }
     pointer.active = false;
     wobble(0.4);
+    squishSound(0.55, 300);
   }
 
   cv.addEventListener('pointerdown', down, { passive: false });
@@ -478,7 +527,7 @@ canvas{display:block;touch-action:none}
     wobble(0.5);
   };
 
-  document.getElementById('jelly').onclick = function () { wobble(2.4); };
+  document.getElementById('jelly').onclick = function () { wobble(2.4); squishSound(1.1, 220); };
 
   function wobble(power) {
     for (var j = 0; j < M; j++) {
