@@ -1,0 +1,427 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
+<meta name="theme-color" content="#FFF3E6">
+<title>Squishy — لعبة الوجه المطاطي</title>
+<meta name="description" content="لعبة بسيطة: اسحب الوجه المطاطي، اضغط عليه، وشوف كيفاش كيرجع لبلاصتو. تشتغل بالتاتش والفأرة.">
+<meta name="robots" content="index,follow">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#FFF3E6;--bg2:#FFFBF6;--txt:#2E2118;--dim:#8B7768;--accent:#FF6B4A}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0;padding:0;height:100%;overflow:hidden;background:var(--bg);
+  font-family:'Cairo',system-ui,sans-serif;color:var(--txt);touch-action:none;overscroll-behavior:none}
+canvas{display:block;touch-action:none}
+#hud{position:fixed;inset-block-start:0;inset-inline:0;display:flex;align-items:center;
+  justify-content:space-between;padding:14px 16px;pointer-events:none;z-index:5}
+#brand{display:flex;align-items:center;gap:8px;font-weight:800;font-size:14px;letter-spacing:-.2px}
+#brand i{width:22px;height:22px;border-radius:7px;display:inline-block;
+  background:linear-gradient(145deg,#FF6B4A,#FF9F1C)}
+#score{font-size:12px;font-weight:700;background:rgba(255,255,255,.8);border:1px solid #F0E4D8;
+  border-radius:20px;padding:6px 13px;color:var(--dim);pointer-events:auto}
+#hint{position:fixed;inset-block-end:26px;inset-inline:0;text-align:center;font-size:12.5px;
+  color:var(--dim);z-index:5;transition:opacity .4s;pointer-events:none}
+#hint.gone{opacity:0}
+#bar{position:fixed;inset-block-end:0;inset-inline:0;display:flex;gap:8px;justify-content:center;
+  padding:0 16px 18px;z-index:6}
+#bar button{font-family:inherit;font-size:12px;font-weight:700;border-radius:12px;padding:9px 15px;
+  border:1px solid #F0C9B6;background:rgba(255,255,255,.9);color:var(--accent);cursor:pointer}
+#bar button:active{transform:scale(.96)}
+</style>
+<link rel="canonical" href="https://nova-achraf.github.io/nova/squishy.html">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="AZAMI">
+<meta property="og:title" content="Squishy — لعبة الوجه المطاطي">
+<meta property="og:description" content="اسحب الوجه المطاطي واضغط عليه — فيزياء ناعمة بالكانفاس، تشتغل بالتاتش.">
+<meta property="og:url" content="https://nova-achraf.github.io/nova/squishy.html">
+<meta property="og:image" content="https://nova-achraf.github.io/nova/pixshrink-icon-512.png">
+<meta name="twitter:card" content="summary_large_image">
+</head>
+<body>
+<canvas id="c"></canvas>
+
+<div id="hud">
+  <div id="brand"><i></i> Squishy</div>
+  <div id="score">0 ضغطة</div>
+</div>
+<div id="hint">اسحب الوجه ولا اضغط عليه 👆</div>
+<div id="bar">
+  <button id="reset">إعادة</button>
+  <button id="jelly">جرباه يرجف</button>
+</div>
+
+<script>
+(function () {
+  var cv = document.getElementById('c');
+  var ctx = cv.getContext('2d');
+  var scoreEl = document.getElementById('score');
+  var hintEl = document.getElementById('hint');
+
+  var W = 0, H = 0, DPR = 1;
+  var N = 10, M = 10;            // mesh resolution
+  var pts = [];                  // {x,y,px,py,pin}
+  var rest = 0, base = 0;
+  var grabs = new Map();
+  var pokes = 0;
+  var stress = 0;
+  var t0 = performance.now();
+
+  function resize() {
+    DPR = Math.min(window.devicePixelRatio || 1, 2);
+    W = window.innerWidth;
+    H = window.innerHeight;
+    cv.width = Math.floor(W * DPR);
+    cv.height = Math.floor(H * DPR);
+    cv.style.width = W + 'px';
+    cv.style.height = H + 'px';
+    ctx.setTransform(DPR, 0, 0, DPR, 0, 0);
+    build();
+  }
+
+  function build() {
+    base = Math.min(W, H) * 0.52;
+    rest = base / (N - 1);
+    var ox = W / 2 - base / 2;
+    var oy = H / 2 - base / 2;
+    pts = [];
+    for (var j = 0; j < M; j++) {
+      var row = [];
+      for (var i = 0; i < N; i++) {
+        var x = ox + i * rest;
+        var y = oy + j * rest;
+        row.push({ x: x, y: y, px: x, py: y, pin: false, i: i, j: j });
+      }
+      pts.push(row);
+    }
+  }
+
+  function integrate(dt) {
+    var g = 0.9;
+    for (var j = 0; j < M; j++) {
+      for (var i = 0; i < N; i++) {
+        var p = pts[j][i];
+        if (p.pin) { p.px = p.x; p.py = p.y; continue; }
+        var vx = (p.x - p.px) * 0.985;
+        var vy = (p.y - p.py) * 0.985;
+        p.px = p.x; p.py = p.y;
+        p.x += vx;
+        p.y += vy + g * dt * 55;
+      }
+    }
+  }
+
+  function solve() {
+    var iters = 4;
+    for (var k = 0; k < iters; k++) {
+      for (var j = 0; j < M; j++) {
+        for (var i = 0; i < N; i++) {
+          if (i < N - 1) spring(pts[j][i], pts[j][i + 1], rest);
+          if (j < M - 1) spring(pts[j][i], pts[j + 1][i], rest);
+          if (i < N - 1 && j < M - 1) spring(pts[j][i], pts[j + 1][i + 1], rest * 1.414);
+          if (i > 0 && j < M - 1) spring(pts[j][i], pts[j + 1][i - 1], rest * 1.414);
+          if (i < N - 2) spring(pts[j][i], pts[j][i + 2], rest * 2, 0.35);
+          if (j < M - 2) spring(pts[j][i], pts[j + 2][i], rest * 2, 0.35);
+        }
+      }
+      bounds();
+    }
+  }
+
+  function spring(a, b, len, stiff) {
+    stiff = stiff === undefined ? 1 : stiff;
+    var dx = b.x - a.x, dy = b.y - a.y;
+    var d = Math.sqrt(dx * dx + dy * dy) || 0.0001;
+    var diff = (d - len) / d * 0.5 * stiff;
+    var ox = dx * diff, oy = dy * diff;
+    if (!a.pin && !b.pin) {
+      a.x += ox; a.y += oy;
+      b.x -= ox; b.y -= oy;
+    } else if (a.pin && !b.pin) {
+      b.x -= ox * 2; b.y -= oy * 2;
+    } else if (b.pin && !a.pin) {
+      a.x += ox * 2; a.y += oy * 2;
+    }
+  }
+
+  function bounds() {
+    var pad = 8;
+    for (var j = 0; j < M; j++) {
+      for (var i = 0; i < N; i++) {
+        var p = pts[j][i];
+        if (p.pin) continue;
+        if (p.x < pad) p.x = pad;
+        if (p.x > W - pad) p.x = W - pad;
+        if (p.y < pad) p.y = pad;
+        if (p.y > H - pad - 56) p.y = H - pad - 56;
+      }
+    }
+  }
+
+  /* ---------- mapping ---------- */
+  function at(u, v) {
+    var fi = Math.max(0, Math.min(N - 1, u * (N - 1)));
+    var fj = Math.max(0, Math.min(M - 1, v * (M - 1)));
+    var i0 = Math.floor(fi), j0 = Math.floor(fj);
+    var i1 = Math.min(N - 1, i0 + 1), j1 = Math.min(M - 1, j0 + 1);
+    var tx = fi - i0, ty = fj - j0;
+    var a = pts[j0][i0], b = pts[j0][i1], c = pts[j1][i0], d = pts[j1][i1];
+    return {
+      x: (a.x * (1 - tx) + b.x * tx) * (1 - ty) + (c.x * (1 - tx) + d.x * tx) * ty,
+      y: (a.y * (1 - tx) + b.y * tx) * (1 - ty) + (c.y * (1 - tx) + d.y * tx) * ty
+    };
+  }
+
+  function localScale(u, v) {
+    var a = at(u, v);
+    var b = at(Math.min(1, u + 0.08), v);
+    var c = at(u, Math.min(1, v + 0.08));
+    var d1 = Math.hypot(b.x - a.x, b.y - a.y);
+    var d2 = Math.hypot(c.x - a.x, c.y - a.y);
+    return Math.max(0.35, Math.min(1.8, (d1 + d2) / (rest * 0.16 * 2)));
+  }
+
+  /* ---------- drawing ---------- */
+  function perimeter() {
+    var out = [];
+    var i, j;
+    for (i = 0; i < N; i++) out.push(pts[0][i]);
+    for (j = 1; j < M; j++) out.push(pts[j][N - 1]);
+    for (i = N - 2; i >= 0; i--) out.push(pts[M - 1][i]);
+    for (j = M - 2; j >= 1; j--) out.push(pts[j][0]);
+    return out;
+  }
+
+  function blobPath(list) {
+    var n = list.length;
+    ctx.beginPath();
+    for (var i = 0; i < n; i++) {
+      var p0 = list[(i - 1 + n) % n], p1 = list[i], p2 = list[(i + 1) % n], p3 = list[(i + 2) % n];
+      if (i === 0) ctx.moveTo(p1.x, p1.y);
+      var c1x = p1.x + (p2.x - p0.x) / 6, c1y = p1.y + (p2.y - p0.y) / 6;
+      var c2x = p2.x - (p3.x - p1.x) / 6, c2y = p2.y - (p3.y - p1.y) / 6;
+      ctx.bezierCurveTo(c1x, c1y, c2x, c2y, p2.x, p2.y);
+    }
+    ctx.closePath();
+  }
+
+  function draw() {
+    ctx.clearRect(0, 0, W, H);
+
+    // background glow
+    var bg = ctx.createRadialGradient(W / 2, H * 0.42, 20, W / 2, H * 0.42, Math.max(W, H) * 0.8);
+    bg.addColorStop(0, '#FFF9F2');
+    bg.addColorStop(1, '#FFEBD6');
+    ctx.fillStyle = bg;
+    ctx.fillRect(0, 0, W, H);
+
+    var list = perimeter();
+    var top = pts[0][0], bot = pts[M - 1][0];
+
+    ctx.save();
+    ctx.shadowColor = 'rgba(190,90,30,.30)';
+    ctx.shadowBlur = 28;
+    ctx.shadowOffsetY = 14;
+
+    blobPath(list);
+    var gx = W / 2, gy = H * 0.45;
+    var grad = ctx.createLinearGradient(gx - base / 2, gy - base / 2, gx + base / 2, gy + base / 2);
+    grad.addColorStop(0, stress > 0.55 ? '#FF5A3C' : '#FF7A57');
+    grad.addColorStop(1, stress > 0.55 ? '#FF8C2B' : '#FFB347');
+    ctx.fillStyle = grad;
+    ctx.fill();
+    ctx.restore();
+
+    ctx.save();
+    blobPath(list);
+    ctx.strokeStyle = 'rgba(190,74,40,.25)';
+    ctx.lineWidth = 2;
+    ctx.stroke();
+    ctx.restore();
+
+    // cheeks
+    var cheeks = [[0.26, 0.63], [0.74, 0.63]];
+    cheeks.forEach(function (c) {
+      var p = at(c[0], c[1]);
+      var s = localScale(c[0], c[1]);
+      var r = rest * 0.30 * s;
+      var rg = ctx.createRadialGradient(p.x, p.y, 1, p.x, p.y, r);
+      rg.addColorStop(0, 'rgba(255,90,60,' + (0.10 + stress * 0.30) + ')');
+      rg.addColorStop(1, 'rgba(255,90,60,0)');
+      ctx.fillStyle = rg;
+      ctx.beginPath();
+      ctx.arc(p.x, p.y, r, 0, Math.PI * 2);
+      ctx.fill();
+    });
+
+    // eyes
+    var blink = Math.sin((performance.now() - t0) / 1500);
+    var eyeOpen = blink > 0.985 ? 0.12 : 1;
+    [[0.32, 0.36], [0.68, 0.36]].forEach(function (e, idx) {
+      var p = at(e[0], e[1]);
+      var s = localScale(e[0], e[1]);
+      var rx = rest * 0.20 * s;
+      var ry = rest * 0.23 * s * eyeOpen;
+
+      ctx.fillStyle = '#FFFFFF';
+      ctx.beginPath();
+      ctx.ellipse(p.x, p.y, rx, ry, 0, 0, Math.PI * 2);
+      ctx.fill();
+
+      var look = lookAt(p);
+      ctx.fillStyle = '#2E2118';
+      ctx.beginPath();
+      ctx.ellipse(p.x + look.x * rx * 0.32, p.y + look.y * ry * 0.32, rx * 0.46, ry * 0.50, 0, 0, Math.PI * 2);
+      ctx.fill();
+
+      ctx.fillStyle = 'rgba(255,255,255,.85)';
+      ctx.beginPath();
+      ctx.arc(p.x + look.x * rx * 0.32 - rx * 0.14, p.y + look.y * ry * 0.32 - ry * 0.18, rx * 0.13, 0, Math.PI * 2);
+      ctx.fill();
+    });
+
+    // mouth
+    var m1 = at(0.36, 0.66), m2 = at(0.5, 0.72 + stress * 0.03), m3 = at(0.64, 0.66);
+    ctx.strokeStyle = 'rgba(70,30,15,.75)';
+    ctx.lineWidth = Math.max(2, rest * 0.055);
+    ctx.lineCap = 'round';
+    ctx.beginPath();
+    ctx.moveTo(m1.x, m1.y);
+    ctx.quadraticCurveTo(m2.x, m2.y, m3.x, m3.y);
+    ctx.stroke();
+
+    // grain dots
+    ctx.fillStyle = 'rgba(255,255,255,.13)';
+    for (var j = 2; j < M - 1; j += 3) {
+      for (var i = 2; i < N - 1; i += 3) {
+        var q = pts[j][i];
+        ctx.beginPath();
+        ctx.arc(q.x, q.y, 1.6, 0, Math.PI * 2);
+        ctx.fill();
+      }
+    }
+  }
+
+  var pointer = { x: -999, y: -999, active: false };
+  function lookAt(p) {
+    if (!pointer.active) return { x: 0, y: 0 };
+    var dx = pointer.x - p.x, dy = pointer.y - p.y;
+    var d = Math.hypot(dx, dy) || 1;
+    return { x: dx / d, y: dy / d };
+  }
+
+  /* ---------- interaction ---------- */
+  function nearestPoint(x, y) {
+    var best = null, bd = 1e9;
+    for (var j = 0; j < M; j++) {
+      for (var i = 0; i < N; i++) {
+        var p = pts[j][i];
+        var d = (p.x - x) * (p.x - x) + (p.y - y) * (p.y - y);
+        if (d < bd) { bd = d; best = p; }
+      }
+    }
+    return { p: best, d: Math.sqrt(bd) };
+  }
+
+  function localXY(e) {
+    var r = cv.getBoundingClientRect();
+    return { x: e.clientX - r.left, y: e.clientY - r.top };
+  }
+
+  function down(e) {
+    var pos = localXY(e);
+    pointer.x = pos.x; pointer.y = pos.y; pointer.active = true;
+    var near = nearestPoint(pos.x, pos.y);
+    if (near.p && near.d < rest * 1.6) {
+      near.p.pin = true;
+      near.p.x = pos.x;
+      near.p.y = pos.y;
+      grabs.set(e.pointerId, near.p);
+    }
+    pokes++;
+    scoreEl.textContent = pokes + ' ضغطة';
+    hintEl.classList.add('gone');
+    wobble(0.9);
+    e.preventDefault();
+  }
+
+  function move(e) {
+    var pos = localXY(e);
+    pointer.x = pos.x; pointer.y = pos.y;
+    var g = grabs.get(e.pointerId);
+    if (g) { g.x = pos.x; g.y = pos.y; }
+  }
+
+  function up(e) {
+    var g = grabs.get(e.pointerId);
+    if (g) { g.pin = false; grabs.delete(e.pointerId); }
+    pointer.active = false;
+    wobble(0.4);
+  }
+
+  cv.addEventListener('pointerdown', down, { passive: false });
+  cv.addEventListener('pointermove', move);
+  cv.addEventListener('pointerup', up);
+  cv.addEventListener('pointercancel', up);
+  cv.addEventListener('pointerleave', function () { pointer.active = false; });
+
+  document.getElementById('reset').onclick = function () {
+    build();
+    pokes = 0;
+    scoreEl.textContent = '0 ضغطة';
+    hintEl.classList.remove('gone');
+    wobble(0.5);
+  };
+
+  document.getElementById('jelly').onclick = function () { wobble(2.4); };
+
+  function wobble(power) {
+    for (var j = 0; j < M; j++) {
+      for (var i = 0; i < N; i++) {
+        var p = pts[j][i];
+        if (p.pin) continue;
+        p.px -= (Math.random() - 0.5) * rest * power * 0.55;
+        p.py -= (Math.random() - 0.5) * rest * power * 0.55;
+      }
+    }
+  }
+
+  /* ---------- loop ---------- */
+  var last = performance.now();
+  function frame(now) {
+    var dt = Math.min(0.032, (now - last) / 1000);
+    last = now;
+    integrate(dt);
+    solve();
+
+    // stress = how far the mesh deviates from rest shape
+    var s = 0, c = 0;
+    for (var j = 0; j < M; j++) {
+      for (var i = 0; i < N; i++) {
+        if (i < N - 1) { s += Math.abs(dist(pts[j][i], pts[j][i + 1]) - rest); c++; }
+        if (j < M - 1) { s += Math.abs(dist(pts[j][i], pts[j + 1][i]) - rest); c++; }
+      }
+    }
+    var avg = c ? s / c / rest : 0;
+    stress += ((Math.min(1, avg * 3)) - stress) * 0.08;
+
+    draw();
+    requestAnimationFrame(frame);
+  }
+
+  function dist(a, b) { return Math.hypot(b.x - a.x, b.y - a.y); }
+
+  window.addEventListener('resize', resize);
+  window.addEventListener('orientationchange', function () { setTimeout(resize, 200); });
+  document.addEventListener('gesturestart', function (e) { e.preventDefault(); });
+
+  resize();
+  wobble(0.6);
+  requestAnimationFrame(frame);
+})();
+</script>
+</body>
+</html>
