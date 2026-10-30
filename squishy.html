@@ -228,54 +228,24 @@ canvas{display:block;touch-action:none}
     // background glow
     var bg = ctx.createRadialGradient(W / 2, H * 0.42, 20, W / 2, H * 0.42, Math.max(W, H) * 0.8);
     bg.addColorStop(0, '#FFF9F2');
-    bg.addColorStop(1, '#FFEBD6');
+    bg.addColorStop(1, '#FFF1E2');
     ctx.fillStyle = bg;
     ctx.fillRect(0, 0, W, H);
 
     var list = perimeter();
     var top = pts[0][0], bot = pts[M - 1][0];
 
-    // stem (behind the head, on top)
-    var st = at(0.5, 0.0);
-    ctx.save();
-    ctx.fillStyle = '#7A9440';
-    ctx.strokeStyle = '#4E6A28';
-    ctx.lineWidth = 2;
-    ctx.beginPath();
-    ctx.moveTo(st.x - rest * 0.17, st.y + rest * 0.10);
-    ctx.quadraticCurveTo(st.x - rest * 0.22, st.y - rest * 0.40, st.x - rest * 0.02, st.y - rest * 0.44);
-    ctx.quadraticCurveTo(st.x + rest * 0.20, st.y - rest * 0.48, st.x + rest * 0.17, st.y + rest * 0.10);
-    ctx.closePath();
-    ctx.fill();
-    ctx.stroke();
-    ctx.restore();
 
-    // pumpkin ridges (vertical curves across the body)
-    ctx.save();
-    ctx.lineCap = 'round';
-    ctx.strokeStyle = 'rgba(150,60,15,.16)';
-    ctx.lineWidth = rest * 0.11;
-    [2, 4, 6, 8].forEach(function (col) {
-      ctx.beginPath();
-      for (var jr = 1; jr < M - 1; jr++) {
-        var q1 = pts[jr][col], q2 = pts[jr + 1][col];
-        var mx = (q1.x + q2.x) / 2, my = (q1.y + q2.y) / 2;
-        if (jr === 1) ctx.moveTo(q1.x, q1.y);
-        ctx.quadraticCurveTo(q1.x, q1.y, mx, my);
-      }
-      ctx.stroke();
-    });
-    ctx.restore();
 
     // ears (behind the head)
     [[0.012, 0.52], [0.988, 0.52]].forEach(function (e) {
       var p = at(e[0], e[1]);
       var s = localScale(e[0], e[1]);
-      ctx.fillStyle = '#F2915F';
+      ctx.fillStyle = '#F3BFA4';
       ctx.beginPath();
       ctx.ellipse(p.x, p.y, rest * 0.14 * s, rest * 0.20 * s, 0, 0, Math.PI * 2);
       ctx.fill();
-      ctx.fillStyle = 'rgba(200,90,50,.30)';
+      ctx.fillStyle = 'rgba(190,110,80,.25)';
       ctx.beginPath();
       ctx.ellipse(p.x, p.y, rest * 0.06 * s, rest * 0.10 * s, 0, 0, Math.PI * 2);
       ctx.fill();
@@ -289,8 +259,8 @@ canvas{display:block;touch-action:none}
     blobPath(list);
     var gx = W / 2, gy = H * 0.45;
     var grad = ctx.createLinearGradient(gx - base / 2, gy - base / 2, gx + base / 2, gy + base / 2);
-    grad.addColorStop(0, stress > 0.55 ? '#FF5A3C' : '#FF7A57');
-    grad.addColorStop(1, stress > 0.55 ? '#FF8C2B' : '#FFB347');
+    grad.addColorStop(0, stress > 0.55 ? '#FF9A72' : '#FFC3A0');
+    grad.addColorStop(1, stress > 0.55 ? '#FFB48A' : '#FCE0CB');
     ctx.fillStyle = grad;
     ctx.fill();
     ctx.restore();
@@ -355,8 +325,8 @@ canvas{display:block;touch-action:none}
     [[0.32, 0.36], [0.68, 0.36]].forEach(function (e, idx) {
       var p = at(e[0], e[1]);
       var s = localScale(e[0], e[1]);
-      var rx = rest * 0.20 * s;
-      var ry = rest * 0.23 * s * eyeOpen;
+      var rx = rest * 0.24 * s;
+      var ry = rest * 0.27 * s * eyeOpen;
 
       ctx.fillStyle = '#FFFFFF';
       ctx.beginPath();
@@ -390,7 +360,7 @@ canvas{display:block;touch-action:none}
     ctx.stroke();
 
     // smiling mouth (dark inside + teeth + tongue)
-    var m1 = at(0.34, 0.635), m3 = at(0.66, 0.635);
+    var m1 = at(0.31, 0.625), m3 = at(0.69, 0.625);
     var mTop = at(0.50, 0.655);
     var mBot = at(0.50, 0.735 + stress * 0.045);
     ctx.fillStyle = '#59261A';
@@ -420,7 +390,7 @@ canvas{display:block;touch-action:none}
     ctx.fill();
 
     // grain dots
-    ctx.fillStyle = "rgba(190,80,20,.10)";
+    ctx.fillStyle = "rgba(200,120,90,.10)";
     for (var j = 2; j < M - 1; j += 3) {
       for (var i = 2; i < N - 1; i += 3) {
         var q = pts[j][i];
