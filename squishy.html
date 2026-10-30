@@ -121,13 +121,13 @@ canvas{display:block;touch-action:none}
   }
 
   function integrate(dt) {
-    var g = 0.9;
+    var g = 0;   // elastic sheet: no gravity, springs do the work
     for (var j = 0; j < M; j++) {
       for (var i = 0; i < N; i++) {
         var p = pts[j][i];
         if (p.pin) { p.px = p.x; p.py = p.y; continue; }
-        var vx = (p.x - p.px) * 0.992;
-        var vy = (p.y - p.py) * 0.992;
+        var vx = (p.x - p.px) * 0.995;
+        var vy = (p.y - p.py) * 0.995;
         p.px = p.x; p.py = p.y;
         p.x += vx;
         p.y += vy + g * dt * 45;
@@ -136,10 +136,10 @@ canvas{display:block;touch-action:none}
   }
 
   function solve() {
-    for (var k = 0; k < 6; k++) {
+    for (var k = 0; k < 8; k++) {
       for (var c = 0; c < cons.length; c++) {
         var sp = cons[c];
-        spring(sp.a, sp.b, sp.len, sp.stiff * 0.55);
+        spring(sp.a, sp.b, sp.len, sp.stiff * 0.42);
       }
       bounds();
     }
