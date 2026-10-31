@@ -163,6 +163,7 @@
   .sheet .szrow{display:flex;gap:8px;margin-bottom:10px}
   .sheet .szrow .sz{flex:1;width:auto;padding:10px 6px;background:var(--card);color:var(--muted);border:1.5px solid var(--line);border-radius:10px;font-size:13px;font-weight:700}
   .sheet .szrow .sz.on{background:linear-gradient(135deg,var(--gold),var(--gold2));border-color:transparent;color:#1b130b}
+  .sheet a.dl{display:block;text-align:center;text-decoration:none;background:linear-gradient(135deg,#1B7A5A,#0E5C4A);color:#fff;padding:14px;border-radius:12px;font-weight:800;font-size:16px;margin-bottom:8px;box-shadow:0 6px 18px rgba(27,122,90,.35)}
   .err{color:var(--red);font-size:12px;margin-top:6px;display:none}
   @media(max-width:768px){.sidebar{position:fixed;right:0;top:0;bottom:0;box-shadow:-4px 0 20px rgba(0,0,0,.4)}}
 </style>
@@ -243,6 +244,7 @@
       <button class="sz" data-size="a5" onclick="setPdfSize('a5')">A5 · 14.8×21 سم</button>
     </div>
     <button class="go" id="pdfPick" onclick="document.getElementById('pdfInput').click()">📂 ختار الصور</button>
+    <a class="dl" id="pdfDl" download style="display:none">⬇️ حمّل الـ PDF</a>
     <button class="skip" onclick="closePdf()">إغلاق</button>
   </div>
 </div>
@@ -554,6 +556,8 @@ async function pdfFromImages(input){
   if(!files.length) return;
   var msg=document.getElementById('pdfMsg'), btn=document.getElementById('pdfPick');
   paintPdfSize();
+  var dl0=document.getElementById('pdfDl');
+  if(dl0){ dl0.style.display='none'; dl0.removeAttribute('href'); }
   btn.disabled=true;
   var okCount=0, skipped=0;
   try{
@@ -578,9 +582,20 @@ async function pdfFromImages(input){
     }
     if(!okCount){ msg.textContent='⚠️ ما قدرتش نقرا هاد الصور. جرب JPG ولا PNG (صور iPhone بصيغة HEIC ما كتقراش فالمتصفح).'; }
     else{
-      msg.textContent='✅ كنحضر الملف…';
-      doc.save('azami-'+okCount+'-images-'+SZ.label+'.pdf');
-      msg.textContent='✅ تصاوب PDF فيه '+okCount+' صفحة على مقاس '+SZ.label+(skipped?' ('+skipped+' صورة ما قدرتش نقراها)':'')+'. إلا ما تحملش، عاود دق على «ختار الصور».';
+      msg.textContent='✅ الـ PDF واجد — '+okCount+' صفحة على مقاس '+SZ.label+'. دق على الزر الأخضر باش تحفظو فالهاتف.';
+      var fname='azami-'+okCount+'-images-'+SZ.label+'.pdf';
+      var shown=false;
+      try{
+        var furl=doc.output('bloburl');
+        var ael=document.getElementById('pdfDl');
+        ael.href=furl; ael.download=fname;
+        ael.textContent='⬇️ حمّل الـ PDF ('+SZ.label+')';
+        ael.style.display='block';
+        shown=true;
+      }catch(e1){}
+      if(!shown){
+        try{ doc.save(fname); msg.textContent='✅ الـ PDF واجد — '+okCount+' صفحة على مقاس '+SZ.label+'. شوف مجلد Downloads.'; }catch(e2){}
+      }
     }
   }catch(e){
     msg.textContent='⚠️ مشكل فتحميل الأداة. تحقق من الأنترنت وعاود جرب.';
