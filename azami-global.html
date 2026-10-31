@@ -129,7 +129,7 @@
   <span class="free-badge" id="freeBadge">Free</span>
   <span class="visitors" id="visitors">👥 <b>…</b></span>
   <button class="lang-btn" onclick="toggleLang()">🌐</button>
-  <button class="key-btn" onclick="openPdf()">📄 PDF</button>
+  <button class="key-btn" onclick="pickPdf()" title="Photos to PDF">📄 PDF</button>
   <button class="key-btn" onclick="openKey()">🔑 Key</button>
 </header>
 
@@ -161,6 +161,7 @@
     <input type="file" id="camInput" accept="image/*" capture="environment" hidden onchange="onImgPick(this)">
     <button class="inp-btn" onclick="document.getElementById('camInput').click()" title="Camera">📷</button>
     <button class="inp-btn" id="imgBtn" onclick="toggleImg()" title="Image mode">🎨</button>
+    <button class="inp-btn" id="pdfBtn" onclick="pickPdf()" title="Photos to PDF">📄</button>
     <button class="inp-btn" id="vidBtn" onclick="toggleVid()" title="Video">🎬</button>
     <button class="inp-btn" id="micBtn" onclick="toggleMic()" title="Microphone">🎤</button>
     <button class="inp-btn" id="send" onclick="handleSend()" title="Send">➤</button>
@@ -423,6 +424,11 @@ function openPdf(){
   document.getElementById('pdfModal').classList.add('show');
 }
 function closePdf(){ document.getElementById('pdfModal').classList.remove('show'); }
+function pickPdf(){
+  var inp=document.getElementById('pdfInput');
+  inp.value='';
+  inp.click();
+}
 
 function loadJsPDF(){
   return new Promise(function(res,rej){
@@ -465,6 +471,7 @@ async function pdfFromImages(input){
   input.value='';
   if(!files.length) return;
   var msg=document.getElementById('pdfMsg'), btn=document.getElementById('pdfPick');
+  document.getElementById('pdfModal').classList.add('show');
   btn.disabled=true;
   var okCount=0, skipped=0;
   try{
