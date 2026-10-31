@@ -196,6 +196,7 @@
     <div class="h-right">
       <button class="h-btn" onclick="exportChat()">⬇️ تصدير</button>
       <button class="h-btn" onclick="newChat()">✨ جديد</button>
+      <button class="h-btn" onclick="openPdf()">📄 PDF</button>
       <button class="h-btn" onclick="openKey()">🔑</button>
     </div>
   </header>
@@ -226,6 +227,17 @@
     <button class="skip" onclick="closeKey()">لحظة، نرجع من بعد</button>
   </div>
 </div>
+
+<!-- IMAGES -> PDF -->
+<div class="modal" id="pdfModal">
+  <div class="sheet">
+    <h3>🖼️ صور → PDF</h3>
+    <p id="pdfMsg">ختار صور من المعرض، وغادي نحولهم لملف PDF واحد. كلشي كيتدار فالمتصفح ديالك — حتى صورة ما كتطلع للسيرفر.</p>
+    <button class="go" id="pdfPick" onclick="document.getElementById('pdfInput').click()">📂 ختار الصور</button>
+    <button class="skip" onclick="closePdf()">إغلاق</button>
+  </div>
+</div>
+<input type="file" id="pdfInput" accept="image/*" multiple hidden onchange="pdfFromImages(this)">
 <script>
 const KEY='azami_ai_gemini_key';
 let APIKEY='';try{APIKEY=localStorage.getItem(KEY)||''}catch(e){}
@@ -468,6 +480,87 @@ renderConvList();renderChat();
 if(window.innerWidth<=768)document.getElementById('sidebar').classList.add('hide');
 if(!APIKEY)openKey();
 var ta=document.getElementById('in');ta.addEventListener('input',function(){this.style.height='auto';this.style.height=Math.min(this.scrollHeight,120)+'px'});
+
+/* ================= صور → PDF ================= */
+function openPdf(){
+  var m=document.getElementById('pdfModal');
+  document.getElementById('pdfMsg').textContent='ختار صور من المعرض، وغادي نحولهم لملف PDF واحد. كلشي كيتدار فالمتصفح ديالك — حتى صورة ما كتطلع للسيرفر.';
+  m.classList.add('show');
+}
+function closePdf(){ document.getElementById('pdfModal').classList.remove('show'); }
+
+function loadJsPDF(){
+  return new Promise(function(res,rej){
+    if(window.jspdf && window.jspdf.jsPDF) return res(window.jspdf);
+    var s=document.createElement('script');
+    s.src='https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js';
+    s.onload=function(){ window.jspdf && window.jspdf.jsPDF ? res(window.jspdf) : rej(new Error('lib')); };
+    s.onerror=function(){ rej(new Error('cdn')); };
+    document.head.appendChild(s);
+  });
+}
+function readFile(file){
+  return new Promise(function(res,rej){
+    var r=new FileReader();
+    r.onload=function(e){ res(e.target.result); };
+    r.onerror=function(){ rej(new Error('read')); };
+    r.readAsDataURL(file);
+  });
+}
+function loadImgEl(src){
+  return new Promise(function(res,rej){
+    var i=new Image();
+    i.onload=function(){ res(i); };
+    i.onerror=function(){ rej(new Error('decode')); };
+    i.src=src;
+  });
+}
+function shrinkJpeg(img,maxSide,q){
+  var w=img.naturalWidth||img.width, h=img.naturalHeight||img.height;
+  var sc=Math.min(1,maxSide/Math.max(w,h));
+  var cv=document.createElement('canvas');
+  cv.width=Math.round(w*sc); cv.height=Math.round(h*sc);
+  var ctx=cv.getContext('2d');
+  ctx.fillStyle='#FFFFFF'; ctx.fillRect(0,0,cv.width,cv.height);
+  ctx.drawImage(img,0,0,cv.width,cv.height);
+  return cv.toDataURL('image/jpeg',q);
+}
+async function pdfFromImages(input){
+  var files=Array.prototype.slice.call(input.files||[]);
+  input.value='';
+  if(!files.length) return;
+  var msg=document.getElementById('pdfMsg'), btn=document.getElementById('pdfPick');
+  btn.disabled=true;
+  var okCount=0, skipped=0;
+  try{
+    var lib=await loadJsPDF();
+    var doc=new lib.jsPDF({orientation:'p',unit:'mm',format:'a4'});
+    var PW=210,PH=297,M=8;
+    for(var i=0;i<files.length;i++){
+      msg.textContent='⏳ كنعالج الصورة '+(i+1)+' من '+files.length+'…';
+      try{
+        var durl=await readFile(files[i]);
+        var im=await loadImgEl(durl);
+        var jp=shrinkJpeg(im,1600,0.82);
+        var iw=im.naturalWidth||im.width, ih=im.naturalHeight||im.height;
+        var sc=Math.min((PW-2*M)/iw,(PH-2*M)/ih);
+        var w=iw*sc, h=ih*sc;
+        if(okCount) doc.addPage();
+        doc.addImage(jp,'JPEG',(PW-w)/2,(PH-h)/2,w,h);
+        okCount++;
+      }catch(err){ skipped++; }
+    }
+    if(!okCount){ msg.textContent='⚠️ ما قدرتش نقرا هاد الصور. جرب JPG ولا PNG (صور iPhone بصيغة HEIC ما كتقراش فالمتصفح).'; }
+    else{
+      msg.textContent='✅ كنحضر الملف…';
+      doc.save('azami-'+okCount+'-images.pdf');
+      msg.textContent='✅ تصاوب PDF فيه '+okCount+' صفحة'+(skipped?' ('+skipped+' صورة ما قدرتش نقراها)':'')+'. إلا ما تحملش، عاود دق على «ختار الصور».';
+    }
+  }catch(e){
+    msg.textContent='⚠️ مشكل فتحميل الأداة. تحقق من الأنترنت وعاود جرب.';
+  }
+  btn.disabled=false;
+}
 </script>
 </body>
 </html>
