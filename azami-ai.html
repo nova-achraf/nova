@@ -160,6 +160,9 @@
   .sheet button{width:100%;padding:12px;border:none;border-radius:10px;font-weight:700;font-size:15px;cursor:pointer}
   .sheet .go{background:linear-gradient(135deg,var(--green),var(--green2));color:#fff;margin-bottom:8px}
   .sheet .skip{background:transparent;color:var(--muted);border:1px solid var(--line)}
+  .sheet .szrow{display:flex;gap:8px;margin-bottom:10px}
+  .sheet .szrow .sz{flex:1;width:auto;padding:10px 6px;background:var(--card);color:var(--muted);border:1.5px solid var(--line);border-radius:10px;font-size:13px;font-weight:700}
+  .sheet .szrow .sz.on{background:linear-gradient(135deg,var(--gold),var(--gold2));border-color:transparent;color:#1b130b}
   .err{color:var(--red);font-size:12px;margin-top:6px;display:none}
   @media(max-width:768px){.sidebar{position:fixed;right:0;top:0;bottom:0;box-shadow:-4px 0 20px rgba(0,0,0,.4)}}
 </style>
@@ -235,6 +238,10 @@
   <div class="sheet">
     <h3>🖼️ صور → PDF</h3>
     <p id="pdfMsg">ختار صور من المعرض، وغادي نحولهم لملف PDF واحد. كلشي كيتدار فالمتصفح ديالك — حتى صورة ما كتطلع للسيرفر.</p>
+    <div class="szrow">
+      <button class="sz" data-size="a4" onclick="setPdfSize('a4')">A4 · 21×29.7 سم</button>
+      <button class="sz" data-size="a5" onclick="setPdfSize('a5')">A5 · 14.8×21 سم</button>
+    </div>
     <button class="go" id="pdfPick" onclick="document.getElementById('pdfInput').click()">📂 ختار الصور</button>
     <button class="skip" onclick="closePdf()">إغلاق</button>
   </div>
@@ -278,7 +285,7 @@ function renderConvList(){
       var nm=prompt('✏️ إعادة تسمية (فارغ = حذف):',convs[k].title||'محادثة');
       if(nm===null)return;
       if(nm.trim()===''){if(confirm('🗑️ امسح هاد المحادثة؟')){delete convs[k];saveConvs();if(curConv===k){curConv='main';if(!convs[curConv])convs[curConv]={title:'المحادثة الرئيسية',msgs:[],hist:[]}}switchConv(curConv);renderConvList()}}
-      }else{convs[k].title=nm.trim();saveConvs();renderConvList()}
+      else{convs[k].title=nm.trim();saveConvs();renderConvList()}
     };
     el.appendChild(d);
   });
@@ -484,9 +491,23 @@ if(!APIKEY)openKey();
 var ta=document.getElementById('in');ta.addEventListener('input',function(){this.style.height='auto';this.style.height=Math.min(this.scrollHeight,120)+'px'});
 
 /* ================= صور → PDF ================= */
+var PDF_SIZES={a4:{w:210,h:297,label:'A4'},a5:{w:148,h:210,label:'A5'}};
+var pdfSize='a4';
+try{var _ps=localStorage.getItem('azami_pdf_size'); if(_ps&&PDF_SIZES[_ps]) pdfSize=_ps;}catch(e){}
+function paintPdfSize(){
+  var bs=document.querySelectorAll('#pdfModal .sz');
+  for(var i=0;i<bs.length;i++){ bs[i].classList.toggle('on', bs[i].getAttribute('data-size')===pdfSize); }
+}
+function setPdfSize(s){
+  if(!PDF_SIZES[s]) return;
+  pdfSize=s;
+  try{localStorage.setItem('azami_pdf_size',s);}catch(e){}
+  paintPdfSize();
+}
 function openPdf(){
   var m=document.getElementById('pdfModal');
   document.getElementById('pdfMsg').textContent='ختار صور من المعرض، وغادي نحولهم لملف PDF واحد. كلشي كيتدار فالمتصفح ديالك — حتى صورة ما كتطلع للسيرفر.';
+  paintPdfSize();
   m.classList.add('show');
 }
 function closePdf(){ document.getElementById('pdfModal').classList.remove('show'); }
@@ -532,22 +553,25 @@ async function pdfFromImages(input){
   input.value='';
   if(!files.length) return;
   var msg=document.getElementById('pdfMsg'), btn=document.getElementById('pdfPick');
+  paintPdfSize();
   btn.disabled=true;
   var okCount=0, skipped=0;
   try{
     var lib=await loadJsPDF();
-    var doc=new lib.jsPDF({orientation:'p',unit:'mm',format:'a4'});
-    var PW=210,PH=297,M=8;
+    var SZ=PDF_SIZES[pdfSize]||PDF_SIZES.a4;
+    var doc=new lib.jsPDF({orientation:'p',unit:'mm',format:pdfSize});
+    var PW=SZ.w,PH=SZ.h,M=8;
+    var maxSide=pdfSize==='a5'?1200:1600;
     for(var i=0;i<files.length;i++){
       msg.textContent='⏳ كنعالج الصورة '+(i+1)+' من '+files.length+'…';
       try{
         var durl=await readFile(files[i]);
         var im=await loadImgEl(durl);
-        var jp=shrinkJpeg(im,1600,0.82);
+        var jp=shrinkJpeg(im,maxSide,0.82);
         var iw=im.naturalWidth||im.width, ih=im.naturalHeight||im.height;
         var sc=Math.min((PW-2*M)/iw,(PH-2*M)/ih);
         var w=iw*sc, h=ih*sc;
-        if(okCount) doc.addPage();
+        if(okCount) doc.addPage([PW,PH],'p');
         doc.addImage(jp,'JPEG',(PW-w)/2,(PH-h)/2,w,h);
         okCount++;
       }catch(err){ skipped++; }
@@ -555,8 +579,8 @@ async function pdfFromImages(input){
     if(!okCount){ msg.textContent='⚠️ ما قدرتش نقرا هاد الصور. جرب JPG ولا PNG (صور iPhone بصيغة HEIC ما كتقراش فالمتصفح).'; }
     else{
       msg.textContent='✅ كنحضر الملف…';
-      doc.save('azami-'+okCount+'-images.pdf');
-      msg.textContent='✅ تصاوب PDF فيه '+okCount+' صفحة'+(skipped?' ('+skipped+' صورة ما قدرتش نقراها)':'')+'. إلا ما تحملش، عاود دق على «ختار الصور».';
+      doc.save('azami-'+okCount+'-images-'+SZ.label+'.pdf');
+      msg.textContent='✅ تصاوب PDF فيه '+okCount+' صفحة على مقاس '+SZ.label+(skipped?' ('+skipped+' صورة ما قدرتش نقراها)':'')+'. إلا ما تحملش، عاود دق على «ختار الصور».';
     }
   }catch(e){
     msg.textContent='⚠️ مشكل فتحميل الأداة. تحقق من الأنترنت وعاود جرب.';

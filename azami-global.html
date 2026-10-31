@@ -102,6 +102,9 @@
   .lang-menu button:hover{background:var(--card)}
   .lang-menu button.active{color:var(--gold2);font-weight:700}
   .sheet .skip{background:transparent;color:var(--muted);border:1px solid var(--line)}
+  .sheet .szrow{display:flex;gap:8px;margin-bottom:10px}
+  .sheet .szrow .sz{flex:1;width:auto;padding:10px 6px;background:var(--card);color:var(--muted);border:1.5px solid var(--line);border-radius:10px;font-size:13px;font-weight:700}
+  .sheet .szrow .sz.on{background:linear-gradient(135deg,var(--gold),var(--gold2));border-color:transparent;color:#1b130b}
   .err{color:var(--red);font-size:12px;margin-top:6px;display:none}
   .install-banner{position:fixed;bottom:0;left:0;right:0;background:linear-gradient(135deg,var(--green),var(--green2));padding:12px 16px;display:none;align-items:center;gap:12px;z-index:40;box-shadow:0 -4px 20px rgba(0,0,0,.5)}
   .install-banner.show{display:flex}
@@ -185,6 +188,10 @@
   <div class="sheet">
     <h3>🖼️ Images → PDF</h3>
     <p id="pdfMsg">Pick photos from your gallery and get one PDF file. Everything happens inside your browser — nothing is uploaded.</p>
+    <div class="szrow">
+      <button class="sz" data-size="a4" onclick="setPdfSize('a4')">A4 · 21×29.7 cm</button>
+      <button class="sz" data-size="a5" onclick="setPdfSize('a5')">A5 · 14.8×21 cm</button>
+    </div>
     <button class="go" id="pdfPick" onclick="document.getElementById('pdfInput').click()">📂 Choose images</button>
     <button class="skip" onclick="closePdf()">Close</button>
   </div>
@@ -419,8 +426,22 @@ setTimeout(function(){if(!deferredPrompt){banner.classList.add('show');bannerTex
 
 /* ================= Images → PDF ================= */
 var PDF_INTRO='Pick photos from your gallery and get one PDF file. Everything happens inside your browser — nothing is uploaded.';
+var PDF_SIZES={a4:{w:210,h:297,label:'A4'},a5:{w:148,h:210,label:'A5'}};
+var pdfSize='a4';
+try{var _ps=localStorage.getItem('azami_pdf_size'); if(_ps&&PDF_SIZES[_ps]) pdfSize=_ps;}catch(e){}
+function paintPdfSize(){
+  var bs=document.querySelectorAll('#pdfModal .sz');
+  for(var i=0;i<bs.length;i++){ bs[i].classList.toggle('on', bs[i].getAttribute('data-size')===pdfSize); }
+}
+function setPdfSize(s){
+  if(!PDF_SIZES[s]) return;
+  pdfSize=s;
+  try{localStorage.setItem('azami_pdf_size',s);}catch(e){}
+  paintPdfSize();
+}
 function openPdf(){
   document.getElementById('pdfMsg').textContent=PDF_INTRO;
+  paintPdfSize();
   document.getElementById('pdfModal').classList.add('show');
 }
 function closePdf(){ document.getElementById('pdfModal').classList.remove('show'); }
@@ -471,23 +492,26 @@ async function pdfFromImages(input){
   input.value='';
   if(!files.length) return;
   var msg=document.getElementById('pdfMsg'), btn=document.getElementById('pdfPick');
+  paintPdfSize();
   document.getElementById('pdfModal').classList.add('show');
   btn.disabled=true;
   var okCount=0, skipped=0;
   try{
     var lib=await loadJsPDF();
-    var doc=new lib.jsPDF({orientation:'p',unit:'mm',format:'a4'});
-    var PW=210,PH=297,M=8;
+    var SZ=PDF_SIZES[pdfSize]||PDF_SIZES.a4;
+    var doc=new lib.jsPDF({orientation:'p',unit:'mm',format:pdfSize});
+    var PW=SZ.w,PH=SZ.h,M=8;
+    var maxSide=pdfSize==='a5'?1200:1600;
     for(var i=0;i<files.length;i++){
       msg.textContent='⏳ Processing image '+(i+1)+' of '+files.length+'…';
       try{
         var durl=await readFile(files[i]);
         var im=await loadImgEl(durl);
-        var jp=shrinkJpeg(im,1600,0.82);
+        var jp=shrinkJpeg(im,maxSide,0.82);
         var iw=im.naturalWidth||im.width, ih=im.naturalHeight||im.height;
         var sc=Math.min((PW-2*M)/iw,(PH-2*M)/ih);
         var w=iw*sc, h=ih*sc;
-        if(okCount) doc.addPage();
+        if(okCount) doc.addPage([PW,PH],'p');
         doc.addImage(jp,'JPEG',(PW-w)/2,(PH-h)/2,w,h);
         okCount++;
       }catch(err){ skipped++; }
@@ -495,8 +519,8 @@ async function pdfFromImages(input){
     if(!okCount){ msg.textContent='⚠️ Could not read those images. Try JPG or PNG (iPhone HEIC files are not decodable in the browser).'; }
     else{
       msg.textContent='✅ Building the file…';
-      doc.save('azami-'+okCount+'-images.pdf');
-      msg.textContent='✅ PDF ready — '+okCount+' page(s)'+(skipped?' ('+skipped+' image(s) skipped)':'')+'. If the download did not start, tap “Choose images” again.';
+      doc.save('azami-'+okCount+'-images-'+SZ.label+'.pdf');
+      msg.textContent='✅ PDF ready — '+okCount+' page(s) on '+SZ.label+(skipped?' ('+skipped+' image(s) skipped)':'')+'. If the download did not start, tap “Choose images” again.';
     }
   }catch(e){
     msg.textContent='⚠️ Could not load the PDF engine. Check your connection and try again.';
