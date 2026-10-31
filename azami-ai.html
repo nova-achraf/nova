@@ -207,8 +207,10 @@
       <div id="imgPrev"><img id="prevThumb"><button class="clear-img" onclick="clearImg()">✕</button></div>
       <div class="inp">
         <textarea id="in" rows="1" placeholder="كتب لـ AZAMI AI..." onkeydown="if(event.key==='Enter'&&!event.shiftKey){event.preventDefault();send()}"></textarea>
-        <input type="file" id="camInput" accept="image/*" capture="environment" hidden onchange="onImgPick(this)">
+        <input type="file" id="camInput" accept="image/*" hidden onchange="onImgPick(this)">
+        <input type="file" id="galInput" accept="image/*" multiple hidden onchange="onImgPick(this)">
         <button class="inp-btn" onclick="document.getElementById('camInput').click()" title="تصوير">📷</button>
+        <button class="inp-btn" onclick="document.getElementById('galInput').click()" title="من المعرض">🖼️</button>
         <button class="inp-btn" id="imgBtn" onclick="toggleImg()" title="وضع التصاور">🎨</button>
         <button class="inp-btn" id="mic" onclick="toggleMic()" title="ميكروفون">🎤</button>
         <button class="inp-btn send" id="send" onclick="handleSend()" title="إرسال">➤</button>
