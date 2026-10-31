@@ -164,6 +164,7 @@
   .sheet .szrow .sz{flex:1;width:auto;padding:10px 6px;background:var(--card);color:var(--muted);border:1.5px solid var(--line);border-radius:10px;font-size:13px;font-weight:700}
   .sheet .szrow .sz.on{background:linear-gradient(135deg,var(--gold),var(--gold2));border-color:transparent;color:#1b130b}
   .sheet a.dl{display:block;text-align:center;text-decoration:none;background:linear-gradient(135deg,#1B7A5A,#0E5C4A);color:#fff;padding:14px;border-radius:12px;font-weight:800;font-size:16px;margin-bottom:8px;box-shadow:0 6px 18px rgba(27,122,90,.35)}
+  .sheet a.alt{display:block;text-align:center;text-decoration:none;background:var(--card);color:var(--gold2);border:1.5px solid var(--line);padding:12px;border-radius:12px;font-weight:700;font-size:14px;margin-bottom:8px}
   .err{color:var(--red);font-size:12px;margin-top:6px;display:none}
   @media(max-width:768px){.sidebar{position:fixed;right:0;top:0;bottom:0;box-shadow:-4px 0 20px rgba(0,0,0,.4)}}
 </style>
@@ -244,7 +245,8 @@
       <button class="sz" data-size="a5" onclick="setPdfSize('a5')">A5 · 14.8×21 سم</button>
     </div>
     <button class="go" id="pdfPick" onclick="document.getElementById('pdfInput').click()">📂 ختار الصور</button>
-    <a class="dl" id="pdfDl" download style="display:none">⬇️ حمّل الـ PDF</a>
+    <a class="dl" id="pdfDl" href="#" onclick="return pdfDownload(event)" style="display:none">⬇️ حمّل الـ PDF</a>
+    <a class="alt" id="pdfOpen" href="#" onclick="return pdfOpenTab(event)" style="display:none">👁️ حلّو / شاركو</a>
     <button class="skip" onclick="closePdf()">إغلاق</button>
   </div>
 </div>
@@ -514,6 +516,56 @@ function openPdf(){
 }
 function closePdf(){ document.getElementById('pdfModal').classList.remove('show'); }
 
+var __pdfDoc=null, __pdfName='azami.pdf', __pdfUrl='';
+function pdfClear(){
+  __pdfDoc=null; __pdfName='azami.pdf'; __pdfUrl='';
+  var a=document.getElementById('pdfDl'), b=document.getElementById('pdfOpen');
+  if(a) a.style.display='none';
+  if(b) b.style.display='none';
+}
+function pdfPrepare(doc,name){
+  __pdfDoc=doc; __pdfName=name; __pdfUrl='';
+  try{ __pdfUrl=doc.output('bloburl'); }catch(e){}
+  var a=document.getElementById('pdfDl'), b=document.getElementById('pdfOpen');
+  if(a){ a.style.display='block'; a.textContent='⬇️ حمّل الـ PDF'; }
+  if(b){ b.style.display='block'; }
+}
+function pdfDownload(e){
+  if(e) e.preventDefault();
+  if(!__pdfDoc) return false;
+  var blob=null, file=null;
+  try{ blob=__pdfDoc.output('blob'); }catch(err){}
+  try{ if(blob) file=new File([blob],__pdfName,{type:'application/pdf'}); }catch(err){}
+  if(file && navigator.canShare && navigator.canShare({files:[file]}) && navigator.share){
+    document.getElementById('pdfMsg').textContent='ختار «حفظ في الملفات» ولا Drive من القائمة اللي غادي تتحل.';
+    try{
+      navigator.share({files:[file],title:__pdfName}).then(function(){
+        document.getElementById('pdfMsg').textContent='✅ تحفظ. شوفو فـ Files → Downloads.';
+      },function(err){
+        if(err && err.name!=='AbortError') pdfOpenTab(null);
+      });
+      return false;
+    }catch(err){}
+  }
+  if(__pdfUrl){
+    var a=document.createElement('a');
+    a.href=__pdfUrl; a.download=__pdfName; a.rel='noopener';
+    document.body.appendChild(a); a.click(); document.body.removeChild(a);
+    document.getElementById('pdfMsg').textContent='✅ تصيفط للتنزيلات. شوف الشريط لفوق.';
+    return false;
+  }
+  pdfOpenTab(null);
+  return false;
+}
+function pdfOpenTab(e){
+  if(e) e.preventDefault();
+  if(!__pdfUrl)
+    return false;
+  var w=null;
+  try{ w=window.open(__pdfUrl,'_blank'); }catch(err){}
+  if(!w){ try{ location.href=__pdfUrl; }catch(err2){} }
+  return false;
+}
 function loadJsPDF(){
   return new Promise(function(res,rej){
     if(window.jspdf && window.jspdf.jsPDF) return res(window.jspdf);
@@ -556,8 +608,7 @@ async function pdfFromImages(input){
   if(!files.length) return;
   var msg=document.getElementById('pdfMsg'), btn=document.getElementById('pdfPick');
   paintPdfSize();
-  var dl0=document.getElementById('pdfDl');
-  if(dl0){ dl0.style.display='none'; dl0.removeAttribute('href'); }
+  pdfClear();
   btn.disabled=true;
   var okCount=0, skipped=0;
   try{
@@ -582,20 +633,9 @@ async function pdfFromImages(input){
     }
     if(!okCount){ msg.textContent='⚠️ ما قدرتش نقرا هاد الصور. جرب JPG ولا PNG (صور iPhone بصيغة HEIC ما كتقراش فالمتصفح).'; }
     else{
-      msg.textContent='✅ الـ PDF واجد — '+okCount+' صفحة على مقاس '+SZ.label+'. دق على الزر الأخضر باش تحفظو فالهاتف.';
       var fname='azami-'+okCount+'-images-'+SZ.label+'.pdf';
-      var shown=false;
-      try{
-        var furl=doc.output('bloburl');
-        var ael=document.getElementById('pdfDl');
-        ael.href=furl; ael.download=fname;
-        ael.textContent='⬇️ حمّل الـ PDF ('+SZ.label+')';
-        ael.style.display='block';
-        shown=true;
-      }catch(e1){}
-      if(!shown){
-        try{ doc.save(fname); msg.textContent='✅ الـ PDF واجد — '+okCount+' صفحة على مقاس '+SZ.label+'. شوف مجلد Downloads.'; }catch(e2){}
-      }
+      pdfPrepare(doc,fname);
+      msg.textContent='✅ الـ PDF واجد — '+okCount+' صفحة على مقاس '+SZ.label+'. دق على الزر الأخضر «حمّل الـ PDF».';
     }
   }catch(e){
     msg.textContent='⚠️ مشكل فتحميل الأداة. تحقق من الأنترنت وعاود جرب.';

@@ -106,6 +106,7 @@
   .sheet .szrow .sz{flex:1;width:auto;padding:10px 6px;background:var(--card);color:var(--muted);border:1.5px solid var(--line);border-radius:10px;font-size:13px;font-weight:700}
   .sheet .szrow .sz.on{background:linear-gradient(135deg,var(--gold),var(--gold2));border-color:transparent;color:#1b130b}
   .sheet a.dl{display:block;text-align:center;text-decoration:none;background:linear-gradient(135deg,#1B7A5A,#0E5C4A);color:#fff;padding:14px;border-radius:12px;font-weight:800;font-size:16px;margin-bottom:8px;box-shadow:0 6px 18px rgba(27,122,90,.35)}
+  .sheet a.alt{display:block;text-align:center;text-decoration:none;background:var(--card);color:var(--gold2);border:1.5px solid var(--line);padding:12px;border-radius:12px;font-weight:700;font-size:14px;margin-bottom:8px}
   .err{color:var(--red);font-size:12px;margin-top:6px;display:none}
   .install-banner{position:fixed;bottom:0;left:0;right:0;background:linear-gradient(135deg,var(--green),var(--green2));padding:12px 16px;display:none;align-items:center;gap:12px;z-index:40;box-shadow:0 -4px 20px rgba(0,0,0,.5)}
   .install-banner.show{display:flex}
@@ -194,7 +195,8 @@
       <button class="sz" data-size="a5" onclick="setPdfSize('a5')">A5 · 14.8×21 cm</button>
     </div>
     <button class="go" id="pdfPick" onclick="document.getElementById('pdfInput').click()">📂 Choose images</button>
-    <a class="dl" id="pdfDl" download style="display:none">⬇️ Download PDF</a>
+    <a class="dl" id="pdfDl" href="#" onclick="return pdfDownload(event)" style="display:none">⬇️ Save the PDF</a>
+    <a class="alt" id="pdfOpen" href="#" onclick="return pdfOpenTab(event)" style="display:none">👁️ Open / share it</a>
     <button class="skip" onclick="closePdf()">Close</button>
   </div>
 </div>
@@ -453,6 +455,57 @@ function pickPdf(){
   inp.click();
 }
 
+/* --- saving the PDF: share sheet first, then blob link, then new tab --- */
+var __pdfDoc=null, __pdfName='azami.pdf', __pdfUrl='';
+function pdfClear(){
+  __pdfDoc=null; __pdfName='azami.pdf'; __pdfUrl='';
+  var a=document.getElementById('pdfDl'), b=document.getElementById('pdfOpen');
+  if(a) a.style.display='none';
+  if(b) b.style.display='none';
+}
+function pdfPrepare(doc,name){
+  __pdfDoc=doc; __pdfName=name; __pdfUrl='';
+  try{ __pdfUrl=doc.output('bloburl'); }catch(e){}
+  var a=document.getElementById('pdfDl'), b=document.getElementById('pdfOpen');
+  if(a){ a.style.display='block'; a.textContent='⬇️ Save the PDF'; }
+  if(b){ b.style.display='block'; }
+}
+function pdfDownload(e){
+  if(e) e.preventDefault();
+  if(!__pdfDoc) return false;
+  var blob=null, file=null;
+  try{ blob=__pdfDoc.output('blob'); }catch(err){}
+  try{ if(blob) file=new File([blob],__pdfName,{type:'application/pdf'}); }catch(err){}
+  if(file && navigator.canShare && navigator.canShare({files:[file]}) && navigator.share){
+    document.getElementById('pdfMsg').textContent='Choose “Save to Files” or Drive in the menu that opens.';
+    try{
+      navigator.share({files:[file],title:__pdfName}).then(function(){
+        document.getElementById('pdfMsg').textContent='✅ Saved. Look in Files → Downloads.';
+      },function(err){
+        if(err && err.name!=='AbortError') pdfOpenTab(null);
+      });
+      return false;
+    }catch(err){}
+  }
+  if(__pdfUrl){
+    var a=document.createElement('a');
+    a.href=__pdfUrl; a.download=__pdfName; a.rel='noopener';
+    document.body.appendChild(a); a.click(); document.body.removeChild(a);
+    document.getElementById('pdfMsg').textContent='✅ Sent to your downloads. Check the notification bar.';
+    return false;
+  }
+  pdfOpenTab(null);
+  return false;
+}
+function pdfOpenTab(e){
+  if(e) e.preventDefault();
+  if(!__pdfUrl) return false;
+  var w=null;
+  try{ w=window.open(__pdfUrl,'_blank'); }catch(err){}
+  if(!w){ try{ location.href=__pdfUrl; }catch(err2){} }
+  return false;
+}
+
 function loadJsPDF(){
   return new Promise(function(res,rej){
     if(window.jspdf && window.jspdf.jsPDF) return res(window.jspdf);
@@ -495,8 +548,7 @@ async function pdfFromImages(input){
   if(!files.length) return;
   var msg=document.getElementById('pdfMsg'), btn=document.getElementById('pdfPick');
   paintPdfSize();
-  var dl=document.getElementById('pdfDl');
-  if(dl){ dl.style.display='none'; dl.removeAttribute('href'); }
+  pdfClear();
   document.getElementById('pdfModal').classList.add('show');
   btn.disabled=true;
   var okCount=0, skipped=0;
@@ -522,20 +574,9 @@ async function pdfFromImages(input){
     }
     if(!okCount){ msg.textContent='⚠️ Could not read those images. Try JPG or PNG (iPhone HEIC files are not decodable in the browser).'; }
     else{
-      msg.textContent='✅ PDF ready — '+okCount+' page(s) on '+SZ.label+'. Tap the green button to save it to your phone.';
       var name='azami-'+okCount+'-images-'+SZ.label+'.pdf';
-      var shown=false;
-      try{
-        var url=doc.output('bloburl');
-        var a=document.getElementById('pdfDl');
-        a.href=url; a.download=name;
-        a.textContent='⬇️ Download PDF ('+SZ.label+')';
-        a.style.display='block';
-        shown=true;
-      }catch(e){}
-      if(!shown){
-        try{ doc.save(name); msg.textContent='✅ PDF ready — '+okCount+' page(s) on '+SZ.label+'. Check your Downloads folder.'; }catch(e2){}
-      }
+      pdfPrepare(doc,name);
+      msg.textContent='✅ PDF ready — '+okCount+' page(s) on '+SZ.label+'. Tap the green “Save the PDF” button.';
     }
   }catch(e){
     msg.textContent='⚠️ Could not load the PDF engine. Check your connection and try again.';
